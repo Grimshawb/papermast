@@ -1,0 +1,12 @@
+
+
+# Client
+/client/dist
+/client/.vscode
+/client/node_modules
+/client/.editorconfig
+
+
+# Server
+/server/node_modules/
+/server/.env
