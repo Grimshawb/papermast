@@ -5,6 +5,7 @@
 /client/.vscode
 /client/node_modules
 /client/.editorconfig
+/client/.angular
 
 
 # Server
