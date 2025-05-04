@@ -1,0 +1,29 @@
+<div [ngClass]="themeClass">
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav
+      #drawer
+      [class.sidenav]="true"
+      [class.expanded]="!collapsed || isMobile"
+      [mode]="isMobile ? 'over' : 'side'"
+      [opened]="!isMobile"
+      [fixedInViewport]="true"
+      fixedTopGap="64"
+      >
+      <!-- Side Nav -->
+      <bookshelf-side-nav [isCollapsed]="collapsed"></bookshelf-side-nav>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <!-- Toolbar -->
+      <bookshelf-toolbar color="primary"
+                         (onCollapsedChanged)="toggleCollapsed()"
+                         (onDarkModeChanged)="onThemeChanged($event)"></bookshelf-toolbar>
+
+      <!-- Content -->
+      <div class="main-content container-fluid">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
+

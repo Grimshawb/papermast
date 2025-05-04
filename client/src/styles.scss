@@ -1,0 +1,52 @@
+@use "bootstrap/scss/bootstrap";
+@use '@angular/material' as mat;
+@include mat.core();
+
+html {
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+// Define custom palettes
+$light-primary: mat.m2-define-palette(mat.$m2-cyan-palette);
+$light-accent: mat.m2-define-palette(mat.$m2-pink-palette);
+
+$dark-primary: mat.m2-define-palette(mat.$m2-deep-purple-palette);
+$dark-accent: mat.m2-define-palette(mat.$m2-amber-palette);
+
+// Define light theme
+$light-theme: mat.m2-define-light-theme((
+  color: (
+    theme-type: light,
+    primary: $light-primary,
+    accent: $light-accent,
+  )
+));
+
+// Define dark theme
+$dark-theme: mat.m2-define-dark-theme((
+  color: (
+    theme-type: dark,
+    primary: $dark-primary,
+    accent: $dark-accent,
+  )
+));
+
+// Create theme containers
+.light-theme {
+  @include mat.all-component-themes($light-theme);
+}
+
+.dark-theme {
+  @include mat.all-component-themes($dark-theme);
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

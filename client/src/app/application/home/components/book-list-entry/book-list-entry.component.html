@@ -1,0 +1,22 @@
+<mat-card *ngIf="book" class="book-card" (click)="navigateToBook()" appearance="outlined">
+  <div class="card-content d-flex align-items-start">
+    <img mat-card-image [src]="book.imageLinks.smallThumbnail" alt="Book Thumbnail" class="thumbnail me-3">
+
+    <div class="book-info">
+      <mat-card-title class="mb-1">
+        {{ book.title }}{{ subtitle(book.subtitle) }}
+      </mat-card-title>
+
+      <mat-card-subtitle class="mb-1">
+        Author: {{ book.authors.length === 1 ? book.authors[0] : (book.authors[0] + ', etal.') }}
+      </mat-card-subtitle>
+
+      <mat-card-content >
+        <p style="margin: 0;"><b>Published Date: </b> {{ book.publishedDate }}</p>
+        <p style="margin: 0;"><b>Pages: </b>{{ book.pageCount }}</p>
+        <p><b>Description: </b> {{ book.description }} </p>
+      </mat-card-content>
+    </div>
+  </div>
+</mat-card>
+

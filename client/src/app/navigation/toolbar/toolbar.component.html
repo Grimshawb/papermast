@@ -1,0 +1,16 @@
+<mat-toolbar color="primary" class="toolbar">
+
+  <!-- Left -->
+  <button mat-icon-button (click)="menuClick()" class="toggle-button">
+    <mat-icon color="accent">menu</mat-icon>
+  </button>
+  <span class="app-title">{{ appTitle }}</span>
+  <span class="spacer"></span>
+
+  <!-- Right -->
+  <div>
+    <mat-slide-toggle (change)="toggleDarkMode()"></mat-slide-toggle>
+    <span class="dark-label" >Dark</span>
+  </div>
+
+</mat-toolbar>
