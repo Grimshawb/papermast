@@ -1,0 +1,16 @@
+<mat-card *ngIf="author" class="book-card" (click)="navigateToWiki()" appearance="outlined">
+  <div class="card-content d-flex align-items-start">
+    <img mat-card-image [src]="author.thumbnail.source" alt="Author Thumbnail" class="thumbnail me-3">
+
+    <div class="book-info">
+      <mat-card-title class="mb-1">
+        {{ author.title }}
+      </mat-card-title>
+
+      <mat-card-content >
+        <p> {{ author.extract }} </p>
+      </mat-card-content>
+    </div>
+  </div>
+</mat-card>
+

@@ -3,7 +3,7 @@
     <!-- LEFT -->
     <div class="left-column" style="flex: 1;">
       <mat-card class="scroll-container mat-elevation-z2">
-        <mat-card-header>
+        <mat-card-header class="mb-3">
           <mat-card-title>Popular Fiction</mat-card-title>
         </mat-card-header>
 
@@ -22,8 +22,16 @@
     <!-- RIGHT -->
     <div class="right-column" style="flex: 1;">
       <mat-card class="scroll-container mat-elevation-z2">
-        <mat-card-title>Another Card</mat-card-title>
-        <mat-card-content>Some content here...</mat-card-content>
+        <mat-card class="scroll-container mat-elevation-z2">
+          <mat-card-header class="mb-3">
+            <mat-card-title>Author Of The Day</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <daily-author [author]="authorOfTheDay"></daily-author>
+          </mat-card-content>
+        </mat-card>
+
       </mat-card>
     </div>
   </div>

@@ -6,11 +6,12 @@ import { fadeAnimation } from '../../../constants';
 import { BookListEntryComponent } from '../components/book-list-entry/book-list-entry.component';
 import { MatCardModule } from '@angular/material/card';
 import { WikiEntry } from '../../../models';
+import { DailyAuthorComponent } from '../components/daily-author/daily-author.component';
 
 @Component({
   selector: 'bookshelf-home-page',
   standalone: true,
-  imports: [CommonModule, BookListEntryComponent, MatCardModule],
+  imports: [CommonModule, BookListEntryComponent, MatCardModule, DailyAuthorComponent],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss',
   animations: [fadeAnimation]
