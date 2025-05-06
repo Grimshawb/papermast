@@ -1,31 +1,33 @@
 import { Injectable } from '@angular/core';
 import { ApiBook, BookStoreState } from '../models';
-import { BehaviorSubject, filter, take } from 'rxjs';
+import { filter, take } from 'rxjs';
 import { BooksApiService } from '../services';
+import { Store } from './store';
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class BooksApiStore {
+export class BooksApiStore extends Store<BookStoreState> {
 
-  public constructor(private _bookService: BooksApiService) { }
+  public constructor(private _bookService: BooksApiService) {
+    super({
+      selectedBook: undefined,
+      searchResults: undefined,
+      popularFiction: undefined
+    });
+   }
 
-  public state: BehaviorSubject<BookStoreState> = new BehaviorSubject({
-    selectedBook: undefined,
-    searchResults: undefined,
-    popularFiction: undefined
-  } as BookStoreState);
 
   public setSelectedBook(book: ApiBook | undefined): void {
-    this.state.next({...this.state.getValue(), selectedBook: book} as BookStoreState);
+    this.setState({ selectedBook: book });
   }
 
   public apiSearch(query: string): void {
     this._bookService.searchBooks(query)
       .pipe(filter(res => !!res), take(1))
       .subscribe(res => {
-        this.state.next({...this.state.getValue(), searchResults: res?.items?.map(b => b.volumeInfo)} as BookStoreState);
+        this.setState({ searchResults: res?.items?.map(b => b.volumeInfo) });
       });
   }
 
@@ -33,7 +35,7 @@ export class BooksApiStore {
     this._bookService.popularFiction()
       .pipe(take(1))
       .subscribe(res => {
-        this.state.next({...this.state.getValue(), popularFiction: res?.items?.map(b => b.volumeInfo)} as BookStoreState);
+        this.setState({ popularFiction: res?.items?.map(b => b.volumeInfo) });
       })
   }
 }
