@@ -14,7 +14,7 @@ export class DailyAuthorComponent {
   @Input()
   public author: WikiEntry
 
-  public navigateToWiki(): void {
-
+  public mobileView(): boolean {
+    return window.innerWidth <= 768;
   }
 }

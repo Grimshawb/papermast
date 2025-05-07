@@ -1,4 +1,4 @@
-<mat-card *ngIf="author" class="book-card" (click)="navigateToWiki()" appearance="outlined">
+<mat-card *ngIf="author" class="book-card" appearance="outlined">
   <div class="card-content d-flex align-items-start">
     <img mat-card-image [src]="author.thumbnail.source" alt="Author Thumbnail" class="thumbnail me-3">
 
@@ -9,6 +9,8 @@
 
       <mat-card-content >
         <p> {{ author.extract }} </p>
+        <a [href]="mobileView() ? author.content_urls.mobile.page : author.content_urls.desktop.page"
+          target="_blank">View On Wikipedia</a>
       </mat-card-content>
     </div>
   </div>
