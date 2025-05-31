@@ -1,9 +1,9 @@
 <mat-card *ngIf="author" class="book-card" appearance="outlined">
   <div class="card-content d-flex align-items-start">
-    <img mat-card-image [src]="author.thumbnail.source" alt="Author Thumbnail" class="thumbnail me-3">
+    <img mat-card-image [src]="author.thumbnail?.source || '' " alt="No Image Available" class="thumbnail me-3">
 
     <div class="book-info">
-      <mat-card-title class="mb-1">
+      <mat-card-title class="mt-3 mb-1">
         {{ author.title }}
       </mat-card-title>
 

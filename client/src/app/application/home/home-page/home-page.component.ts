@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { filter, Observable, Subject, take, takeUntil } from 'rxjs';
+import { filter, Observable, Subject, take, takeUntil, tap } from 'rxjs';
 import { BooksApiStore, WikiStore } from '../../../store';
 import { fadeAnimation } from '../../../constants';
 import { BookListEntryComponent } from '../components/book-list-entry/book-list-entry.component';
 import { MatCardModule } from '@angular/material/card';
 import { WikiEntry } from '../../../models';
 import { DailyAuthorComponent } from '../components/daily-author/daily-author.component';
+import { DailyAuthors } from '../../../constants/daily-authors.enum';
 
 @Component({
   selector: 'bookshelf-home-page',
@@ -35,7 +36,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
               private _wikiStore: WikiStore) {
     // this._booksApiStore.apiSearch('Stephen Graham Jones')
     this._booksApiStore.getPopularFiction();
-    this._wikiStore.getAuthorOfTheDay('Kurt Vonnegut')
+    this.loopAuthors();
   }
 
   public ngOnInit(): void {
@@ -44,12 +45,24 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.booksResults$.subscribe(r => this.booksResults = r);
 
     this.authorOfTheDay$ = this._wikiStore.select(s => s.authorOfTheDay)
-      .pipe(filter(r => !!r), take(1))
-    this.authorOfTheDay$.subscribe(r => {this.authorOfTheDay = r; console.log(r)})
+      .pipe(tap(a => this.authorOfTheDay = a), takeUntil(this.destroy$))
+    this.authorOfTheDay$.subscribe();
   }
 
   public pageChanged(e: any): void {
 
+  }
+
+  public async loopAuthors() {
+    const authors = Object.values(DailyAuthors);
+    for (const author of authors) { console.log('Firing Author')
+      this._wikiStore.getAuthorOfTheDay(author)
+      await this.delay(5000);
+    }
+  }
+
+  public delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   public ngOnDestroy(): void {
