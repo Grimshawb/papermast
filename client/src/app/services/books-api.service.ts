@@ -2,14 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, filter, map, take } from 'rxjs';
 import { ApiBook } from '../models/books-api';
+import { environment } from '../../environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BooksApiService {
 
-  private apiUrl = 'http://localhost:3000/api/books'; // 'https://www.googleapis.com/books/v1/volumes';
-  private apiKey =  ''; // environment.googleApiKey;
+  private apiUrl = environment.GOOGLE_BOOKS_API_URL;
+  private apiKey =  environment.GOOGLE_BOOKS_API_KEY;
   private url: string = 'User';
 
   constructor(protected http: HttpClient) { }
@@ -19,6 +20,13 @@ export class BooksApiService {
   }
 
   popularFiction(): Observable<any> {
+    const params = {
+      q: `subject:fiction`,
+      orderBy: 'relevance',
+      startIndex: 0,
+      maxResults: 40,
+      key: this.apiKey
+    }
     return this.http.get(`${this.apiUrl}/pop-fiction`);
   }
 

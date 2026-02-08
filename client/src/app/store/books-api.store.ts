@@ -24,10 +24,10 @@ export class BooksApiStore extends Store<BookStoreState> {
   }
 
   public apiSearch(query: string): void {
-    this._bookService.searchBooks(query)
+    this._bookService.apiSearch(query)
       .pipe(filter(res => !!res), take(1))
       .subscribe(res => {
-        this.setState({ searchResults: res?.items?.map(b => b.volumeInfo) });
+        this.setState({ searchResults: res || [] });
       });
   }
 

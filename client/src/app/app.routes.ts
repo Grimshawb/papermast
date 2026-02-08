@@ -6,8 +6,6 @@ export const routes: Routes = [
     loadComponent: () => import('./application/home/home-page/home-page.component').then(m => m.HomePageComponent)
 
   },
-
-
   {
     path: '**',
     loadComponent: () => import('./navigation/bad-navigation/bad-navigation.component').then(m => m.BadNavigationComponent)

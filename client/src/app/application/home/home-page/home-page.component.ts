@@ -34,13 +34,13 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   constructor(private _booksApiStore: BooksApiStore,
               private _wikiStore: WikiStore) {
-    // this._booksApiStore.apiSearch('Stephen Graham Jones')
-    this._booksApiStore.getPopularFiction();
-    this.loopAuthors();
+    this._booksApiStore.apiSearch('Stephen Graham Jones')
+    // this._booksApiStore.getPopularFiction();
+    this.getDailyAuthor();
   }
 
   public ngOnInit(): void {
-    this.booksResults$ = this._booksApiStore.select(s => s.popularFiction)
+    this.booksResults$ = this._booksApiStore.select(s => s.searchResults)
       .pipe(takeUntil(this.destroy$))
     this.booksResults$.subscribe(r => this.booksResults = r);
 
@@ -53,16 +53,15 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   }
 
-  public async loopAuthors() {
+  public async getDailyAuthor() {
     const authors = Object.values(DailyAuthors);
-    for (const author of authors) { console.log('Firing Author')
-      this._wikiStore.getAuthorOfTheDay(author)
-      await this.delay(5000);
-    }
-  }
-
-  public delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    const startDate = new Date("2024-01-01"); // fixed epoch
+    const today = new Date();
+    const daysSince = Math.floor(
+      (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    const index = daysSince % authors.length;
+    this._wikiStore.getAuthorOfTheDay(authors[index]);
   }
 
   public ngOnDestroy(): void {
