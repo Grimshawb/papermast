@@ -1,13 +1,21 @@
 
 
 # Client
-/client/dist
-/client/.vscode
-/client/node_modules
-/client/.editorconfig
-/client/.angular
+client/dist
+client/.vscode
+client/node_modules
+client/.editorconfig
+client/.angular
+client/src/environment.ts
+client/src/environment.prod.ts
 
 
 # Server
-/server/node_modules/
-/server/.env
+/server/
+
+/papermast/appsettings.Development.json
+/papermast/appsettings.json
+/papermast/bin/
+/papermast/obj/
+/papermast/.vs/
+/papermast/Properties/launchSettings.json
