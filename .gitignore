@@ -19,3 +19,4 @@ client/src/environment.prod.ts
 /papermast/obj/
 /papermast/.vs/
 /papermast/Properties/launchSettings.json
+docker-compose.yml
