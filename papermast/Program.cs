@@ -4,18 +4,32 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
+using papermast.Data.Services;
+using papermast.Entities.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var allowLocal4200 = "http://localhost:4200";
 builder.WebHost.UseUrls("http://localhost:5000", "https://localhost:5001");
 
-// PostgreSQL
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "AllowLocal4200",
+                      policy =>
+                      {
+                          policy.WithOrigins(allowLocal4200);
+                      });
+});
+
+// Database
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("Default"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("Default"))
+    ));
 
 // Identity
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
@@ -38,15 +52,14 @@ builder.Services.AddAuthentication("Bearer")
 
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<IUserService, UserService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-
 app.UseHttpsRedirection();
-
+app.UseCors("AllowLocal4200");
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

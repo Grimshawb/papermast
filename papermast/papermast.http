@@ -1,6 +1,0 @@
-@papermast_HostAddress = http://localhost:5001
-
-GET {{papermast_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
