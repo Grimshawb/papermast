@@ -4,7 +4,10 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./application/home/home-page/home-page.component').then(m => m.HomePageComponent)
-
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./application/authentication/login-page/login-page.component').then(m => m.LoginPageComponent)
   },
   {
     path: '**',

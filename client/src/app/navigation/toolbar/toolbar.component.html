@@ -9,6 +9,7 @@
 
   <!-- Right -->
   <div>
+    <a *ngIf="!loggedInUser" [routerLink]="'login'" style="margin-right: 2rem; color: white;">Log In</a>
     <mat-slide-toggle (change)="toggleDarkMode()"></mat-slide-toggle>
     <span class="dark-label" >Dark</span>
   </div>
