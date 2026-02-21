@@ -1,0 +1,38 @@
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 5%;
+  background: #f5f5f5;
+}
+
+.register-card {
+  width: 500px;
+  padding: 1rem;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.name-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .register-card {
+    width: 95%;
+  }
+
+  .name-row {
+    flex-direction: column;
+  }
+}
