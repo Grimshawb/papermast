@@ -9,7 +9,7 @@ import { RegistrationRequestDto } from '../models';
 })
 export class AuthService {
 
-  private baseUrl = environment.BACK_END_URL;
+  private baseUrl = `${environment.BACK_END_URL}auth`;
 
   constructor(private http: HttpClient) {}
 

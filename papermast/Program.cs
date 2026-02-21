@@ -18,6 +18,8 @@ builder.Services.AddCors(options =>
                       policy =>
                       {
                           policy.WithOrigins(allowLocal4200);
+                          policy.AllowAnyHeader();
+                          policy.AllowAnyMethod();
                       });
 });
 
@@ -58,6 +60,7 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
+app.UseRouting();
 app.UseCors("AllowLocal4200");
 app.UseAuthentication();
 app.UseAuthorization();

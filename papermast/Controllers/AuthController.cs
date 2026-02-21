@@ -32,7 +32,7 @@ namespace papermast.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Error Registering New User");
+                return BadRequest($"Error Registering New User: {ex.Message}");
             }
         }
 
