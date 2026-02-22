@@ -9,26 +9,24 @@ import { environment } from '../../environment.prod';
 })
 export class BooksApiService {
 
-  private apiUrl = environment.GOOGLE_BOOKS_API_URL;
-  private apiKey =  environment.GOOGLE_BOOKS_API_KEY;
-  private url: string = 'User';
+  private baseUrl = `${environment.BACK_END_URL}booksapi`;
 
   constructor(protected http: HttpClient) { }
 
-  searchBooks(query: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/search?q=${encodeURIComponent(query)}`);
-  }
+  // searchBooks(query: string): Observable<any> {
+  //   return this.http.get(`${this.apiUrl}/search?q=${encodeURIComponent(query)}`);
+  // }
 
-  popularFiction(): Observable<any> {
-    const params = {
-      q: `subject:fiction`,
-      orderBy: 'relevance',
-      startIndex: 0,
-      maxResults: 40,
-      key: this.apiKey
-    }
-    return this.http.get(`${this.apiUrl}/pop-fiction`);
-  }
+  // popularFiction(): Observable<any> {
+  //   const params = {
+  //     q: `subject:fiction`,
+  //     orderBy: 'relevance',
+  //     startIndex: 0,
+  //     maxResults: 40,
+  //     key: this.apiKey
+  //   }
+  //   return this.http.get(`${this.apiUrl}/pop-fiction`);
+  // }
 
   public apiSearch(query: string): Observable<ApiBook[]> {
 
@@ -41,7 +39,7 @@ export class BooksApiService {
   // lccn: Returns results where the text following this keyword is the Library of Congress Control Number.
   // oclc: Returns results where the text following this keyword is the Online Computer Library Center number.
 
-    return this.http.get<any>(`${this.apiUrl}?q=${query}&key=${this.apiKey}`)
+    return this.http.get<any>(`${this.baseUrl}/search?query=${query}`)
     .pipe(
       take(1),
       map((res: any) => {

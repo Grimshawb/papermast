@@ -6,10 +6,11 @@ using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using papermast.Data.Services;
 using papermast.Entities.Models;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-var allowLocal4200 = "http://localhost:4200";
+var allowLocal4200 = "https://localhost:4200";
 builder.WebHost.UseUrls("http://localhost:5000", "https://localhost:5001");
 
 builder.Services.AddCors(options =>
@@ -22,6 +23,8 @@ builder.Services.AddCors(options =>
                           policy.AllowAnyMethod();
                       });
 });
+
+builder.Services.AddHttpClient();
 
 // Database
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -39,6 +42,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddAuthentication("Bearer")
 .AddJwtBearer("Bearer", options =>
 {
+    options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -48,7 +52,10 @@ builder.Services.AddAuthentication("Bearer")
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+        NameClaimType = ClaimTypes.NameIdentifier,
+        RoleClaimType = ClaimTypes.Role,
+        ClockSkew = TimeSpan.FromMinutes(5)
     };
 });
 

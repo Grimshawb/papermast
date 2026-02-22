@@ -1,18 +1,14 @@
-﻿
+﻿using papermast.Entities.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace papermast.Entities.Models
+namespace papermast.Entities.DTO
 {
-    public class AppUser
+    public class UserDto
     {
-        [Key]
         public int UserID { get; set; }
-        public string IdentityUserId { get; set; } = null!;
-        public ApplicationUser IdentityUser { get; set; } = null!;
+        public string? Email { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
-
-        [MaxLength(50)]
         public string? Username { get; set; }
     }
 }

@@ -8,6 +8,7 @@ import { BreakpointObserver, Breakpoints, LayoutModule } from '@angular/cdk/layo
 import { CommonModule } from '@angular/common';
 import { SideNavComponent } from './navigation/side-nav/bookshelf-side-nav.component';
 import { ToolbarComponent } from "./navigation/toolbar/toolbar.component";
+import { AuthStore } from './store/auth.store';
 
 @Component({
   selector: 'app-root',
@@ -22,12 +23,14 @@ export class AppComponent {
   public isMobile: boolean = false;
   public themeClass = 'light-theme';
 
-  constructor(private breakpointObserver: BreakpointObserver) {
+  constructor(private breakpointObserver: BreakpointObserver,
+              private _authStore: AuthStore) {
     this.breakpointObserver.observe([Breakpoints.Handset])
       .subscribe(result => {
         this.isMobile = result.matches;
         if (this.isMobile) this.collapsed = true;
       });
+    this._authStore.initializeAuthState();
   }
 
   public toggleCollapsed(): void {

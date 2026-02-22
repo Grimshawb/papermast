@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using papermast.Entities.DTO;
 using papermast.Entities.Models;
 
 namespace papermast.Data.Services
@@ -7,6 +8,7 @@ namespace papermast.Data.Services
     public interface IUserService
     {
         public Task<bool> CreateUser(RegistrationRequest request);
+        public Task<UserDto?> GetAppUserByIdentityID(string identityUserID);
     }
 
     public class UserService : IUserService
@@ -43,6 +45,20 @@ namespace papermast.Data.Services
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<UserDto?> GetAppUserByIdentityID(string identityUserID)
+        {
+            var user = await _context.AppUsers.Include(a => a.IdentityUser).FirstOrDefaultAsync(a => a.IdentityUserId == identityUserID);
+            if (user == null) return null;
+            return new UserDto
+            {
+                UserID = user.UserID,
+                Email = user.IdentityUser.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Username = user.Username
+            };
         }
     }
 }

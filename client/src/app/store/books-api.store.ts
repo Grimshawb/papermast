@@ -31,11 +31,11 @@ export class BooksApiStore extends Store<BookStoreState> {
       });
   }
 
-  public getPopularFiction(): void {
-    this._bookService.popularFiction()
-      .pipe(take(1))
-      .subscribe(res => {
-        this.setState({ popularFiction: res?.items?.map(b => b.volumeInfo) });
-      })
-  }
+  // public getPopularFiction(): void {
+  //   this._bookService.popularFiction()
+  //     .pipe(take(1))
+  //     .subscribe(res => {
+  //       this.setState({ popularFiction: res?.items?.map(b => b.volumeInfo) });
+  //     })
+  // }
 }
