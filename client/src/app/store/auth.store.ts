@@ -18,9 +18,9 @@ export class AuthStore extends Store<AuthStoreState> {
   public login(loginRequest: LoginRequestDto): void {
     this._authService.login(loginRequest)
       .pipe(take(1))
-      .subscribe(res => { console.log(`HERE : ${res.token}`)
+      .subscribe(res => {
         if (res?.token) {
-          localStorage.setItem('auth_token', res.token);
+          localStorage.setItem('papermast_auth_token', res.token);
           this.setState({ logInResponse: 'Success! You Are Now Logged In' });
           this.getLoggedInUser();
         }
@@ -39,11 +39,11 @@ export class AuthStore extends Store<AuthStoreState> {
   }
 
   public getToken(): any {
-    return localStorage.getItem('auth_token');
+    return localStorage.getItem('papermast_auth_token');
   }
 
   public removeToken(): void {
-    localStorage.removeItem('auth_token');
+    localStorage.removeItem('papermast_auth_token');
   }
 
   public setLoginResponse(res: any): void {

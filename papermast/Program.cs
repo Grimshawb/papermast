@@ -10,7 +10,7 @@ using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-var allowLocal4200 = "https://localhost:4200";
+var allowLocal4200 = "http://localhost:4200";
 builder.WebHost.UseUrls("http://localhost:5000", "https://localhost:5001");
 
 builder.Services.AddCors(options =>
@@ -39,7 +39,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
 // JWT Auth
-builder.Services.AddAuthentication("Bearer")
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "Bearer";
+    options.DefaultChallengeScheme = "Bearer";
+})
 .AddJwtBearer("Bearer", options =>
 {
     options.SaveToken = true;

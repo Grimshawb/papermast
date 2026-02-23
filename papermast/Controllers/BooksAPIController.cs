@@ -11,7 +11,7 @@ namespace papermast.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class BooksAPIController : ControllerBase
     {
         private readonly IHttpClientFactory _httpClientFactory;

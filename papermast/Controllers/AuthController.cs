@@ -59,7 +59,7 @@ namespace papermast.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         public async Task<ActionResult<UserDto>> GetLoggedInUser()
         {

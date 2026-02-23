@@ -36,6 +36,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loggedInUser$ = this._authStore.select(s => s.loggedInUser)
       .pipe(takeUntil(this._destroy$), tap(l => this.loggedInUser = l));
+    this.loggedInUser$.subscribe();
   }
 
   public menuClick(): void {
