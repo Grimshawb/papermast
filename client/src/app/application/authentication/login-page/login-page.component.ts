@@ -12,6 +12,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthStore } from '../../../store/auth.store';
 import { filter, take } from 'rxjs';
 import { ToasterService } from '../../../services';
+import { fadeAnimation } from '../../../constants';
 
 @Component({
   selector: 'login-page',
@@ -19,7 +20,8 @@ import { ToasterService } from '../../../services';
             MatInputModule, MatButtonModule, MatCheckboxModule, ReactiveFormsModule,
             MatProgressSpinnerModule, RouterModule],
   templateUrl: './login-page.component.html',
-  styleUrl: './login-page.component.scss'
+  styleUrl: './login-page.component.scss',
+  animations: [fadeAnimation]
 })
 export class LoginPageComponent implements OnInit{
 

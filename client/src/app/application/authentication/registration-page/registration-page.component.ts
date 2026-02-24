@@ -11,6 +11,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { take, finalize } from 'rxjs/operators';
 import { ToasterService } from '../../../services/toaster.service';
+import { fadeAnimation } from '../../../constants';
 
 @Component({
   selector: 'registration-page',
@@ -19,7 +20,8 @@ import { ToasterService } from '../../../services/toaster.service';
             MatInputModule, MatButtonModule, MatCardModule,
             MatIconModule, MatProgressSpinnerModule, RouterModule],
   templateUrl: './registration-page.component.html',
-  styleUrls: ['./registration-page.component.scss']
+  styleUrls: ['./registration-page.component.scss'],
+  animations: [fadeAnimation]
 })
 
 export class RegistrationPageComponent {
