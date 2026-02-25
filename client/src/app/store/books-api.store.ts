@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiBook, BookStoreState } from '../models';
+import { ApiBook, BookSearchRequestDto, BookStoreState } from '../models';
 import { filter, take } from 'rxjs';
 import { BooksApiService } from '../services';
 import { Store } from './store';
@@ -23,8 +23,8 @@ export class BooksApiStore extends Store<BookStoreState> {
     this.setState({ selectedBook: book });
   }
 
-  public apiSearch(query: string): void {
-    this._bookService.apiSearch(query)
+  public apiSearch(request: BookSearchRequestDto): void {
+    this._bookService.apiSearch(request)
       .pipe(filter(res => !!res), take(1))
       .subscribe(res => {
         this.setState({ searchResults: res || [] });

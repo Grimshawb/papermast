@@ -5,7 +5,7 @@ import { BooksApiStore, WikiStore } from '../../../store';
 import { fadeAnimation } from '../../../constants';
 import { BookListEntryComponent } from '../components/book-list-entry/book-list-entry.component';
 import { MatCardModule } from '@angular/material/card';
-import { WikiEntry } from '../../../models';
+import { BookSearchRequestDto, WikiEntry } from '../../../models';
 import { DailyAuthorComponent } from '../components/daily-author/daily-author.component';
 import { DailyAuthors } from '../../../constants/daily-authors.enum';
 
@@ -34,7 +34,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   constructor(private _booksApiStore: BooksApiStore,
               private _wikiStore: WikiStore) {
-    this._booksApiStore.apiSearch('Stephen Graham Jones')
+    this._booksApiStore.apiSearch({inauthor: 'Stephen Graham Jones'} as BookSearchRequestDto);
     // this._booksApiStore.getPopularFiction();
     this.getDailyAuthor();
   }

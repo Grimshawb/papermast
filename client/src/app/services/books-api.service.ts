@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable, filter, map, take } from 'rxjs';
 import { ApiBook } from '../models/books-api';
 import { environment } from '../../environment.prod';
+import { toHttpParams } from '../utils';
+import { BookSearchRequestDto } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +30,7 @@ export class BooksApiService {
   //   return this.http.get(`${this.apiUrl}/pop-fiction`);
   // }
 
-  public apiSearch(query: string): Observable<ApiBook[]> {
+  public apiSearch(request: BookSearchRequestDto): Observable<ApiBook[]> {
 
   // q - Search for volumes that contain this text string. There are special keywords you can specify in the search terms to search in particular fields, such as:
   // intitle: Returns results where the text following this keyword is found in the title.
@@ -39,7 +41,7 @@ export class BooksApiService {
   // lccn: Returns results where the text following this keyword is the Library of Congress Control Number.
   // oclc: Returns results where the text following this keyword is the Online Computer Library Center number.
 
-    return this.http.get<any>(`${this.baseUrl}/search?query=${query}`)
+    return this.http.get<any>(`${this.baseUrl}/search`, {params: toHttpParams(request)})
     .pipe(
       take(1),
       map((res: any) => {
