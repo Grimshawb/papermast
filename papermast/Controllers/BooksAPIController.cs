@@ -12,14 +12,14 @@ namespace papermast.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BooksAPIController : ControllerBase
+    public class BooksApiController : ControllerBase
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _config;
         private readonly IUserService _userService;
 
-        public BooksAPIController(UserManager<ApplicationUser> userManager, IConfiguration config, IUserService userService, IHttpClientFactory httpClientFactory)
+        public BooksApiController(UserManager<ApplicationUser> userManager, IConfiguration config, IUserService userService, IHttpClientFactory httpClientFactory)
         {
             _userManager = userManager;
             _config = config;

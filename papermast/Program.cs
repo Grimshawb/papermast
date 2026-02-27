@@ -26,6 +26,12 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddHttpClient();
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = "localhost:6379";
+    options.InstanceName = "papermast:";
+});
+
 // Database
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(
@@ -66,6 +72,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IWikiService, WikiService>();
 
 var app = builder.Build();
 
