@@ -14,6 +14,10 @@ export const routes: Routes = [
     loadComponent: () => import('./application/authentication/login-page/login-page.component').then(m => m.LoginPageComponent)
   },
   {
+    path: 'bestsellers',
+    loadComponent: () => import('./application/bestsellers/bestsellers-page/bestsellers-page.component').then(m => m.BestsellersPageComponent)
+  },
+  {
     path: '**',
     loadComponent: () => import('./navigation/bad-navigation/bad-navigation.component').then(m => m.BadNavigationComponent)
   }

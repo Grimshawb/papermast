@@ -10,6 +10,14 @@
     </button>
 
     <button mat-button
+        [routerLink]="['/bestsellers']"
+        class="nav-button d-flex align-items-center w-100"
+        [ngClass]="{ 'justify-content-center': collapsed, 'justify-content-start': !collapsed }">
+      <mat-icon title="Bestsellers" class="me-2" [ngClass]="{ 'me-0': collapsed }">sell</mat-icon>
+      <span *ngIf="!collapsed">Bestsellers</span>
+    </button>
+
+    <button mat-button
         [routerLink]="['/my-books']"
         class="nav-button d-flex align-items-center w-100"
         [ngClass]="{ 'justify-content-center': collapsed, 'justify-content-start': !collapsed }">
@@ -25,4 +33,11 @@
     </button>
   </nav>
 
+  <div class="sidenav-bottom">
+    <div class="nav-button d-flex align-items-center w-100">
+      <mat-slide-toggle (change)="toggleDarkMode()"></mat-slide-toggle>
+      <span *ngIf="!collapsed" [ngClass]="darkMode ? 'dark-label' : ''">Dark</span>
+    </div>
+  </div>
 </div>
+

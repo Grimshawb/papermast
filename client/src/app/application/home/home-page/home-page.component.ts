@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { filter, Observable, Subject, take, takeUntil, tap } from 'rxjs';
-import { BooksApiStore, WikiStore } from '../../../store';
+import { BooksApiStore, NytStore, WikiStore } from '../../../store';
 import { fadeAnimation } from '../../../constants';
 import { BookListEntryComponent } from '../components/book-list-entry/book-list-entry.component';
 import { MatCardModule } from '@angular/material/card';
 import { BookSearchRequestDto, WikiEntry } from '../../../models';
 import { DailyAuthorComponent } from '../components/daily-author/daily-author.component';
 import { DailyAuthors } from '../../../constants/daily-authors.enum';
+import { NytService } from '../../../services/nyt.service';
 
 @Component({
   selector: 'bookshelf-home-page',
@@ -33,8 +34,10 @@ export class HomePageComponent implements OnInit, OnDestroy {
   public totalElements: number = 0;
 
   constructor(private _booksApiStore: BooksApiStore,
-              private _wikiStore: WikiStore) {
+              private _wikiStore: WikiStore,
+              private _nytStore: NytStore) {
     this._booksApiStore.apiSearch({inauthor: 'Stephen Graham Jones'} as BookSearchRequestDto);
+    this._nytStore.getAllBestsellerLists();
     // this._booksApiStore.getPopularFiction();
     this.getDailyAuthor();
   }

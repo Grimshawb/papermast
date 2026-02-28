@@ -1,7 +1,8 @@
 .sidenav-content {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: calc(100vh - 64px);
+  overflow: hidden;
 }
 
 .nav-button {
@@ -10,4 +11,18 @@
   text-align: left;
 }
 
+.sidenav-bottom {
+  margin-top: auto;
+}
+
+.toggle-button {
+  margin: 8px;
+  align-self: center;
+}
+
+.dark-label {
+  color:white;
+  font-size: medium;
+  font-weight: 300;
+}
 

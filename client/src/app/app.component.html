@@ -10,14 +10,14 @@
       fixedTopGap="64"
       >
       <!-- Side Nav -->
-      <bookshelf-side-nav [isCollapsed]="collapsed"></bookshelf-side-nav>
+      <bookshelf-side-nav [isCollapsed]="collapsed"
+                          (onDarkModeChanged)="onThemeChanged($event)"></bookshelf-side-nav>
     </mat-sidenav>
 
     <mat-sidenav-content>
       <!-- Toolbar -->
       <bookshelf-toolbar color="primary"
-                         (onCollapsedChanged)="toggleCollapsed()"
-                         (onDarkModeChanged)="onThemeChanged($event)"></bookshelf-toolbar>
+                         (onCollapsedChanged)="toggleCollapsed()"></bookshelf-toolbar>
 
       <!-- Content -->
       <div class="main-content container-fluid">

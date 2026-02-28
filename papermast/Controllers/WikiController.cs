@@ -1,12 +1,5 @@
 ﻿using papermast.Data.Services;
-using papermast.Entities.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http;
-using static System.Net.WebRequestMethods;
 
 namespace papermast.Controllers
 {
@@ -15,16 +8,9 @@ namespace papermast.Controllers
     public class WikiController : ControllerBase
     {
         private readonly IWikiService _wikiService;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IConfiguration _config;
-        private readonly IUserService _userService;
 
-        public WikiController(UserManager<ApplicationUser> userManager, IConfiguration config, IUserService userService, 
-                              IWikiService wikiService)
+        public WikiController(IWikiService wikiService)
         {
-            _userManager = userManager;
-            _config = config;
-            _userService = userService;
             _wikiService = wikiService;
         }
 

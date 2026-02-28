@@ -72,7 +72,9 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
 builder.Services.AddScoped<IWikiService, WikiService>();
+builder.Services.AddScoped<INytService, NytService>();
 
 var app = builder.Build();
 

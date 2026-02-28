@@ -9,42 +9,37 @@ namespace papermast.Data.Services
 {
     public interface IWikiService
     {
-        public Task<string> SearchAuthor(string author);
+        public Task<string?> SearchAuthor(string author);
     }
 
     public class WikiService : IWikiService
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _config;
-        private readonly IDistributedCache _cache;
+        private readonly IRedisCacheService _cache;
 
         public WikiService(IConfiguration config, IHttpClientFactory httpClientFactory,
-                           IDistributedCache cache)
+                           IRedisCacheService cache)
         {
             _config = config;
             _httpClientFactory = httpClientFactory;
             _cache = cache;
         }
 
-        public async Task<string> SearchAuthor(string author)
+        public async Task<string?> SearchAuthor(string author)
         {
-            var header = _config["Wiki:RequestHeader"];
-            var url = _config["Wiki:ApiUrl"];
             author = author.Trim().Replace("_", " ");
+            return await _cache.GetOrCreateAsoluteTTLAsync<string>($"wiki:author:{author}", async () =>
+                {
+                    var client = _httpClientFactory.CreateClient();
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd(_config["Wiki:RequestHeader"]);
 
-            var cacheKey = $"wiki:author:{author}";
-            var cached = await _cache.GetAsync<string>(cacheKey);
-            if (!string.IsNullOrEmpty(cached)) return cached; // Cache hit
+                    var response = await client.GetAsync($"{_config["Wiki:ApiUrl"]}/{author}");
 
-            var client = _httpClientFactory.CreateClient();
-            client.DefaultRequestHeaders.UserAgent.ParseAdd(header);
-            var response = await client.GetAsync($"{url}/{author}"); // Cache Miss
+                    if (!response.IsSuccessStatusCode) return string.Empty;
 
-            if (!response.IsSuccessStatusCode) return string.Empty;
-
-            var content = await response.Content.ReadAsStringAsync();
-            await _cache.SetAsync(cacheKey, content, TimeSpan.FromHours(24)); // Cache
-            return content;
+                    return await response.Content.ReadAsStringAsync();
+                }, TimeSpan.FromHours(24));
         }
             
     }

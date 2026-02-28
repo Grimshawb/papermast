@@ -20,16 +20,12 @@ import { CommonModule } from '@angular/common';
 export class ToolbarComponent implements OnInit, OnDestroy {
 
   public appTitle = 'Paper Mast';
-  public darkMode: boolean = false;
   public loggedInUser$: Observable<User>;
   public loggedInUser: User = undefined;
   private _destroy$: Subject<void> = new Subject<void>();
 
   @Output()
   public onCollapsedChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
-
-  @Output()
-  public onDarkModeChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(private _authStore: AuthStore) {}
 
@@ -41,11 +37,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   public menuClick(): void {
     this.onCollapsedChanged.emit(true);
-  }
-
-  public toggleDarkMode(): void {
-    this.darkMode = !this.darkMode;
-    this.onDarkModeChanged.emit(this.darkMode);
   }
 
   ngOnDestroy(): void {
