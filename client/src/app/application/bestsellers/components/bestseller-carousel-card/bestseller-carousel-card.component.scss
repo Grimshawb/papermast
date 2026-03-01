@@ -1,8 +1,21 @@
 .carousel-card {
-  max-width: 400px;
+  width: clamp(280px, 85vw, 420px);
+  max-height: 75vh;
+  margin: auto;
+  align-items: center;
+}
+
+.image-frame {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
 .main-image {
-  max-width: 300px;
+  width: 80%;
+  height: 100%;
+  object-fit:contain;
 }

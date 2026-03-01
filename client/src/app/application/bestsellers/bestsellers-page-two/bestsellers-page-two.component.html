@@ -1,0 +1,43 @@
+<div class="bestseller-page">
+  <div *ngIf="selectedBestsellerList$ | async as list">
+
+    <div class="page-header">
+      <h2 *ngIf="(bestsellerLists$ | async)?.[0]?.bestsellersDate">Week of {{(bestsellerLists$ | async)?.[0]?.bestsellersDate | date:'MMMM, d yyyy' }}</h2>
+    </div>
+    <div class="title-row">
+      <div class="bestseller-list-header row">
+        <h4 style="margin: 1rem;"> {{list.name}}</h4>
+      </div>
+    </div>
+
+    <div class="list-row row">
+
+      <div class="carousel-container">
+        <button mat-icon-button
+                class="floating-chevron"
+                (click)="previous(list.name)">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <div class="carousel-stage">
+          <div class="carousel-card-wrapper"
+              *ngFor="let book of list.books; let i = index"
+              [ngClass]="getPositionClass(i, list.name)">
+            <bestseller-carousel-card [book]="book"></bestseller-carousel-card>
+          </div>
+        </div>
+
+        <button mat-icon-button
+                class="floating-chevron"
+                (click)="next(list.name)">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="footer">
+      <a href="https://developer.nytimes.com/"><img [src]="getImageSource()"/></a>
+    </div>
+
+  </div>
+</div>

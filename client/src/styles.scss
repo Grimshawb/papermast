@@ -1,5 +1,6 @@
 @use "bootstrap/scss/bootstrap";
 @use '@angular/material' as mat;
+@use 'sass:map';
 @include mat.core();
 
 html {

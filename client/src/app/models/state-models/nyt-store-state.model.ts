@@ -1,5 +1,6 @@
 import { BestsellerList } from "../nyt";
 
 export interface NytStoreState {
-  bestsellerLists: BestsellerList[]
+  bestsellerLists: BestsellerList[],
+  selectedBestsellerList: BestsellerList
 }

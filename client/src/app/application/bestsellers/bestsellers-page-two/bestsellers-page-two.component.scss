@@ -1,9 +1,27 @@
+.bestseller-page {
+  min-height: 100vh;
+  display: block;
+  justify-content: center;
+  align-items: center;
+}
+
 .page-header {
   display: block;
   margin-bottom: 3rem;
 }
 
+.title-row {
+  align-items: center;
+  justify-content: center;
+  display: block;
+  text-align: center;
+  margin-bottom: clamp(3rem, 5vw, 6rem);
+}
+
+
 .bestseller-list-header {
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(to right, transparent, var(--mat-option-selected-state-label-text-color), transparent);
 }
 
@@ -22,8 +40,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
-   padding-top: 2rem;
+  padding-top: 2rem;
 }
 
 .carousel-stage {
@@ -75,11 +92,47 @@
   text-align: center;
   display: block;
   width: 100%;
+  height: auto;
 }
 
 .footer img {
   width: 200px;
   height: auto;
   display: inline-block;
+}
+
+.floating-chevron {
+  border: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.floating-chevron mat-icon {
+  font-size: 22px;
+  height: 22px;
+  width: 22px;
+  line-height: 22px;
+}
+
+.floating-chevron:hover {
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+  transform: translateY(-1px);
+}
+
+.floating-chevron:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
