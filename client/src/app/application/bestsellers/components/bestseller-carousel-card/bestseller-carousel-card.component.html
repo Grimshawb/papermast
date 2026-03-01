@@ -1,0 +1,17 @@
+<mat-card class="carousel-card" appearance="outlined">
+  <mat-card-header>
+    <!-- <div mat-card-avatar class="example-header-image"></div> -->
+    <mat-card-title>{{ book.title }}</mat-card-title>
+    <mat-card-subtitle>{{ book.author }}</mat-card-subtitle>
+  </mat-card-header>
+  <img class="main-image" mat-card-image [src]="book.bookImage" alt="Cover Image">
+  <mat-card-content>
+    <p>
+      {{ book.description }}
+    </p>
+  </mat-card-content>
+  <!-- <mat-card-actions>
+    <button matButton>LIKE</button>
+    <button matButton>SHARE</button>
+  </mat-card-actions> -->
+</mat-card>

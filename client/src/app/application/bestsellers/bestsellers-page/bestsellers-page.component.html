@@ -1,1 +1,43 @@
-<p>bestsellers-page works!</p>
+
+<div>
+  <h2>{{(bestsellerLists$ | async)?.[0]?.bestsellersDate}}</h2>
+</div>
+
+<div class="list-row" *ngFor="let list of (bestsellerLists$ | async)">
+  <div>
+    <h5> {{list.name}}</h5>
+  </div>
+
+  <div class="carousel-container">
+    <button mat-icon-button
+            class="nav-button left"
+            (click)="previous(list.name)">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <div class="carousel-stage">
+      <div class="carousel-card-wrapper"
+          *ngFor="let book of list.books; let i = index"
+          [ngClass]="getPositionClass(i, list.name)">
+        <bestseller-carousel-card [book]="book"></bestseller-carousel-card>
+      </div>
+    </div>
+
+    <button mat-icon-button
+            class="nav-button right"
+            (click)="next(list.name)">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+</div>
+
+<!-- Optional Dots -->
+<!-- <div class="carousel-dots">
+  <button
+    mat-icon-button
+    *ngFor="let item of items; let i = index"
+    (click)="goTo(i)"
+    [class.active]="i === currentIndex">
+    <mat-icon>fiber_manual_record</mat-icon>
+  </button>
+</div> -->

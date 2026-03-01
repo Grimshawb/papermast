@@ -21,7 +21,7 @@ import { AuthStore } from './store/auth.store';
 export class AppComponent {
   public collapsed: boolean = false;
   public isMobile: boolean = false;
-  public themeClass = 'light-theme';
+  public themeClass = 'dark-theme';
 
   constructor(private breakpointObserver: BreakpointObserver,
               private _authStore: AuthStore) {

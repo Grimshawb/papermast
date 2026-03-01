@@ -17,7 +17,7 @@ import { RouterModule } from '@angular/router';
 export class SideNavComponent {
 
   public isMobile: boolean = false;
-  public darkMode: boolean = false;
+  public darkMode: boolean = true;
 
   @Output()
   public onDarkModeChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
