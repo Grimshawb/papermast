@@ -25,6 +25,23 @@
   background: linear-gradient(to right, transparent, var(--mat-option-selected-state-label-text-color), transparent);
 }
 
+.list-button-group {
+  display: flex;
+  align-items: center;
+}
+
+.list-button-group > :first-child {
+  margin-right: auto;
+  margin-left: 3rem;
+  z-index: 5;
+}
+
+.list-button-group > :last-child {
+  margin-left: auto;
+  margin-right: 3rem;
+  z-index: 5;
+}
+
 .list-row {
   display: block;
   text-align: center;

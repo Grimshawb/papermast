@@ -28,6 +28,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   public authorOfTheDay$: Observable<WikiEntry>;
   public authorOfTheDay: WikiEntry;
+  public author: string;
 
   public pages: any[] = [];
   public selectedPage: number = 0;
@@ -36,10 +37,9 @@ export class HomePageComponent implements OnInit, OnDestroy {
   constructor(private _booksApiStore: BooksApiStore,
               private _wikiStore: WikiStore,
               private _nytStore: NytStore) {
-    this._booksApiStore.apiSearch({inauthor: 'Stephen Graham Jones'} as BookSearchRequestDto);
-    this._nytStore.getAllBestsellerLists();
-    // this._booksApiStore.getPopularFiction();
     this.getDailyAuthor();
+    this._booksApiStore.apiSearch({inauthor: this.author} as BookSearchRequestDto);
+    this._nytStore.getAllBestsellerLists();
   }
 
   public ngOnInit(): void {
@@ -64,7 +64,9 @@ export class HomePageComponent implements OnInit, OnDestroy {
       (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
     );
     const index = daysSince % authors.length;
-    this._wikiStore.getAuthorOfTheDay(authors[index]);
+    this.author = authors[index].replace('_', ' ');
+    this._wikiStore.getAuthorOfTheDay(this.author);
+
   }
 
   public ngOnDestroy(): void {

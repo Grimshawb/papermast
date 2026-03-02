@@ -1,12 +1,16 @@
 <div class="bestseller-page">
-  <div *ngIf="selectedBestsellerList$ | async as list">
+  <div *ngIf="(selectedBestsellerList$ | async) as list">
 
     <div class="page-header">
-      <h2 *ngIf="(bestsellerLists$ | async)?.[0]?.bestsellersDate">Week of {{(bestsellerLists$ | async)?.[0]?.bestsellersDate | date:'MMMM, d yyyy' }}</h2>
+      <h2 *ngIf="list.bestsellersDate">Week of {{ list?.bestsellersDate | date:'MMMM, d yyyy' }}</h2>
     </div>
     <div class="title-row">
       <div class="bestseller-list-header row">
-        <h4 style="margin: 1rem;"> {{list.name}}</h4>
+        <div class="list-button-group">
+          <span role="button" (click)="previousList(list)"><mat-icon>chevron_left</mat-icon></span>
+          <h4 style="margin: 1rem;"> {{list.name}}</h4>
+          <span role="button" (click)="nextList(list)"><mat-icon>chevron_right</mat-icon></span>
+        </div>
       </div>
     </div>
 

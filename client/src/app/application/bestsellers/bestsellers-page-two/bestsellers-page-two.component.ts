@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { BestsellerCarouselCardComponent } from '../components/bestseller-carousel-card/bestseller-carousel-card.component';
-import { filter, first, Observable, Subject, takeUntil, tap } from 'rxjs';
+import { filter, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { BestsellerList } from '../../../models';
 import { NytStore } from '../../../store';
 
@@ -22,16 +22,17 @@ export class BestsellersPageTwoComponent implements OnInit, OnDestroy {
   public selectedBestsellerList: BestsellerList;
   public indices: {key: string, index: number, max: number}[] = [];
 
-  constructor(private _nytStore: NytStore) {}
+  constructor(private _nytStore: NytStore) {
+    this._nytStore.getAllBestsellerLists();
+  }
 
   ngOnInit(): void {
-    this._nytStore.getAllBestsellerLists();
     this.bestsellerLists$ = this._nytStore.select(s => s.bestsellerLists)
       .pipe(filter(l => !!l),
         tap(l => {
           if (l) {
             this.bestsellerLists = l;
-            if (!this.selectedBestsellerList) this._nytStore.setSelectedBestsellerList(l[0])
+            if (!this.selectedBestsellerList && l?.length > 0) this._nytStore.setSelectedBestsellerList(l[0])
             this.indices = this.bestsellerLists.map(bl => {
               return {
                 key: bl.name,
@@ -44,7 +45,11 @@ export class BestsellersPageTwoComponent implements OnInit, OnDestroy {
     this.bestsellerLists$.subscribe();
 
     this.selectedBestsellerList$ = this._nytStore.select(s => s.selectedBestsellerList)
-      .pipe(tap(l => this.selectedBestsellerList = l), takeUntil(this.destroy$));
+      .pipe(tap(l => {
+         if (l) {
+          this.selectedBestsellerList = l;
+         }
+        }), takeUntil(this.destroy$));
     this.selectedBestsellerList$.subscribe();
   }
 
@@ -78,6 +83,18 @@ export class BestsellersPageTwoComponent implements OnInit, OnDestroy {
     if (index === (current.index - 1 < 0 ? current.max : current.index - 1)) return 'left';
     if (index === (current.index + 1 <= current.max ? current.index + 1 : 0)) return 'right';
     return 'hidden';
+  }
+
+  public previousList(list: BestsellerList): void {
+    const index = this.bestsellerLists.findIndex(l => l.name === list.name);
+    const nextListIndex = index > 0 ? index - 1 : this.bestsellerLists.length - 1;
+    this._nytStore.setSelectedBestsellerList(this.bestsellerLists[nextListIndex]);
+  }
+
+  public nextList(list: BestsellerList): void {
+    const index = this.bestsellerLists.findIndex(l => l.name === list.name);
+    const nextListIndex = index < (this.bestsellerLists.length - 1) ? index + 1 : 0;
+    this._nytStore.setSelectedBestsellerList(this.bestsellerLists[nextListIndex]);
   }
 
   public getImageSource(): string {
