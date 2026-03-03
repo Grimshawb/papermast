@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,9 +16,7 @@ import { fadeAnimation } from '../../../constants';
 
 @Component({
   selector: 'login-page',
-  imports: [CommonModule, MatCardModule, MatIconModule, MatFormFieldModule,
-            MatInputModule, MatButtonModule, MatCheckboxModule, ReactiveFormsModule,
-            MatProgressSpinnerModule, RouterModule],
+  imports: [MatCardModule, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatCheckboxModule, ReactiveFormsModule, MatProgressSpinnerModule, RouterModule],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
   animations: [fadeAnimation]

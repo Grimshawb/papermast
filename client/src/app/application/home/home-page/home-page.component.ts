@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { filter, Observable, Subject, take, takeUntil, tap } from 'rxjs';
 import { BooksApiStore, NytStore, WikiStore } from '../../../store';
@@ -13,7 +13,7 @@ import { NytService } from '../../../services/nyt.service';
 @Component({
   selector: 'bookshelf-home-page',
   standalone: true,
-  imports: [CommonModule, BookListEntryComponent, MatCardModule, DailyAuthorComponent],
+  imports: [BookListEntryComponent, MatCardModule, DailyAuthorComponent],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss',
   animations: [fadeAnimation]

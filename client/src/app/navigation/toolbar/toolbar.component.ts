@@ -7,11 +7,11 @@ import { AuthStore } from '../../store/auth.store';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
 import { User } from '../../models';
 import { RouterLink } from "@angular/router";
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'bookshelf-toolbar',
-  imports: [CommonModule, MatIconModule, MatToolbarModule, MatButtonModule, MatSlideToggleModule, RouterLink],
+  imports: [MatIconModule, MatToolbarModule, MatButtonModule, MatSlideToggleModule, RouterLink],
   standalone: true,
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss'

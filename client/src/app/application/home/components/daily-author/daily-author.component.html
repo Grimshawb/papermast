@@ -1,18 +1,18 @@
-<mat-card *ngIf="author" class="book-card" appearance="outlined">
-  <div class="card-content d-flex align-items-start">
-    <img mat-card-image [src]="author.thumbnail?.source || '' " alt="No Image Available" class="thumbnail me-3">
-
-    <div class="book-info">
-      <mat-card-title class="mt-3 mb-1">
-        {{ author.title }}
-      </mat-card-title>
-
-      <mat-card-content >
-        <p> {{ author.extract }} </p>
-        <a [href]="mobileView() ? author.content_urls.mobile.page : author.content_urls.desktop.page"
+@if (author) {
+  <mat-card class="book-card" appearance="outlined">
+    <div class="card-content d-flex align-items-start">
+      <img mat-card-image [src]="author.thumbnail?.source || '' " alt="No Image Available" class="thumbnail me-3">
+      <div class="book-info">
+        <mat-card-title class="mt-3 mb-1">
+          {{ author.title }}
+        </mat-card-title>
+        <mat-card-content >
+          <p> {{ author.extract }} </p>
+          <a [href]="mobileView() ? author.content_urls.mobile.page : author.content_urls.desktop.page"
           target="_blank">View On Wikipedia</a>
-      </mat-card-content>
+        </mat-card-content>
+      </div>
     </div>
-  </div>
-</mat-card>
+  </mat-card>
+}
 

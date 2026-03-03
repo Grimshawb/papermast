@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, Validators, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -16,9 +16,7 @@ import { fadeAnimation } from '../../../constants';
 @Component({
   selector: 'registration-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule,
-            MatInputModule, MatButtonModule, MatCardModule,
-            MatIconModule, MatProgressSpinnerModule, RouterModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinnerModule, RouterModule],
   templateUrl: './registration-page.component.html',
   styleUrls: ['./registration-page.component.scss'],
   animations: [fadeAnimation]

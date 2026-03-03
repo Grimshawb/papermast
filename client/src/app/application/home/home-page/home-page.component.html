@@ -7,13 +7,17 @@
           <mat-card-title>{{ author }}</mat-card-title>
         </mat-card-header>
 
-        <mat-card-content *ngIf="booksResults">
-          <div *ngFor="let book of booksResults || []" class="mb-2">
-            <mat-card class="mb-2">
-              <bookshelf-book-list-entry [book]="book"></bookshelf-book-list-entry>
-            </mat-card>
-          </div>
-        </mat-card-content>
+        @if (booksResults) {
+          <mat-card-content>
+            @for (book of booksResults || []; track book) {
+              <div class="mb-2">
+                <mat-card class="mb-2">
+                  <bookshelf-book-list-entry [book]="book"></bookshelf-book-list-entry>
+                </mat-card>
+              </div>
+            }
+          </mat-card-content>
+        }
 
         <!-- pagination -->
       </mat-card>

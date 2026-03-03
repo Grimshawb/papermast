@@ -1,47 +1,45 @@
 <div class="bestseller-page">
-  <div *ngIf="(selectedBestsellerList$ | async) as list">
-
-    <div class="page-header">
-      <h2 *ngIf="list.bestsellersDate">Week of {{ list?.bestsellersDate | date:'MMMM, d yyyy' }}</h2>
-    </div>
-    <div class="title-row">
-      <div class="bestseller-list-header row">
-        <div class="list-button-group">
-          <span role="button" (click)="previousList(list)"><mat-icon>chevron_left</mat-icon></span>
-          <h4 style="margin: 1rem;"> {{list.name}}</h4>
-          <span role="button" (click)="nextList(list)"><mat-icon>chevron_right</mat-icon></span>
-        </div>
+  @if ((selectedBestsellerList$ | async); as list) {
+    <div>
+      <div class="page-header">
+        @if (list.bestsellersDate) {
+          <h2>Week of {{ list?.bestsellersDate | date:'MMMM, d yyyy' }}</h2>
+        }
       </div>
-    </div>
-
-    <div class="list-row row">
-
-      <div class="carousel-container">
-        <button mat-icon-button
-                class="floating-chevron"
-                (click)="previous(list.name)">
-          <mat-icon>chevron_left</mat-icon>
-        </button>
-
-        <div class="carousel-stage">
-          <div class="carousel-card-wrapper"
-              *ngFor="let book of list.books; let i = index"
-              [ngClass]="getPositionClass(i, list.name)">
-            <bestseller-carousel-card [book]="book"></bestseller-carousel-card>
+      <div class="title-row">
+        <div class="bestseller-list-header row">
+          <div class="list-button-group">
+            <span role="button" (click)="previousList(list)"><mat-icon>chevron_left</mat-icon></span>
+            <h4 style="margin: 1rem;"> {{list.name}}</h4>
+            <span role="button" (click)="nextList(list)"><mat-icon>chevron_right</mat-icon></span>
           </div>
         </div>
-
-        <button mat-icon-button
-                class="floating-chevron"
-                (click)="next(list.name)">
-          <mat-icon>chevron_right</mat-icon>
-        </button>
+      </div>
+      <div class="list-row row">
+        <div class="carousel-container">
+          <button mat-icon-button
+            class="floating-chevron"
+            (click)="previous(list.name)">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <div class="carousel-stage">
+            @for (book of list.books; track book; let i = $index) {
+              <div class="carousel-card-wrapper"
+                [ngClass]="getPositionClass(i, list.name)">
+                <bestseller-carousel-card [book]="book"></bestseller-carousel-card>
+              </div>
+            }
+          </div>
+          <button mat-icon-button
+            class="floating-chevron"
+            (click)="next(list.name)">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="footer">
+        <a href="https://developer.nytimes.com/"><img [src]="getImageSource()"/></a>
       </div>
     </div>
-
-    <div class="footer">
-      <a href="https://developer.nytimes.com/"><img [src]="getImageSource()"/></a>
-    </div>
-
-  </div>
+  }
 </div>

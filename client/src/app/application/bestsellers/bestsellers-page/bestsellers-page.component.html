@@ -1,36 +1,38 @@
 
 <div>
   <div class="page-header">
-    <h2 *ngIf="(bestsellerLists$ | async)?.[0]?.bestsellersDate">Week of {{(bestsellerLists$ | async)?.[0]?.bestsellersDate | date:'MMMM, d yyyy' }}</h2>
+    @if ((bestsellerLists$ | async)?.[0]?.bestsellersDate) {
+      <h2>Week of {{(bestsellerLists$ | async)?.[0]?.bestsellersDate | date:'MMMM, d yyyy' }}</h2>
+    }
   </div>
 
-  <div class="list-row" *ngFor="let list of (bestsellerLists$ | async)">
-    <div class="bestseller-list-header">
-      <h4> {{list.name}}</h4>
-    </div>
-
-    <div class="carousel-container">
-      <button mat-icon-button
-              class="nav-button left"
-              (click)="previous(list.name)">
-        <mat-icon>chevron_left</mat-icon>
-      </button>
-
-      <div class="carousel-stage">
-        <div class="carousel-card-wrapper"
-            *ngFor="let book of list.books; let i = index"
-            [ngClass]="getPositionClass(i, list.name)">
-          <bestseller-carousel-card [book]="book"></bestseller-carousel-card>
-        </div>
+  @for (list of (bestsellerLists$ | async); track list) {
+    <div class="list-row">
+      <div class="bestseller-list-header">
+        <h4> {{list.name}}</h4>
       </div>
-
-      <button mat-icon-button
-              class="nav-button right"
-              (click)="next(list.name)">
-        <mat-icon>chevron_right</mat-icon>
-      </button>
+      <div class="carousel-container">
+        <button mat-icon-button
+          class="nav-button left"
+          (click)="previous(list.name)">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <div class="carousel-stage">
+          @for (book of list.books; track book; let i = $index) {
+            <div class="carousel-card-wrapper"
+              [ngClass]="getPositionClass(i, list.name)">
+              <bestseller-carousel-card [book]="book"></bestseller-carousel-card>
+            </div>
+          }
+        </div>
+        <button mat-icon-button
+          class="nav-button right"
+          (click)="next(list.name)">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
     </div>
-  </div>
+  }
 
   <div class="footer">
     <a href="https://developer.nytimes.com/"><img [src]="getImageSource()"/></a>
@@ -40,11 +42,11 @@
 
 <!-- Optional Dots -->
 <!-- <div class="carousel-dots">
-  <button
-    mat-icon-button
-    *ngFor="let item of items; let i = index"
-    (click)="goTo(i)"
-    [class.active]="i === currentIndex">
-    <mat-icon>fiber_manual_record</mat-icon>
-  </button>
+<button
+  mat-icon-button
+  *ngFor="let item of items; let i = index"
+  (click)="goTo(i)"
+  [class.active]="i === currentIndex">
+  <mat-icon>fiber_manual_record</mat-icon>
+</button>
 </div> -->
