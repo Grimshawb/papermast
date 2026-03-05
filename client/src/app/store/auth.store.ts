@@ -19,12 +19,13 @@ export class AuthStore extends Store<AuthStoreState> {
     this._authService.login(loginRequest)
       .pipe(take(1))
       .subscribe(res => {
-        if (res?.token) {
-          localStorage.setItem('papermast_auth_token', res.token);
-          this.setState({ logInResponse: 'Success! You Are Now Logged In' });
-          this.getLoggedInUser();
-        }
+        this.setState({ logInResponse: 'Success! You Are Now Logged In' });
+        this.getLoggedInUser();
       });
+  }
+
+  public initializeAuthState(): void {
+    this.getLoggedInUser();
   }
 
   public getLoggedInUser(): void {
@@ -33,20 +34,11 @@ export class AuthStore extends Store<AuthStoreState> {
       .subscribe(u => this.setState({ loggedInUser: u }));
   }
 
-  public initializeAuthState(): void {
-    const token = this.getToken();
-    if (token) this.getLoggedInUser();
-  }
-
-  public getToken(): any {
-    return localStorage.getItem('papermast_auth_token');
-  }
-
-  public removeToken(): void {
-    localStorage.removeItem('papermast_auth_token');
-  }
-
-  public setLoginResponse(res: any): void {
-    this.setState({ logInResponse: res });
+  public logout(): void {
+    this._authService.logout()
+      .pipe(take(1))
+      .subscribe(() => {
+        this.setState({ loggedInUser: null });
+      });
   }
 }

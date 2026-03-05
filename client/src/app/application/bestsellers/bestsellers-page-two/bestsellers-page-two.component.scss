@@ -74,7 +74,11 @@
 
 .carousel-card-wrapper {
   position: absolute;
-  transition: all 350ms ease;
+  // transition: all 350ms ease;
+  transition:
+    transform 350ms ease,
+    opacity 350ms ease,
+    filter 350ms ease;
 }
 
 .carousel-card-wrapper.center {
@@ -113,8 +117,6 @@
 }
 
 .footer img {
-  width: 200px;
-  height: auto;
   display: inline-block;
 }
 

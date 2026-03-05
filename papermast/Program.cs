@@ -21,6 +21,7 @@ builder.Services.AddCors(options =>
                           policy.WithOrigins(allowLocal4200);
                           policy.AllowAnyHeader();
                           policy.AllowAnyMethod();
+                          policy.AllowCredentials();
                       });
 });
 
@@ -52,7 +53,14 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer("Bearer", options =>
 {
-    options.SaveToken = true;
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            context.Token = context.Request.Cookies["papermast_auth"];
+            return Task.CompletedTask;
+        }
+    };
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,

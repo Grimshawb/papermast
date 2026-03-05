@@ -21,6 +21,10 @@ export class AuthService {
     return this.http.post<boolean>(`${this.baseUrl}/login`, request);
   }
 
+  public logout(): Observable<boolean> {
+    return this.http.post<boolean>(`${this.baseUrl}/logout`, {});
+  }
+
   public getLoggedInUser(): Observable<User> {
     return this.http.get<User>(`${this.baseUrl}`);
   }

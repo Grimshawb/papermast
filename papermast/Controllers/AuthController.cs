@@ -51,11 +51,34 @@ namespace papermast.Controllers
                     return Unauthorized();
 
                 var token = JwtHelper.GenerateToken(user, _config);
-                return Ok(new { token });
+                
+                Response.Cookies.Append("papermast_auth", token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true, 
+                    SameSite = SameSiteMode.None, 
+                    Expires = DateTimeOffset.UtcNow.AddDays(7)
+                });
+
+                return Ok(true);
             }
             catch (Exception ex)
             {
                 return BadRequest($"Error Logging In User: {ex.Message}");
+            }
+        }
+
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            try
+            {
+                Response.Cookies.Delete("papermast_auth");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error Logging Out: {ex.Message}");
             }
         }
 

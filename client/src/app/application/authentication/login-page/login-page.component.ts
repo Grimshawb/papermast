@@ -46,9 +46,8 @@ export class LoginPageComponent implements OnInit{
       const res = this._authStore.select(s => s.logInResponse)
         .pipe(filter(r => !!r), take(1));
       res.subscribe(r => {
-        this.isLoading = false
+        this.isLoading = false;
         this._toaster.success('Success! You Are Now Logged In');
-        this._authStore.setLoginResponse(null);
         this._router.navigate(['']);
       })
       this._authStore.login(this.loginForm.value);
