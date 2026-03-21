@@ -52,3 +52,12 @@ $dark-theme: mat.m2-define-dark-theme((
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.dark-theme input:-webkit-autofill,
+.dark-theme textarea:-webkit-autofill,
+.dark-theme select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px rgb(66, 66, 66) inset !important;
+  -webkit-text-fill-color: white !important;
+}
+
+

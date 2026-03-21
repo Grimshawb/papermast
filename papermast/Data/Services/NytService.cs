@@ -1,4 +1,6 @@
-﻿namespace papermast.Data.Services
+﻿using papermast.Entities.Constants;
+
+namespace papermast.Data.Services
 {
     public interface INytService
     {
@@ -20,7 +22,7 @@
 
         public async Task<string?> GetAllBestSellerLists()
         {
-            return await _cache.GetOrCreateAsoluteTTLAsync<string>($"nyt:all-lists", async () =>
+            return await _cache.GetOrCreateAsoluteTTLAsync<string>(CacheKeys.NYT_ALL_LISTS, async () =>
             {
                 var client = _httpClientFactory.CreateClient();
 

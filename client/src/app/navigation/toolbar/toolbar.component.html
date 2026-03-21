@@ -10,10 +10,12 @@
   <!-- Right -->
   <div>
     @if (!loggedInUser) {
-      <a [routerLink]="'login'" style="margin-right: 2rem; color: white;">Log In</a>
+      <button [routerLink]="'login'" mat-flat-button color="accent" (click)="logout()">Log In</button>
+      <!-- <a  style="margin-right: 2rem; color: white;">Log In</a> -->
     }
     @if (loggedInUser) {
       <span style="margin-right: 2rem; color: white;">Welcome Back {{loggedInUser.firstName}}</span>
+      <button mat-flat-button color="accent" (click)="logout()">Log Out</button>
     }
   </div>
 

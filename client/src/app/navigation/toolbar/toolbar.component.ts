@@ -39,6 +39,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.onCollapsedChanged.emit(true);
   }
 
+  public logout(): void {
+    this._authStore.logout();
+  }
+
   ngOnDestroy(): void {
     this._destroy$.next();
     this._destroy$.complete();
