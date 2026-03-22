@@ -6,6 +6,7 @@ using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using papermast.Data.Services;
 using papermast.Entities.Models;
+using papermast.Entities.Options;
 using System.Security.Claims;
 using System.Text;
 
@@ -39,6 +40,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString("Default"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("Default"))
     ));
+
+builder.Services.Configure<ConnectionStrings>(
+    builder.Configuration.GetSection("ConnectionStrings"));
+
 
 // Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -83,6 +88,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
 builder.Services.AddScoped<IWikiService, WikiService>();
 builder.Services.AddScoped<INytService, NytService>();
+builder.Services.AddScoped<IBooksApiService, BooksApiService>();
 
 var app = builder.Build();
 
