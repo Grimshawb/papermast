@@ -41,7 +41,7 @@ export class BooksApiService {
   // lccn: Returns results where the text following this keyword is the Library of Congress Control Number.
   // oclc: Returns results where the text following this keyword is the Online Computer Library Center number.
 
-    return this.http.get<any>(`${this.baseUrl}/search`, {params: toHttpParams(request)})
+    return this.http.get<any>(`${this.baseUrl}/search-daily`, {params: toHttpParams(request)})
     .pipe(
       take(1),
       map((res: any) => {

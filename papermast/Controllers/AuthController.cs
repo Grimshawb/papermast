@@ -73,12 +73,30 @@ namespace papermast.Controllers
         {
             try
             {
-                Response.Cookies.Delete("papermast_auth");
+                Response.Cookies.Delete("papermast_auth", new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true, 
+                    SameSite = SameSiteMode.None 
+                });
                 return Ok();
             }
             catch (Exception ex)
             {
                 return BadRequest($"Error Logging Out: {ex.Message}");
+            }
+        }
+
+        [HttpGet("email-exists/{email}")]
+        public async Task<ActionResult<bool>> EmailExists([FromRoute] string? email)
+        {
+            try
+            {
+                return Ok(this._userService.EmailExists(email));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error Validating Email: {ex.Message}");
             }
         }
 
