@@ -8,7 +8,9 @@ namespace papermast.Data.Services
     public interface IUserService
     {
         public Task<bool> CreateUser(RegistrationRequest request);
+        public Task<bool> DeleteUser(int userID);
         public Task<UserDto?> GetAppUserByIdentityID(string identityUserID);
+        public Task<bool> EmailExists(string email);
     }
 
     public class UserService : IUserService
@@ -47,6 +49,41 @@ namespace papermast.Data.Services
             return true;
         }
 
+        public async Task<bool> DeleteUser(int userID)
+        {
+            var appUser = await _context.AppUsers.FirstOrDefaultAsync(u => u.UserID == userID);
+            if (appUser != null)
+            {
+                var identityUser = await _userManager.FindByIdAsync(appUser.IdentityUserId);
+                if (identityUser != null)
+                {
+                    using var tx = await _context.Database.BeginTransactionAsync();
+                    try
+                    {
+                        var userEntries = _context.BookEntries.Where(e => e.UserID == userID);
+                        if (userEntries.Any()) _context.BookEntries.RemoveRange(userEntries);
+                        _context.AppUsers.Remove(appUser);
+                        var result = await _userManager.DeleteAsync(identityUser);
+
+                        if (!result.Succeeded)
+                        {
+                            await tx.RollbackAsync();
+                            return false;
+                        }
+
+                        await _context.SaveChangesAsync();
+                        await tx.CommitAsync();
+                    }
+                    catch
+                    {
+                        await tx.RollbackAsync();
+                        throw;
+                    }
+                }
+            }
+            return true;
+        }
+
         public async Task<UserDto?> GetAppUserByIdentityID(string identityUserID)
         {
             var user = await _context.AppUsers.Include(a => a.IdentityUser).FirstOrDefaultAsync(a => a.IdentityUserId == identityUserID);
@@ -59,6 +96,12 @@ namespace papermast.Data.Services
                 LastName = user.LastName,
                 Username = user.Username
             };
+        }
+
+        public async Task<bool> EmailExists(string email)
+        {
+            if (string.IsNullOrEmpty(email)) return true;
+            return await _context.Users.AnyAsync(u => u.Email.ToLower() == email.ToLower());
         }
     }
 }
