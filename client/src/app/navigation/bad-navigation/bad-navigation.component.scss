@@ -1,8 +1,17 @@
 .not-found {
   text-align: center;
-  margin-top: 10vh;
   font-family: sans-serif;
 }
+
+.page-background {
+  margin-top: 25vh;
+  height: 50vh;
+  background-image: url('/assets/pm-logo-black.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
 h1 {
   font-size: 3rem;
   margin-bottom: 0.5rem;

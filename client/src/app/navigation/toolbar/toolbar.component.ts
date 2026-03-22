@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AuthStore } from '../../store/auth.store';
@@ -11,7 +12,7 @@ import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'bookshelf-toolbar',
-  imports: [MatIconModule, MatToolbarModule, MatButtonModule, MatSlideToggleModule, RouterLink],
+  imports: [MatIconModule, MatToolbarModule, MatButtonModule, MatSlideToggleModule, MatMenuModule, RouterLink],
   standalone: true,
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss'

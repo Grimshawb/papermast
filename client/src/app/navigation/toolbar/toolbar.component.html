@@ -4,18 +4,31 @@
   <button mat-icon-button (click)="menuClick()" class="toggle-button">
     <mat-icon color="accent">menu</mat-icon>
   </button>
-  <span class="app-title">{{ appTitle }}</span>
+  <img src="assets/pm-logo-white.svg" class="app-logo" alt="Paper Mast">
+
+  <!-- <span class="app-title">{{ appTitle }}</span> -->
   <span class="spacer"></span>
+
 
   <!-- Right -->
   <div>
     @if (!loggedInUser) {
       <button [routerLink]="'login'" mat-flat-button color="accent" (click)="logout()">Log In</button>
-      <!-- <a  style="margin-right: 2rem; color: white;">Log In</a> -->
     }
     @if (loggedInUser) {
-      <span style="margin-right: 2rem; color: white;">Welcome Back {{loggedInUser.firstName}}</span>
-      <button mat-flat-button color="accent" (click)="logout()">Log Out</button>
+      <!-- <span style="margin-right: 2rem; color: white;">Welcome Back {{loggedInUser.firstName}}</span> -->
+      <div class="mat-toolbar-single-row">
+        <button class="me-2" mat-flat-button color="accent" (click)="logout()">Log Out</button>
+        <button matIconButton color="accent" [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>
+            <mat-icon>account_circle</mat-icon>
+            <span>Account</span>
+          </button>
+        </mat-menu>
+      </div>
     }
   </div>
 
