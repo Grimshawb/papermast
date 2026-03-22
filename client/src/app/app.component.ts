@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Renderer2 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { SideNavComponent } from './navigation/side-nav/bookshelf-side-nav.component';
 import { ToolbarComponent } from "./navigation/toolbar/toolbar.component";
 import { AuthStore } from './store/auth.store';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-root',
@@ -24,13 +25,18 @@ export class AppComponent {
   public themeClass = 'dark-theme';
 
   constructor(private breakpointObserver: BreakpointObserver,
-              private _authStore: AuthStore) {
+              private _authStore: AuthStore,
+              private overlay: OverlayContainer,
+              private renderer: Renderer2) {
     this.breakpointObserver.observe([Breakpoints.Handset])
       .subscribe(result => {
         this.isMobile = result.matches;
         if (this.isMobile) this.collapsed = true;
       });
     this._authStore.initializeAuthState();
+
+    this.overlay.getContainerElement().classList.add(this.themeClass);
+    this.renderer.addClass(document.body, this.themeClass);
   }
 
   public toggleCollapsed(): void {
@@ -42,5 +48,9 @@ export class AppComponent {
       this.themeClass = 'dark-theme';
     else
       this.themeClass = 'light-theme';
+
+    const container = this.overlay.getContainerElement();
+    container.classList.remove('light-theme', 'dark-theme');
+    container.classList.add(dark ? 'dark-theme' : 'light-theme');
   }
 }
