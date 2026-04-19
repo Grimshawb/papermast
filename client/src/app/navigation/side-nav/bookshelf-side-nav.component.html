@@ -22,12 +22,12 @@
     </button>
 
     <button mat-button
-      [routerLink]="['/my-books']"
+      [routerLink]="['/shelves']"
       class="nav-button d-flex align-items-center w-100"
       [ngClass]="{ 'justify-content-center': collapsed, 'justify-content-start': !collapsed }">
-      <mat-icon title="My Books" class="me-2" [ngClass]="{ 'me-0': collapsed }">menu_book</mat-icon>
+      <mat-icon title="Shelves" class="me-2" [ngClass]="{ 'me-0': collapsed }">menu_book</mat-icon>
       @if (!collapsed) {
-        <span>My Books</span>
+        <span>Shelves</span>
       }
     </button>
 

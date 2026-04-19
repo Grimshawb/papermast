@@ -19,6 +19,13 @@ namespace papermast.Entities.Models
         [StringLength(20)]
         public string? Isbn13 { get; set; }
 
+        [StringLength(50)]
+        public string? Status { get; set; }
+
+        public int PagesCompleted { get; set; }
+
+        public int PercentCompleted { get; set; }
+
         public decimal? Rating { get; set; }
 
         public string? UserReview { get; set; }
