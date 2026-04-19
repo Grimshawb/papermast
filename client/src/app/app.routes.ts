@@ -18,6 +18,10 @@ export const routes: Routes = [
     loadComponent: () => import('./application/bestsellers/bestsellers-page-two/bestsellers-page-two.component').then(m => m.BestsellersPageTwoComponent)
   },
   {
+    path: 'shelves',
+    loadComponent: () => import('./application/shelves/shelves-page/shelves-page.component').then(m => m.ShelvesPageComponent)
+  },
+  {
     path: '**',
     loadComponent: () => import('./navigation/bad-navigation/bad-navigation.component').then(m => m.BadNavigationComponent)
   }
