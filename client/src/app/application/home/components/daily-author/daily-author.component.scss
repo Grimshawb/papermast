@@ -1,0 +1,8 @@
+:host-context(.dark-theme) .wikipedia-link {
+  color: #90caf9;
+}
+
+:host-context(.dark-theme) .wikipedia-link:hover,
+:host-context(.dark-theme) .wikipedia-link:focus-visible {
+  color: #bbdefb;
+}

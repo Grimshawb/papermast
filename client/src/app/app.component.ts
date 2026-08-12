@@ -44,13 +44,14 @@ export class AppComponent {
   }
 
   public onThemeChanged(dark: boolean): void {
-    if (dark)
-      this.themeClass = 'dark-theme';
-    else
-      this.themeClass = 'light-theme';
+    this.themeClass = dark ? 'dark-theme' : 'light-theme';
 
     const container = this.overlay.getContainerElement();
     container.classList.remove('light-theme', 'dark-theme');
-    container.classList.add(dark ? 'dark-theme' : 'light-theme');
+    container.classList.add(this.themeClass);
+
+    this.renderer.removeClass(document.body, 'light-theme');
+    this.renderer.removeClass(document.body, 'dark-theme');
+    this.renderer.addClass(document.body, this.themeClass);
   }
 }
