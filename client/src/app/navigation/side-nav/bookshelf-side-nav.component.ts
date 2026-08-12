@@ -4,12 +4,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'bookshelf-side-nav',
-  imports: [CommonModule, MatSidenavModule, MatButtonModule, MatIconModule, MatSlideToggleModule, LayoutModule, RouterModule],
+  imports: [CommonModule, MatSidenavModule, MatButtonModule, MatIconModule, LayoutModule, RouterModule],
   standalone: true,
   templateUrl: './bookshelf-side-nav.component.html',
   styleUrl: './bookshelf-side-nav.component.scss'

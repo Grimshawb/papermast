@@ -42,12 +42,16 @@
   </nav>
 
   <div class="sidenav-bottom">
-    <div class="nav-button d-flex align-items-center w-100">
-      <mat-slide-toggle (change)="toggleDarkMode()"></mat-slide-toggle>
-      @if (!collapsed) {
-        <span [ngClass]="darkMode ? 'dark-label' : ''">Light</span>
-      }
+    <div class="nav-button d-flex align-items-center w-100"
+      [ngClass]="{ 'justify-content-center': collapsed, 'justify-content-start': !collapsed }">
+      <button mat-icon-button
+        class="theme-toggle-button"
+        type="button"
+        (click)="toggleDarkMode()"
+        [attr.aria-label]="darkMode ? 'Switch to light mode' : 'Switch to dark mode'"
+        [title]="darkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+        <mat-icon color="accent">{{ darkMode ? 'brightness_7' : 'brightness_2' }}</mat-icon>
+      </button>
     </div>
   </div>
 </div>
-
