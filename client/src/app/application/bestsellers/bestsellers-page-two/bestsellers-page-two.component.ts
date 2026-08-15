@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { BestsellerCarouselCardComponent } from '../components/bestseller-carousel-card/bestseller-carousel-card.component';
 import { filter, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { BestsellerList } from '../../../models';
@@ -9,7 +13,8 @@ import { NytStore } from '../../../store';
 
 @Component({
   selector: 'bestsellers-page-two',
-  imports: [CommonModule, MatIconModule, MatCardModule, BestsellerCarouselCardComponent],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatCardModule, MatProgressSpinnerModule,
+    MatFormFieldModule, MatSelectModule, BestsellerCarouselCardComponent],
   templateUrl: './bestsellers-page-two.component.html',
   styleUrl: './bestsellers-page-two.component.scss'
 })
@@ -20,11 +25,11 @@ export class BestsellersPageTwoComponent implements OnInit, OnDestroy {
   public bestsellerLists: BestsellerList[];
   public selectedBestsellerList$: Observable<BestsellerList>;
   public selectedBestsellerList: BestsellerList;
+  public isLoading$: Observable<boolean>;
+  public error$: Observable<string>;
   public indices: {key: string, index: number, max: number}[] = [];
 
-  constructor(private _nytStore: NytStore) {
-    this._nytStore.getAllBestsellerLists();
-  }
+  constructor(private _nytStore: NytStore) {}
 
   ngOnInit(): void {
     this.bestsellerLists$ = this._nytStore.select(s => s.bestsellerLists)
@@ -32,7 +37,6 @@ export class BestsellersPageTwoComponent implements OnInit, OnDestroy {
         tap(l => {
           if (l) {
             this.bestsellerLists = l;
-            if (!this.selectedBestsellerList && l?.length > 0) this._nytStore.setSelectedBestsellerList(l[0])
             this.indices = this.bestsellerLists.map(bl => {
               return {
                 key: bl.name,
@@ -51,6 +55,19 @@ export class BestsellersPageTwoComponent implements OnInit, OnDestroy {
          }
         }), takeUntil(this.destroy$));
     this.selectedBestsellerList$.subscribe();
+
+    this.isLoading$ = this._nytStore.select(s => s.isLoading)
+      .pipe(takeUntil(this.destroy$));
+    this.error$ = this._nytStore.select(s => s.error)
+      .pipe(takeUntil(this.destroy$));
+
+    // Subscribe to store state before starting the request so the initial
+    // route instance observes every load transition.
+    this._nytStore.getAllBestsellerLists();
+  }
+
+  public retryLoad(): void {
+    this._nytStore.getAllBestsellerLists(true);
   }
 
   public next(key: string): void {
@@ -95,6 +112,11 @@ export class BestsellersPageTwoComponent implements OnInit, OnDestroy {
     const index = this.bestsellerLists.findIndex(l => l.name === list.name);
     const nextListIndex = index < (this.bestsellerLists.length - 1) ? index + 1 : 0;
     this._nytStore.setSelectedBestsellerList(this.bestsellerLists[nextListIndex]);
+  }
+
+  public selectListByName(listName: string): void {
+    const list = this.bestsellerLists?.find(item => item.name === listName);
+    if (list) this._nytStore.setSelectedBestsellerList(list);
   }
 
   public getImageSource(): string {

@@ -16,6 +16,16 @@
   flex: 1 1 auto;
 }
 
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.account-menu-button {
+  color: inherit;
+}
+
 .app-title {
   font-size: 20px;
   font-weight: 500;

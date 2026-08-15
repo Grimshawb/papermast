@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { HOME_NAV_ITEM, NAVIGATION_GROUPS } from '../navigation-items';
+import { NAVIGATION_GROUPS } from '../navigation-items';
 
 @Component({
   selector: 'bookshelf-side-nav',
@@ -13,9 +13,10 @@ import { HOME_NAV_ITEM, NAVIGATION_GROUPS } from '../navigation-items';
   styleUrl: './bookshelf-side-nav.component.scss'
 })
 export class SideNavComponent {
-  public darkMode: boolean = true;
-  public readonly homeNavItem = HOME_NAV_ITEM;
   public readonly navigationGroups = NAVIGATION_GROUPS;
+
+  @Input()
+  public darkMode: boolean = true;
 
   @Output()
   public onDarkModeChanged: EventEmitter<boolean> = new EventEmitter<boolean>();

@@ -1,5 +1,19 @@
 <div class="bestseller-page">
-  @if ((selectedBestsellerList$ | async); as list) {
+  @if (isLoading$ | async) {
+    <div class="page-state" role="status" aria-live="polite">
+      <mat-progress-spinner mode="indeterminate" diameter="44"></mat-progress-spinner>
+      <p>Loading bestseller lists…</p>
+    </div>
+  } @else if ((error$ | async); as error) {
+    <div class="page-state" role="alert">
+      <mat-icon class="state-icon">error_outline</mat-icon>
+      <h2>Unable to load bestsellers</h2>
+      <p>{{ error }}</p>
+      <button mat-flat-button color="primary" type="button" (click)="retryLoad()">
+        Try again
+      </button>
+    </div>
+  } @else if ((selectedBestsellerList$ | async); as list) {
     <div>
       <div class="page-header">
         @if (list.bestsellersDate) {
@@ -9,9 +23,30 @@
       <div class="title-row">
         <div class="bestseller-list-header row">
           <div class="list-button-group">
-            <span role="button" (click)="previousList(list)"><mat-icon>chevron_left</mat-icon></span>
-            <h4 style="margin: 1rem;"> {{list.name}}</h4>
-            <span role="button" (click)="nextList(list)"><mat-icon>chevron_right</mat-icon></span>
+            <button mat-icon-button
+                    type="button"
+                    aria-label="Show previous bestseller list"
+                    (click)="previousList(list)">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+
+            <mat-form-field class="list-selector" appearance="outline" subscriptSizing="dynamic">
+              <mat-label>Bestseller list</mat-label>
+              <mat-select [value]="list.name"
+                          aria-label="Choose a bestseller list"
+                          (selectionChange)="selectListByName($event.value)">
+                @for (option of bestsellerLists; track option.name) {
+                  <mat-option [value]="option.name">{{ option.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <button mat-icon-button
+                    type="button"
+                    aria-label="Show next bestseller list"
+                    (click)="nextList(list)">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
           </div>
         </div>
       </div>
@@ -19,6 +54,8 @@
         <div class="carousel-container">
           <button mat-icon-button
             class="floating-chevron"
+            type="button"
+            aria-label="Show previous book"
             (click)="previous(list.name)">
             <mat-icon>chevron_left</mat-icon>
           </button>
@@ -32,6 +69,8 @@
           </div>
           <button mat-icon-button
             class="floating-chevron"
+            type="button"
+            aria-label="Show next book"
             (click)="next(list.name)">
             <mat-icon>chevron_right</mat-icon>
           </button>

@@ -7,18 +7,13 @@
     </button>
   }
   <a [routerLink]="'/'" class="logo-link" aria-label="Paper Mast home">
-    <img src="assets/pm-logo-white.svg" class="app-logo" alt="Paper Mast">
+    <img [src]="darkMode ? 'assets/pm-logo-black.svg' : 'assets/pm-logo-white.svg'"
+         class="app-logo"
+         alt="Paper Mast">
   </a>
 
   @if (!isMobile) {
     <nav class="desktop-nav" aria-label="Primary navigation">
-      <a mat-button
-         [routerLink]="homeNavItem.route"
-         routerLinkActive="active-nav-item"
-         [routerLinkActiveOptions]="{ exact: true }">
-        {{ homeNavItem.label }}
-      </a>
-
       @for (group of navigationGroups; track group.label) {
         <button mat-button [matMenuTriggerFor]="navMenu">
           {{ group.label }}
@@ -41,24 +36,39 @@
 
 
   <!-- Right -->
-  <div>
+  <div class="toolbar-actions">
     @if (!loggedInUser) {
-      <button [routerLink]="'login'" mat-flat-button color="accent" (click)="logout()">Log In</button>
+      @if (!isMobile) {
+        <button mat-icon-button
+                type="button"
+                (click)="toggleDarkMode()"
+                [attr.aria-label]="darkMode ? 'Switch to light mode' : 'Switch to dark mode'"
+                [title]="darkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+          <mat-icon>{{ darkMode ? 'brightness_7' : 'brightness_2' }}</mat-icon>
+        </button>
+      }
+      <button [routerLink]="'login'" mat-flat-button color="accent">Log In</button>
     }
     @if (loggedInUser) {
-      <!-- <span style="margin-right: 2rem; color: white;">Welcome Back {{loggedInUser.firstName}}</span> -->
-      <div class="mat-toolbar-single-row">
-        <button class="me-2" mat-flat-button color="accent" (click)="logout()">Log Out</button>
-        <button matIconButton color="accent" [matMenuTriggerFor]="menu" aria-label="Open account menu">
-          <mat-icon>more_vert</mat-icon>
+      <button mat-icon-button class="account-menu-button" [matMenuTriggerFor]="accountMenu" aria-label="Open account menu">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #accountMenu="matMenu">
+        <button mat-menu-item>
+          <mat-icon>manage_accounts</mat-icon>
+          <span>Account</span>
         </button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item>
-            <mat-icon>account_circle</mat-icon>
-            <span>Account</span>
+        @if (!isMobile) {
+          <button mat-menu-item (click)="toggleDarkMode()">
+            <mat-icon>{{ darkMode ? 'brightness_7' : 'brightness_2' }}</mat-icon>
+            <span>{{ darkMode ? 'Use light theme' : 'Use dark theme' }}</span>
           </button>
-        </mat-menu>
-      </div>
+        }
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Log Out</span>
+        </button>
+      </mat-menu>
     }
   </div>
 

@@ -9,7 +9,8 @@
       [fixedInViewport]="true"
       fixedTopGap="64"
       >
-      <bookshelf-side-nav (onNavigate)="closeMobileDrawer()"
+      <bookshelf-side-nav [darkMode]="themeClass === 'dark-theme'"
+                          (onNavigate)="closeMobileDrawer()"
                           (onDarkModeChanged)="onThemeChanged($event)"></bookshelf-side-nav>
     </mat-sidenav>
 
@@ -17,7 +18,9 @@
       <!-- Toolbar -->
       <bookshelf-toolbar color="primary"
                          [isMobile]="isMobile"
-                         (onMenuClicked)="toggleMobileDrawer()"></bookshelf-toolbar>
+                         [darkMode]="themeClass === 'dark-theme'"
+                         (onMenuClicked)="toggleMobileDrawer()"
+                         (onDarkModeChanged)="onThemeChanged($event)"></bookshelf-toolbar>
 
       <!-- Content -->
       <div class="main-content container-fluid">

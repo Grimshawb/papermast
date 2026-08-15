@@ -1,27 +1,80 @@
 @use "bootstrap/scss/bootstrap";
 @use '@angular/material' as mat;
-@use 'sass:map';
 @include mat.elevation-classes();
 @include mat.app-background();
 
-html {
-  @include mat.theme((
-    color: (
-      theme-type: light,
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
-}
+// Walnut & Sage: quiet, bookish colors that leave visual space for cover art.
+$sage-palette: (
+  50: #f1f4f1,
+  100: #dce3dd,
+  200: #c3cec5,
+  300: #a9baad,
+  400: #91a294,
+  500: #627565,
+  600: #586a5b,
+  700: #4b5b4e,
+  800: #3f4c42,
+  900: #303a32,
+  A100: #dce3dd,
+  A200: #a9baad,
+  A400: #627565,
+  A700: #3f4c42,
+  contrast: (
+    50: #342d28,
+    100: #342d28,
+    200: #342d28,
+    300: #342d28,
+    400: #342d28,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: #342d28,
+    A200: #342d28,
+    A400: white,
+    A700: white,
+  )
+);
 
-// Define custom palettes
-$light-primary: mat.m2-define-palette(mat.$m2-cyan-palette);
-$light-accent: mat.m2-define-palette(mat.$m2-pink-palette);
+$clay-palette: (
+  50: #f8eeeb,
+  100: #edd5ce,
+  200: #dfb8ac,
+  300: #d19a89,
+  400: #c37c66,
+  500: #a65f49,
+  600: #975642,
+  700: #814938,
+  800: #6c3d2f,
+  900: #512e23,
+  A100: #edd5ce,
+  A200: #d19a89,
+  A400: #a65f49,
+  A700: #814938,
+  contrast: (
+    50: #342d28,
+    100: #342d28,
+    200: #342d28,
+    300: #342d28,
+    400: #342d28,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: #342d28,
+    A200: #342d28,
+    A400: white,
+    A700: white,
+  )
+);
 
-$dark-primary: mat.m2-define-palette(mat.$m2-deep-purple-palette);
-$dark-accent: mat.m2-define-palette(mat.$m2-amber-palette);
+$light-primary: mat.m2-define-palette($sage-palette, 500, 300, 700);
+$light-accent: mat.m2-define-palette($clay-palette, 500, 300, 700);
+
+$dark-primary: mat.m2-define-palette($sage-palette, 400, 200, 600);
+$dark-accent: mat.m2-define-palette($clay-palette, 400, 200, 600);
 
 // Define light theme
 $light-theme: mat.m2-define-light-theme((
@@ -44,20 +97,71 @@ $dark-theme: mat.m2-define-dark-theme((
 // Create theme containers
 .light-theme {
   @include mat.all-component-themes($light-theme);
+
+  --app-background: #f3eee4;
+  --app-surface: #fbf8f1;
+  --app-text: #342d28;
+  --app-text-secondary: #746b62;
+  --app-border: #dcd2c4;
+  --app-primary: #627565;
+  --app-on-primary: #ffffff;
+  --app-accent: #a65f49;
+
+  color-scheme: light;
 }
 
 .dark-theme {
   @include mat.all-component-themes($dark-theme);
+
+  --app-background: #1d1b19;
+  --app-surface: #292622;
+  --app-text: #ece5da;
+  --app-text-secondary: #aca399;
+  --app-border: #403b36;
+  --app-primary: #91a294;
+  --app-on-primary: #342d28;
+  --app-accent: #c37c66;
+
+  color-scheme: dark;
 }
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: var(--app-background);
+  color: var(--app-text);
+}
+
+body.light-theme,
+body.dark-theme {
+  --bs-body-bg: var(--app-background);
+  --bs-body-color: var(--app-text);
+  --bs-border-color: var(--app-border);
+  background-color: var(--app-background);
+  color: var(--app-text);
+}
+
+.light-theme,
+.dark-theme {
+  color: var(--app-text);
+
+  .mat-drawer-container,
+  .mat-drawer-content {
+    background-color: var(--app-background);
+    color: var(--app-text);
+  }
+
+  .mat-drawer,
+  .mat-mdc-card {
+    background-color: var(--app-surface);
+    color: var(--app-text);
+  }
+}
 
 .dark-theme input:-webkit-autofill,
 .dark-theme textarea:-webkit-autofill,
 .dark-theme select:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0px 1000px rgb(66, 66, 66) inset !important;
-  -webkit-text-fill-color: white !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--app-surface) inset !important;
+  -webkit-text-fill-color: var(--app-text) !important;
 }
-
-

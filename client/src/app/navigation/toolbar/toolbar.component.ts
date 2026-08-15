@@ -8,7 +8,7 @@ import { AuthStore } from '../../store/auth.store';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
 import { User } from '../../models';
 import { RouterLink, RouterLinkActive } from "@angular/router";
-import { HOME_NAV_ITEM, NAVIGATION_GROUPS } from '../navigation-items';
+import { NAVIGATION_GROUPS } from '../navigation-items';
 
 
 @Component({
@@ -25,15 +25,20 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   public appTitle = 'Paper Mast';
   public loggedInUser$: Observable<User>;
   public loggedInUser: User = undefined;
-  public readonly homeNavItem = HOME_NAV_ITEM;
   public readonly navigationGroups = NAVIGATION_GROUPS;
   private _destroy$: Subject<void> = new Subject<void>();
 
   @Input()
   public isMobile: boolean = false;
 
+  @Input()
+  public darkMode: boolean = true;
+
   @Output()
   public onMenuClicked: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output()
+  public onDarkModeChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(private _authStore: AuthStore) {}
 
@@ -45,6 +50,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   public menuClick(): void {
     this.onMenuClicked.emit();
+  }
+
+  public toggleDarkMode(): void {
+    this.onDarkModeChanged.emit(!this.darkMode);
   }
 
   public logout(): void {

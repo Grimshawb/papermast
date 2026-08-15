@@ -29,7 +29,8 @@ mat-panel-title mat-icon {
 
 .theme-row {
   display: flex;
-  padding: 8px 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--app-border);
 }
 
 mat-expansion-panel {
@@ -46,5 +47,5 @@ mat-panel-title {
 }
 
 .theme-toggle-button {
-  flex: 0 0 auto;
+  flex: 1 1 auto;
 }
