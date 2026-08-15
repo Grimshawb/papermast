@@ -1,18 +1,150 @@
-<div [@fadeAnimation]>
+<section class="library-page">
+  <header class="library-header">
+    <div>
+      <h1>Shelves</h1>
+      <p>Keep track of what you want to read, what you’re reading, and where you’ve been.</p>
+    </div>
+    @if (loggedInUser) {
+      <a mat-flat-button color="primary" routerLink="/search">
+        <mat-icon>add</mat-icon>
+        Find books
+      </a>
+    }
+  </header>
 
-  <!-- Cards for actively reading -->
-  <div class="active-reading">
+  @if (!loggedInUser) {
+    <div class="auth-state page-state">
+      <mat-icon>local_library</mat-icon>
+      <h2>Your library is waiting</h2>
+      <p>Log in to see your shelves and track your reading.</p>
+      <a mat-flat-button color="primary" routerLink="/login">Log in</a>
+    </div>
+  } @else if (isLoading) {
+    <div class="page-state" role="status" aria-live="polite">
+      <mat-progress-spinner mode="indeterminate" diameter="44"></mat-progress-spinner>
+      <p>Opening your library…</p>
+    </div>
+  } @else if (loadError) {
+    <div class="page-state" role="alert">
+      <mat-icon>error_outline</mat-icon>
+      <h2>Unable to load your library</h2>
+      <p>{{ loadError }}</p>
+      <button mat-flat-button color="primary" type="button" (click)="retryLoad()">Try again</button>
+    </div>
+  } @else {
+    <section class="library-summary" aria-label="Library summary">
+      <div>
+        <span>{{ countFor('Reading') }}</span>
+        <small>Reading now</small>
+      </div>
+      <div>
+        <span>{{ countFor('To Be Read') }}</span>
+        <small>To be read</small>
+      </div>
+      <div>
+        <span>{{ countFor('Read') }}</span>
+        <small>Books read</small>
+      </div>
+    </section>
 
-  </div>
+    <nav class="shelf-nav" aria-label="Reading shelves" role="tablist">
+      @for (shelf of shelves; track shelf.label) {
+        <button mat-button
+                type="button"
+                role="tab"
+                [attr.aria-selected]="selectedShelf === shelf.status"
+                [class.active]="selectedShelf === shelf.status"
+                (click)="selectShelf(shelf.status)">
+          <mat-icon>{{ shelf.icon }}</mat-icon>
+          <span>{{ shelf.label }}</span>
+          <span class="shelf-count">{{ countFor(shelf.status) }}</span>
+        </button>
+      }
+    </nav>
 
-  <!-- Cards for tbr -->
-  <div class="tbr">
+    <div class="library-toolbar">
+      <div>
+        <h2>{{ shelfHeading() }}</h2>
+        <p>{{ visibleEntries.length }} {{ visibleEntries.length === 1 ? 'book' : 'books' }}</p>
+      </div>
+      <div class="library-controls">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Search this library</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput [(ngModel)]="libraryQuery" aria-label="Search this library">
+          @if (libraryQuery) {
+            <button mat-icon-button matSuffix type="button" aria-label="Clear library search" (click)="libraryQuery = ''">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+        </mat-form-field>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Sort</mat-label>
+          <mat-select [(ngModel)]="sortBy" aria-label="Sort books">
+            <mat-option value="recent">Recently updated</mat-option>
+            <mat-option value="title">Title</mat-option>
+            <mat-option value="author">Author</mat-option>
+            <mat-option value="progress">Reading progress</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
 
-  </div>
+    @if (visibleEntries.length === 0) {
+      <div class="empty-state">
+        <mat-icon>{{ entries.length ? 'filter_alt_off' : 'auto_stories' }}</mat-icon>
+        <h2>{{ entries.length ? 'No matching books' : 'Your shelves are empty' }}</h2>
+        <p>
+          {{ entries.length
+            ? 'Try another shelf or search term.'
+            : 'Find a book and choose a reading status to start your library.' }}
+        </p>
+        @if (!entries.length) {
+          <a mat-stroked-button routerLink="/search">Search for books</a>
+        }
+      </div>
+    } @else {
+      <div class="book-grid">
+        @for (entry of visibleEntries; track entry.entryID) {
+          <mat-card class="shelf-card" appearance="outlined">
+            <div class="cover-wrap">
+              <img [src]="entry.thumbnailUrl || 'assets/book-placeholder.svg'" [alt]="'Cover of ' + entry.title">
+              <span class="status-label">{{ entry.status }}</span>
+            </div>
+            <mat-card-content>
+              <h3>{{ entry.title }}</h3>
+              <p class="authors">{{ entry.authors || 'Unknown author' }}</p>
 
-  <div class="">
-
-  </div>
-
-
-</div>
+              @if (entry.status === 'Reading') {
+                <div class="progress-copy">
+                  <span>Reading progress</span>
+                  <strong>{{ entry.percentCompleted }}%</strong>
+                </div>
+                <mat-progress-bar mode="determinate" [value]="entry.percentCompleted"></mat-progress-bar>
+                @if (entry.pagesCompleted || entry.pageCount) {
+                  <p class="page-progress">{{ entry.pagesCompleted }} of {{ entry.pageCount || '—' }} pages</p>
+                }
+              } @else if (entry.status === 'Read' && entry.endDate) {
+                <p class="date-detail"><mat-icon>event_available</mat-icon> Finished {{ entry.endDate | date:'MMM d, y' }}</p>
+              } @else if (entry.status === 'To Be Read' && entry.pageCount) {
+                <p class="date-detail"><mat-icon>menu_book</mat-icon> {{ entry.pageCount }} pages</p>
+              }
+            </mat-card-content>
+            <mat-card-actions>
+              <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                <mat-label>Status</mat-label>
+                <mat-select [value]="entry.status"
+                            [disabled]="savingEntryID === entry.entryID"
+                            (selectionChange)="updateStatus(entry, $event.value)">
+                  @for (status of statuses; track status) {
+                    <mat-option [value]="status">{{ status }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+    }
+  }
+</section>
