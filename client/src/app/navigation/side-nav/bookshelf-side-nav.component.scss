@@ -6,9 +6,39 @@
 }
 
 .nav-button {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   width: 100%;
   padding: 8px 16px;
   text-align: left;
+}
+
+.nav-button mat-icon,
+mat-panel-title mat-icon {
+  margin-right: 12px;
+}
+
+.child-nav-button {
+  padding-left: 24px;
+}
+
+.active-nav-item {
+  background: rgba(127, 127, 127, 0.16);
+}
+
+.theme-row {
+  display: flex;
+  padding: 8px 12px;
+}
+
+mat-expansion-panel {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+mat-panel-title {
+  align-items: center;
 }
 
 .sidenav-bottom {

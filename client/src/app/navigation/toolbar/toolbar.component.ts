@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -7,12 +7,14 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AuthStore } from '../../store/auth.store';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
 import { User } from '../../models';
-import { RouterLink } from "@angular/router";
+import { RouterLink, RouterLinkActive } from "@angular/router";
+import { HOME_NAV_ITEM, NAVIGATION_GROUPS } from '../navigation-items';
 
 
 @Component({
   selector: 'bookshelf-toolbar',
-  imports: [MatIconModule, MatToolbarModule, MatButtonModule, MatSlideToggleModule, MatMenuModule, RouterLink],
+  imports: [MatIconModule, MatToolbarModule, MatButtonModule, MatSlideToggleModule, MatMenuModule,
+    RouterLink, RouterLinkActive],
   standalone: true,
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss'
@@ -23,10 +25,15 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   public appTitle = 'Paper Mast';
   public loggedInUser$: Observable<User>;
   public loggedInUser: User = undefined;
+  public readonly homeNavItem = HOME_NAV_ITEM;
+  public readonly navigationGroups = NAVIGATION_GROUPS;
   private _destroy$: Subject<void> = new Subject<void>();
 
+  @Input()
+  public isMobile: boolean = false;
+
   @Output()
-  public onCollapsedChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+  public onMenuClicked: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private _authStore: AuthStore) {}
 
@@ -37,7 +44,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   public menuClick(): void {
-    this.onCollapsedChanged.emit(true);
+    this.onMenuClicked.emit();
   }
 
   public logout(): void {

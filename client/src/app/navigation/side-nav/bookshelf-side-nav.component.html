@@ -1,49 +1,43 @@
 <div class="sidenav-content py-2">
 
-  <nav class="nav flex-column">
-    <button mat-button
-      [routerLink]="['/']"
-      class="nav-button d-flex align-items-center w-100"
-      [ngClass]="{ 'justify-content-center': collapsed, 'justify-content-start': !collapsed }">
-      <mat-icon title="Home" class="me-2" [ngClass]="{ 'me-0': collapsed }">home</mat-icon>
-      @if (!collapsed) {
-        <span>Home</span>
-      }
-    </button>
+  <nav class="mobile-nav" aria-label="Primary navigation">
+    <a mat-button
+       class="nav-button"
+       [routerLink]="homeNavItem.route"
+       routerLinkActive="active-nav-item"
+       [routerLinkActiveOptions]="{ exact: true }"
+       (click)="navigate()">
+      <mat-icon>{{ homeNavItem.icon }}</mat-icon>
+      <span>{{ homeNavItem.label }}</span>
+    </a>
 
-    <button mat-button
-      [routerLink]="['/bestsellers']"
-      class="nav-button d-flex align-items-center w-100"
-      [ngClass]="{ 'justify-content-center': collapsed, 'justify-content-start': !collapsed }">
-      <mat-icon title="Bestsellers" class="me-2" [ngClass]="{ 'me-0': collapsed }">sell</mat-icon>
-      @if (!collapsed) {
-        <span>Bestsellers</span>
-      }
-    </button>
+    <mat-accordion multi>
+      @for (group of navigationGroups; track group.label) {
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>{{ group.icon }}</mat-icon>
+              <span>{{ group.label }}</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
 
-    <button mat-button
-      [routerLink]="['/shelves']"
-      class="nav-button d-flex align-items-center w-100"
-      [ngClass]="{ 'justify-content-center': collapsed, 'justify-content-start': !collapsed }">
-      <mat-icon title="Shelves" class="me-2" [ngClass]="{ 'me-0': collapsed }">menu_book</mat-icon>
-      @if (!collapsed) {
-        <span>Shelves</span>
+          @for (item of group.items; track item.route) {
+            <a mat-button
+               class="nav-button child-nav-button"
+               [routerLink]="item.route"
+               routerLinkActive="active-nav-item"
+               (click)="navigate()">
+              <mat-icon>{{ item.icon }}</mat-icon>
+              <span>{{ item.label }}</span>
+            </a>
+          }
+        </mat-expansion-panel>
       }
-    </button>
-
-    <button mat-button
-      class="nav-button d-flex align-items-center w-100"
-      [ngClass]="{ 'justify-content-center': collapsed, 'justify-content-start': !collapsed }">
-      <mat-icon title="Search" class="me-2" [ngClass]="{ 'me-0': collapsed }">search</mat-icon>
-      @if (!collapsed) {
-        <span>Search</span>
-      }
-    </button>
+    </mat-accordion>
   </nav>
 
   <div class="sidenav-bottom">
-    <div class="nav-button d-flex align-items-center w-100"
-      [ngClass]="{ 'justify-content-center': collapsed, 'justify-content-start': !collapsed }">
+    <div class="theme-row">
       <button mat-icon-button
         class="theme-toggle-button"
         type="button"

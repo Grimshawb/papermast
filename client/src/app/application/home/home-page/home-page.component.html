@@ -1,7 +1,20 @@
 <div [@fadeAnimation]>
   <div class="page-layout">
-    <!-- LEFT -->
-    <div class="left-column" style="flex: 1;">
+    <div class="author-column">
+      <mat-card class="scroll-container mat-elevation-z2">
+        <mat-card class="scroll-container mat-elevation-z2">
+          <mat-card-header class="mb-3">
+            <mat-card-title>Author Of The Day</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <daily-author [author]="authorOfTheDay"></daily-author>
+          </mat-card-content>
+        </mat-card>
+      </mat-card>
+    </div>
+
+    <div class="books-column">
       <mat-card class="scroll-container mat-elevation-z2">
         <mat-card-header class="mb-3">
           <mat-card-title>{{ author }}</mat-card-title>
@@ -22,22 +35,5 @@
         <!-- pagination -->
       </mat-card>
     </div>
-
-    <!-- RIGHT -->
-    <div class="right-column" style="flex: 1;">
-      <mat-card class="scroll-container mat-elevation-z2">
-        <mat-card class="scroll-container mat-elevation-z2">
-          <mat-card-header class="mb-3">
-            <mat-card-title>Author Of The Day</mat-card-title>
-          </mat-card-header>
-
-          <mat-card-content>
-            <daily-author [author]="authorOfTheDay"></daily-author>
-          </mat-card-content>
-        </mat-card>
-
-      </mat-card>
-    </div>
   </div>
 </div>
-

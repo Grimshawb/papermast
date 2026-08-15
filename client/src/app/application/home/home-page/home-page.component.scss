@@ -1,21 +1,17 @@
 .page-layout {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 24px;
-  flex-wrap: wrap;
 }
 
-.left-column,
-.right-column {
-  flex: 1 1 100%;
-  max-width: 100%;
+.author-column,
+.books-column {
+  min-width: 0;
 }
 
 @media (min-width: 768px) {
-  .left-column,
-  .right-column {
-    flex: 1 1 50%; // split 50/50 on tablets and bigger
-    max-width: 50%;
+  .page-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

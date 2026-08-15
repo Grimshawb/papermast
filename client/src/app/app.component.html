@@ -2,22 +2,22 @@
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav
       #drawer
-      [class.sidenav]="true"
-      [class.expanded]="!collapsed || isMobile"
-      [mode]="isMobile ? 'over' : 'side'"
-      [opened]="!isMobile"
+      class="mobile-sidenav"
+      mode="over"
+      [(opened)]="mobileDrawerOpen"
+      [disableClose]="!isMobile"
       [fixedInViewport]="true"
       fixedTopGap="64"
       >
-      <!-- Side Nav -->
-      <bookshelf-side-nav [isCollapsed]="collapsed"
+      <bookshelf-side-nav (onNavigate)="closeMobileDrawer()"
                           (onDarkModeChanged)="onThemeChanged($event)"></bookshelf-side-nav>
     </mat-sidenav>
 
     <mat-sidenav-content>
       <!-- Toolbar -->
       <bookshelf-toolbar color="primary"
-                         (onCollapsedChanged)="toggleCollapsed()"></bookshelf-toolbar>
+                         [isMobile]="isMobile"
+                         (onMenuClicked)="toggleMobileDrawer()"></bookshelf-toolbar>
 
       <!-- Content -->
       <div class="main-content container-fluid">
@@ -26,4 +26,3 @@
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
-
