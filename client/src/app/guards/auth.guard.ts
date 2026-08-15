@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { CanActivate, Router } from "@angular/router";
+import { CanActivate, Router, UrlTree } from "@angular/router";
 import { AuthService } from "../services";
-import { catchError, map, Observable, of } from "rxjs";
+import { defaultIfEmpty, map, Observable } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
@@ -11,14 +11,13 @@ export class AuthGuard implements CanActivate {
     private router: Router
   ) {}
 
-  canActivate(): Observable<boolean> {
+  canActivate(): Observable<boolean | UrlTree> {
     return this._authService.getLoggedInUser()
       .pipe(
-        map(() => true),
-        catchError(() => {
-          this.router.navigate(['/login']);
-          return of(false);
-        })
+        // The global error interceptor completes unauthorized requests without
+        // emitting, so default the empty stream to a logged-out result.
+        defaultIfEmpty(null),
+        map(user => user ? true : this.router.createUrlTree(['/login']))
       );
   }
 }
