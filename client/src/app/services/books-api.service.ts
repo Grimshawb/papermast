@@ -41,15 +41,23 @@ export class BooksApiService {
   // lccn: Returns results where the text following this keyword is the Library of Congress Control Number.
   // oclc: Returns results where the text following this keyword is the Online Computer Library Center number.
 
-    return this.http.get<any>(`${this.baseUrl}/search-daily`, {params: toHttpParams(request)})
+    return this.searchEndpoint('search-daily', request);
+  }
+
+  public search(request: BookSearchRequestDto): Observable<ApiBook[]> {
+    return this.searchEndpoint('search', request);
+  }
+
+  private searchEndpoint(endpoint: string, request: BookSearchRequestDto): Observable<ApiBook[]> {
+    return this.http.get<any>(`${this.baseUrl}/${endpoint}`, {params: toHttpParams(request)})
     .pipe(
       take(1),
       map((res: any) => {
         let books: ApiBook[] = [];
-        for (let i = 0; i < res.items.length; i++) {
+        for (let i = 0; i < (res.items?.length || 0); i++) {
           let bookData = res.items[i].volumeInfo;
           if (bookData.language === 'en') {
-            books.push(res.items[i].volumeInfo as ApiBook);
+            books.push({ id: res.items[i].id, ...bookData } as ApiBook);
           }
         }
         return books;

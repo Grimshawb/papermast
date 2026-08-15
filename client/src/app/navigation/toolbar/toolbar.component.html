@@ -15,18 +15,22 @@
   @if (!isMobile) {
     <nav class="desktop-nav" aria-label="Primary navigation">
       @for (group of navigationGroups; track group.label) {
-        <button mat-button [matMenuTriggerFor]="navMenu">
-          {{ group.label }}
-          <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
-        </button>
-        <mat-menu #navMenu="matMenu">
-          @for (item of group.items; track item.route) {
-            <a mat-menu-item [routerLink]="item.route" routerLinkActive="active-menu-item">
-              <mat-icon>{{ item.icon }}</mat-icon>
-              <span>{{ item.label }}</span>
-            </a>
-          }
-        </mat-menu>
+        @if (!group.requiresAuth || loggedInUser) {
+          <button mat-button [matMenuTriggerFor]="navMenu">
+            {{ group.label }}
+            <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
+          </button>
+          <mat-menu #navMenu="matMenu">
+            @for (item of group.items; track item.route) {
+              @if (!item.requiresAuth || loggedInUser) {
+                <a mat-menu-item [routerLink]="item.route" routerLinkActive="active-menu-item">
+                  <mat-icon>{{ item.icon }}</mat-icon>
+                  <span>{{ item.label }}</span>
+                </a>
+              }
+            }
+          </mat-menu>
+        }
       }
     </nav>
   }

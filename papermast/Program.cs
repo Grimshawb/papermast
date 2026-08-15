@@ -89,6 +89,7 @@ builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
 builder.Services.AddScoped<IWikiService, WikiService>();
 builder.Services.AddScoped<INytService, NytService>();
 builder.Services.AddScoped<IBooksApiService, BooksApiService>();
+builder.Services.AddScoped<IBookEntryService, BookEntryService>();
 
 var app = builder.Build();
 

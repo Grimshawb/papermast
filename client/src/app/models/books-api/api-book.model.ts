@@ -2,11 +2,12 @@ import { ApiBookIdentifier } from "./api-book-identifier.model"
 import { ApiImageLink } from "./api-image-link.model"
 
 export interface ApiBook {
+  id: string,
   authors: string[],
   categories: string[],
   description: string,
   imageLinks: ApiImageLink,
-  industryIdentifiers: ApiBookIdentifier,
+  industryIdentifiers: ApiBookIdentifier[],
   maturityRating: string,
   language: string,
   pageCount: number

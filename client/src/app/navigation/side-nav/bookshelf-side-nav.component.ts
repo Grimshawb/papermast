@@ -1,9 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NAVIGATION_GROUPS } from '../navigation-items';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { User } from '../../models';
+import { AuthStore } from '../../store/auth.store';
 
 @Component({
   selector: 'bookshelf-side-nav',
@@ -12,8 +15,12 @@ import { NAVIGATION_GROUPS } from '../navigation-items';
   templateUrl: './bookshelf-side-nav.component.html',
   styleUrl: './bookshelf-side-nav.component.scss'
 })
-export class SideNavComponent {
+export class SideNavComponent implements OnInit {
   public readonly navigationGroups = NAVIGATION_GROUPS;
+  public loggedInUser: User | undefined;
+  private readonly destroyRef = inject(DestroyRef);
+
+  constructor(private authStore: AuthStore) {}
 
   @Input()
   public darkMode: boolean = true;
@@ -23,6 +30,12 @@ export class SideNavComponent {
 
   @Output()
   public onNavigate: EventEmitter<void> = new EventEmitter<void>();
+
+  public ngOnInit(): void {
+    this.authStore.select(state => state.loggedInUser)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(user => this.loggedInUser = user);
+  }
 
   public toggleDarkMode(): void {
     this.darkMode = !this.darkMode;

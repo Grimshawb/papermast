@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 240" role="img" aria-label="Book cover unavailable">
+  <rect width="160" height="240" rx="6" fill="#dcd2c4"/>
+  <path d="M48 66h64v108H48c-8 0-14 6-14 14V80c0-8 6-14 14-14Z" fill="#627565"/>
+  <path d="M48 66v108c-8 0-14 6-14 14h64c8 0 14-6 14-14" fill="none" stroke="#342d28" stroke-width="6" stroke-linejoin="round"/>
+</svg>

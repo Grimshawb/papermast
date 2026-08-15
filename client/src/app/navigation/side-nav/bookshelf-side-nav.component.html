@@ -3,25 +3,29 @@
   <nav class="mobile-nav" aria-label="Primary navigation">
     <mat-accordion multi>
       @for (group of navigationGroups; track group.label) {
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <mat-icon>{{ group.icon }}</mat-icon>
-              <span>{{ group.label }}</span>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
+        @if (!group.requiresAuth || loggedInUser) {
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon>{{ group.icon }}</mat-icon>
+                <span>{{ group.label }}</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
 
-          @for (item of group.items; track item.route) {
-            <a mat-button
-               class="nav-button child-nav-button"
-               [routerLink]="item.route"
-               routerLinkActive="active-nav-item"
-               (click)="navigate()">
-              <mat-icon>{{ item.icon }}</mat-icon>
-              <span>{{ item.label }}</span>
-            </a>
-          }
-        </mat-expansion-panel>
+            @for (item of group.items; track item.route) {
+              @if (!item.requiresAuth || loggedInUser) {
+                <a mat-button
+                   class="nav-button child-nav-button"
+                   [routerLink]="item.route"
+                   routerLinkActive="active-nav-item"
+                   (click)="navigate()">
+                  <mat-icon>{{ item.icon }}</mat-icon>
+                  <span>{{ item.label }}</span>
+                </a>
+              }
+            }
+          </mat-expansion-panel>
+        }
       }
     </mat-accordion>
   </nav>

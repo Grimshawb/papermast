@@ -255,6 +255,13 @@ namespace papermast.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<uint>("EntryID"));
 
+                    b.Property<string>("Authors")
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime(6)");
 
@@ -265,6 +272,17 @@ namespace papermast.Migrations
                     b.Property<string>("Isbn13")
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
+
+                    b.Property<string>("Source")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("SourceBookID")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int>("PageCount")
+                        .HasColumnType("int");
 
                     b.Property<int>("PagesCompleted")
                         .HasColumnType("int");
@@ -282,6 +300,18 @@ namespace papermast.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<string>("ThumbnailUrl")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int>("UserID")
                         .HasColumnType("int");
 
@@ -294,6 +324,13 @@ namespace papermast.Migrations
                     b.HasKey("EntryID");
 
                     b.HasIndex("UserID");
+
+                    b.HasIndex("UserID", "Isbn10");
+
+                    b.HasIndex("UserID", "Isbn13");
+
+                    b.HasIndex("UserID", "Source", "SourceBookID")
+                        .IsUnique();
 
                     b.ToTable("BookEntries");
                 });

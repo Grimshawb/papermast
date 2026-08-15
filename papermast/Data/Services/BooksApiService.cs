@@ -44,13 +44,14 @@ namespace papermast.Data.Services
             var apiUrl = _config["GoogleBooks:ApiUrl"];
             var queryParts = new List<string>();
 
-            if (!string.IsNullOrEmpty(text)) queryParts.Add($"q:{text}");
-            if (!string.IsNullOrEmpty(intitle)) queryParts.Add($"intitle:{intitle}");
-            if (!string.IsNullOrEmpty(inauthor)) queryParts.Add($"inauthor:{inauthor}");
+            if (!string.IsNullOrEmpty(text)) queryParts.Add(text);
+            if (!string.IsNullOrEmpty(intitle)) queryParts.Add(BuildFieldQuery("intitle", intitle));
+            if (!string.IsNullOrEmpty(inauthor)) queryParts.Add(BuildFieldQuery("inauthor", inauthor));
             if (!string.IsNullOrEmpty(subject)) queryParts.Add($"subject:{subject}");
-            if (!string.IsNullOrEmpty(isbn)) queryParts.Add($"isbn:{isbn}");
+            if (!string.IsNullOrEmpty(isbn))
+                queryParts.Add($"isbn:{isbn.Replace("-", string.Empty).Replace(" ", string.Empty)}");
 
-            var query = queryParts.Count > 0 ? $"{string.Join("&", queryParts)}" : "";
+            var query = queryParts.Count > 0 ? string.Join(" ", queryParts) : "";
             if (string.IsNullOrEmpty(query)) throw new Exception("Cannot Search With Empty Query");
 
             var queryParams = new Dictionary<string, string?>
@@ -68,6 +69,12 @@ namespace papermast.Data.Services
             if (!response.IsSuccessStatusCode) throw new Exception($"Error Searching For Books: {response.StatusCode}");
 
             return await response.Content.ReadAsStringAsync();
+        }
+
+        private static string BuildFieldQuery(string field, string value)
+        {
+            var terms = value.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            return string.Join(" ", terms.Select(term => $"{field}:{term}"));
         }
     }
 }

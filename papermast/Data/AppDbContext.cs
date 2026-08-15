@@ -23,5 +23,15 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             .WithOne()
             .HasForeignKey<AppUser>(a => a.IdentityUserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<BookEntry>()
+            .HasIndex(entry => new { entry.UserID, entry.Source, entry.SourceBookID })
+            .IsUnique();
+
+        builder.Entity<BookEntry>()
+            .HasIndex(entry => new { entry.UserID, entry.Isbn13 });
+
+        builder.Entity<BookEntry>()
+            .HasIndex(entry => new { entry.UserID, entry.Isbn10 });
     }
 }
