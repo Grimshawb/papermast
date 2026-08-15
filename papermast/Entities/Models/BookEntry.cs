@@ -19,6 +19,23 @@ namespace papermast.Entities.Models
         [StringLength(20)]
         public string? Isbn13 { get; set; }
 
+        [StringLength(100)]
+        public string? Source { get; set; }
+
+        [StringLength(200)]
+        public string? SourceBookID { get; set; }
+
+        [StringLength(500)]
+        public string Title { get; set; } = null!;
+
+        [StringLength(1000)]
+        public string? Authors { get; set; }
+
+        [StringLength(2000)]
+        public string? ThumbnailUrl { get; set; }
+
+        public int PageCount { get; set; }
+
         [StringLength(50)]
         public string? Status { get; set; }
 
@@ -35,5 +52,9 @@ namespace papermast.Entities.Models
         public DateTime? StartDate { get; set; }
 
         public DateTime? EndDate { get; set; }
+
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+
+        public DateTime UpdatedDate { get; set; } = DateTime.UtcNow;
     }
 }
