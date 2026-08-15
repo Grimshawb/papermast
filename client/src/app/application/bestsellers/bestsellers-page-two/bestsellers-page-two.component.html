@@ -15,41 +15,25 @@
     </div>
   } @else if ((selectedBestsellerList$ | async); as list) {
     <div>
-      <div class="page-header">
+      <header class="page-header">
+        <h1>NYT Best Sellers</h1>
         @if (list.bestsellersDate) {
-          <h2>Week of {{ list?.bestsellersDate | date:'MMMM, d yyyy' }}</h2>
+          <p class="edition-date">Week of {{ list.bestsellersDate | date:'MMMM d, y' }}</p>
         }
-      </div>
-      <div class="title-row">
-        <div class="bestseller-list-header row">
-          <div class="list-button-group">
-            <button mat-icon-button
-                    type="button"
-                    aria-label="Show previous bestseller list"
-                    (click)="previousList(list)">
-              <mat-icon>chevron_left</mat-icon>
-            </button>
 
-            <mat-form-field class="list-selector" appearance="outline" subscriptSizing="dynamic">
-              <mat-label>Bestseller list</mat-label>
-              <mat-select [value]="list.name"
-                          aria-label="Choose a bestseller list"
-                          (selectionChange)="selectListByName($event.value)">
-                @for (option of bestsellerLists; track option.name) {
-                  <mat-option [value]="option.name">{{ option.name }}</mat-option>
-                }
-              </mat-select>
-            </mat-form-field>
-
-            <button mat-icon-button
-                    type="button"
-                    aria-label="Show next bestseller list"
-                    (click)="nextList(list)">
-              <mat-icon>chevron_right</mat-icon>
-            </button>
-          </div>
+        <div class="list-button-group">
+          <mat-form-field class="list-selector" appearance="outline" subscriptSizing="dynamic">
+            <mat-label>List</mat-label>
+            <mat-select [value]="list.name"
+                        aria-label="Choose a bestseller list"
+                        (selectionChange)="selectListByName($event.value)">
+              @for (option of bestsellerLists; track option.name) {
+                <mat-option [value]="option.name">{{ option.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
         </div>
-      </div>
+      </header>
       <div class="list-row row">
         <div class="carousel-container">
           <button mat-icon-button

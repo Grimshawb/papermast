@@ -102,18 +102,6 @@ export class BestsellersPageTwoComponent implements OnInit, OnDestroy {
     return 'hidden';
   }
 
-  public previousList(list: BestsellerList): void {
-    const index = this.bestsellerLists.findIndex(l => l.name === list.name);
-    const nextListIndex = index > 0 ? index - 1 : this.bestsellerLists.length - 1;
-    this._nytStore.setSelectedBestsellerList(this.bestsellerLists[nextListIndex]);
-  }
-
-  public nextList(list: BestsellerList): void {
-    const index = this.bestsellerLists.findIndex(l => l.name === list.name);
-    const nextListIndex = index < (this.bestsellerLists.length - 1) ? index + 1 : 0;
-    this._nytStore.setSelectedBestsellerList(this.bestsellerLists[nextListIndex]);
-  }
-
   public selectListByName(listName: string): void {
     const list = this.bestsellerLists?.find(item => item.name === listName);
     if (list) this._nytStore.setSelectedBestsellerList(list);

@@ -34,40 +34,34 @@
 }
 
 .page-header {
-  display: block;
-  margin-bottom: 3rem;
-}
-
-.title-row {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  display: block;
   text-align: center;
-  margin-bottom: clamp(3rem, 5vw, 6rem);
+  padding: clamp(24px, 4vw, 48px) 16px 0;
+  margin-bottom: clamp(24px, 4vw, 40px);
 }
 
+.page-header h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
 
-.bestseller-list-header {
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(to right, transparent, var(--mat-option-selected-state-label-text-color), transparent);
+.edition-date {
+  margin: 6px 0 24px;
+  color: var(--app-text-secondary);
+  font-size: 0.95rem;
 }
 
 .list-button-group {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(8px, 2vw, 24px);
   width: 100%;
-  padding: 12px clamp(8px, 3vw, 48px);
-}
-
-.list-button-group > :first-child {
-  z-index: 5;
-}
-
-.list-button-group > :last-child {
-  z-index: 5;
+  max-width: 560px;
 }
 
 .list-selector {
@@ -76,10 +70,6 @@
 }
 
 @media (max-width: 575.98px) {
-  .list-button-group {
-    gap: 4px;
-  }
-
   .list-selector {
     min-width: 0;
   }
