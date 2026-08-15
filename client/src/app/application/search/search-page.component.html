@@ -1,0 +1,80 @@
+<section class="search-page">
+  <header class="search-header">
+    <p class="eyebrow">Find your next book</p>
+    <h1>Search the catalog</h1>
+    <p>Search by title, author, or ISBN, then add a book to your library.</p>
+
+    <form class="search-form" (ngSubmit)="search()">
+      <mat-form-field class="search-type" appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Search by</mat-label>
+        <mat-select name="searchType" [(ngModel)]="searchType">
+          @for (type of searchTypes; track type.value) {
+            <mat-option [value]="type.value">{{ type.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Title, author, or ISBN</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput name="bookQuery" [(ngModel)]="query" autocomplete="off">
+      </mat-form-field>
+      <button mat-flat-button color="primary" type="submit" [disabled]="!query.trim() || isSearching">
+        @if (isSearching) {
+          <mat-progress-spinner mode="indeterminate" diameter="20"></mat-progress-spinner>
+        } @else {
+          Search
+        }
+      </button>
+    </form>
+  </header>
+
+  @if (!loggedInUser) {
+    <div class="login-note">
+      <mat-icon>bookmark_border</mat-icon>
+      <span><a routerLink="/login">Log in</a> to track books and reading status.</span>
+    </div>
+  }
+
+  @if (hasSearched && !isSearching && results.length === 0) {
+    <div class="empty-state">
+      <mat-icon>menu_book</mat-icon>
+      <h2>No books found</h2>
+      <p>Try a different title, author, or ISBN.</p>
+    </div>
+  }
+
+  <div class="results" aria-live="polite">
+    @for (book of results; track book.id) {
+      <mat-card class="result-card" appearance="outlined">
+        <img [src]="book.imageLinks?.thumbnail || book.imageLinks?.smallThumbnail || 'assets/book-placeholder.svg'"
+             [alt]="'Cover of ' + book.title">
+        <div class="book-copy">
+          <h2>{{ book.title }}</h2>
+          @if (book.subtitle) { <p class="subtitle">{{ book.subtitle }}</p> }
+          <p class="authors">{{ book.authors?.join(', ') || 'Unknown author' }}</p>
+          <p class="metadata">
+            @if (book.publishedDate) { <span>{{ book.publishedDate }}</span> }
+            @if (book.pageCount) { <span>{{ book.pageCount }} pages</span> }
+          </p>
+          @if (book.description) { <p class="description">{{ book.description }}</p> }
+        </div>
+        <div class="tracking-control">
+          @if (loggedInUser) {
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <mat-label>Reading status</mat-label>
+              <mat-select [value]="entryFor(book)?.status || null"
+                          [disabled]="savingBookID === book.id"
+                          (selectionChange)="setStatus(book, $event.value)">
+                @for (status of statuses; track status) {
+                  <mat-option [value]="status">{{ status }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          } @else {
+            <button mat-stroked-button type="button" routerLink="/login">Log in to track</button>
+          }
+        </div>
+      </mat-card>
+    }
+  </div>
+</section>
