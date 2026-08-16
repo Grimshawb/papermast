@@ -103,6 +103,39 @@
   align-items: center;
   justify-content: center;
   overflow: visible;
+  touch-action: pan-y;
+  overscroll-behavior-x: contain;
+  user-select: none;
+}
+
+.book-position-indicators {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 18px;
+  margin-top: 48px;
+  padding: 0 16px;
+}
+
+.carousel-indicator {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--app-text-secondary);
+  opacity: 0.35;
+  transition: transform 180ms ease, opacity 180ms ease, background-color 180ms ease;
+}
+
+.carousel-indicator.active {
+  background: var(--app-accent);
+  opacity: 1;
+  transform: scale(1.5);
 }
 
 .carousel-card-wrapper {

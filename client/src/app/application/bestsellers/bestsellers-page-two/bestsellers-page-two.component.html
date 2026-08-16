@@ -43,7 +43,9 @@
             (click)="previous(list.name)">
             <mat-icon>chevron_left</mat-icon>
           </button>
-          <div class="carousel-stage">
+          <div class="carousel-stage"
+            (pointerdown)="onSwipeStart($event, list.name)"
+            (wheel)="onCarouselWheel($event, list.name)">
             @for (book of list.books; track book; let i = $index) {
               <div class="carousel-card-wrapper"
                 [ngClass]="getPositionClass(i, list.name)">
@@ -58,6 +60,14 @@
             (click)="next(list.name)">
             <mat-icon>chevron_right</mat-icon>
           </button>
+        </div>
+        <div class="book-position-indicators" aria-hidden="true">
+          @for (book of list.books; track book; let i = $index) {
+            <span
+              class="carousel-indicator"
+              [class.active]="i === currentIndex(list.name)">
+            </span>
+          }
         </div>
       </div>
       <div class="footer">

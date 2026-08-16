@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,6 +19,17 @@ import { NytStore } from '../../../store';
   styleUrl: './bestsellers-page-two.component.scss'
 })
 export class BestsellersPageTwoComponent implements OnInit, OnDestroy {
+
+  private readonly swipeThreshold = 50;
+  private swipePointerId: number | null = null;
+  private swipeListName: string | null = null;
+  private swipeStartX = 0;
+  private swipeStartY = 0;
+  private swipeCurrentX = 0;
+  private swipeCurrentY = 0;
+  private wheelDistance = 0;
+  private wheelGestureHandled = false;
+  private wheelResetTimer: ReturnType<typeof setTimeout> | null = null;
 
   private destroy$: Subject<void> = new Subject<void>();
   public bestsellerLists$: Observable<BestsellerList[]>;
@@ -90,6 +101,78 @@ export class BestsellersPageTwoComponent implements OnInit, OnDestroy {
         {...obj, index: obj.max} : i);
   }
 
+  public onSwipeStart(event: PointerEvent, listName: string): void {
+    if (!event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
+
+    this.swipePointerId = event.pointerId;
+    this.swipeListName = listName;
+    this.swipeStartX = this.swipeCurrentX = event.clientX;
+    this.swipeStartY = this.swipeCurrentY = event.clientY;
+  }
+
+  @HostListener('window:pointermove', ['$event'])
+  public onSwipeMove(event: PointerEvent): void {
+    if (event.pointerId !== this.swipePointerId) return;
+
+    this.swipeCurrentX = event.clientX;
+    this.swipeCurrentY = event.clientY;
+
+    const horizontalDistance = Math.abs(this.swipeCurrentX - this.swipeStartX);
+    const verticalDistance = Math.abs(this.swipeCurrentY - this.swipeStartY);
+    if (horizontalDistance > verticalDistance) event.preventDefault();
+  }
+
+  @HostListener('window:pointerup', ['$event'])
+  public onSwipeEnd(event: PointerEvent): void {
+    if (event.pointerId !== this.swipePointerId) return;
+
+    this.swipeCurrentX = event.clientX;
+    this.swipeCurrentY = event.clientY;
+    const horizontalDistance = this.swipeCurrentX - this.swipeStartX;
+    const verticalDistance = this.swipeCurrentY - this.swipeStartY;
+
+    if (Math.abs(horizontalDistance) >= this.swipeThreshold &&
+        Math.abs(horizontalDistance) > Math.abs(verticalDistance) &&
+        this.swipeListName) {
+      horizontalDistance < 0 ? this.next(this.swipeListName) : this.previous(this.swipeListName);
+    }
+
+    this.resetSwipe();
+  }
+
+  @HostListener('window:pointercancel', ['$event'])
+  public onSwipeCancel(event: PointerEvent): void {
+    if (event.pointerId === this.swipePointerId) this.resetSwipe();
+  }
+
+  private resetSwipe(): void {
+    this.swipePointerId = null;
+    this.swipeListName = null;
+  }
+
+  public onCarouselWheel(event: WheelEvent, listName: string): void {
+    if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+
+    // Keep Chrome from treating a trackpad swipe over the carousel as
+    // browser back/forward navigation.
+    event.preventDefault();
+
+    if (this.wheelResetTimer) clearTimeout(this.wheelResetTimer);
+    this.wheelResetTimer = setTimeout(() => {
+      this.wheelDistance = 0;
+      this.wheelGestureHandled = false;
+      this.wheelResetTimer = null;
+    }, 160);
+
+    if (this.wheelGestureHandled) return;
+
+    this.wheelDistance += event.deltaX;
+    if (Math.abs(this.wheelDistance) < this.swipeThreshold) return;
+
+    this.wheelDistance > 0 ? this.next(listName) : this.previous(listName);
+    this.wheelGestureHandled = true;
+  }
+
   public currentIndex(key: string): number {
     return this.indices?.find(l => l.key === key)?.index || 0;
   }
@@ -108,6 +191,7 @@ export class BestsellersPageTwoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.wheelResetTimer) clearTimeout(this.wheelResetTimer);
     this.destroy$.next();
     this.destroy$.complete();
   }
