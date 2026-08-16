@@ -4,7 +4,7 @@ PaperMast is an Angular and ASP.NET Core application for discovering books, main
 
 ## Architecture
 
-The production stack is defined in `compose.yml`:
+The production stack is defined in `compose.production.yml`:
 
 - Caddy serves the compiled Angular SPA and proxies `/api` and `/health`.
 - ASP.NET Core provides the API and cookie-based JWT authentication.
@@ -38,15 +38,15 @@ The tracked launch profile selects the `Development` environment and port 5050. 
 Create a local `.env` from `.env.example` and replace every placeholder. Then:
 
 ```bash
-docker compose up -d mysql redis
-docker compose --profile migration run --rm migrate
-docker compose up -d
+docker compose -f compose.production.yml up -d mysql redis
+docker compose -f compose.production.yml --profile migration run --rm migrate
+docker compose -f compose.production.yml up -d
 ```
 
 Inspect health with:
 
 ```bash
-docker compose ps
+docker compose -f compose.production.yml ps
 curl http://localhost/health/ready
 ```
 

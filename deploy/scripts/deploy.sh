@@ -8,7 +8,7 @@ fi
 
 readonly release_sha="$1"
 readonly deploy_dir="/opt/papermast"
-readonly compose_file="${deploy_dir}/compose.yml"
+readonly compose_file="${deploy_dir}/compose.production.yml"
 readonly environment_file="${deploy_dir}/.env"
 readonly release_file="${deploy_dir}/release.env"
 readonly previous_release_file="${deploy_dir}/release.previous.env"

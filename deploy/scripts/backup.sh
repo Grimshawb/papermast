@@ -3,7 +3,7 @@ set -euo pipefail
 
 readonly reason="${1:-scheduled}"
 readonly deploy_dir="/opt/papermast"
-readonly compose_file="${deploy_dir}/compose.yml"
+readonly compose_file="${deploy_dir}/compose.production.yml"
 readonly environment_file="${deploy_dir}/.env"
 readonly backup_dir="/var/backups/papermast/mysql"
 readonly timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
