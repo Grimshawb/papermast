@@ -10,6 +10,8 @@ readonly timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 readonly final_file="${backup_dir}/papermast-${timestamp}-${reason}.sql.gz"
 readonly temporary_file="${final_file}.partial"
 
+trap 'rm -f "$temporary_file"' EXIT
+
 install -d -m 700 "$backup_dir"
 
 docker compose \
@@ -22,11 +24,15 @@ docker compose \
         --single-transaction \
         --quick \
         --skip-lock-tables \
+        --no-tablespaces \
         papermast' \
     | gzip --stdout > "$temporary_file"
 
 gzip --test "$temporary_file"
 test -s "$temporary_file"
+gzip --decompress --stdout "$temporary_file" \
+    | tail --lines 20 \
+    | grep --quiet '^-- Dump completed on '
 mv "$temporary_file" "$final_file"
 chmod 600 "$final_file"
 
