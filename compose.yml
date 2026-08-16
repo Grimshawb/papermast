@@ -1,0 +1,133 @@
+name: papermast
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  web:
+    image: ${PAPERMAST_WEB_IMAGE:-papermast-web:local}
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    restart: unless-stopped
+    mem_limit: 192m
+    logging: *default-logging
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-:80}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--spider", "http://localhost:2019/config/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - edge
+
+  api:
+    image: ${PAPERMAST_API_IMAGE:-papermast-api:local}
+    build:
+      context: .
+      dockerfile: papermast/Dockerfile
+    restart: unless-stopped
+    mem_limit: 640m
+    logging: *default-logging
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__Default: Server=mysql;Port=3306;Database=papermast;User=papermast;Password=${MYSQL_PASSWORD}
+      ConnectionStrings__Redis: redis:6379
+      Jwt__Issuer: PaperMast
+      Jwt__Audience: PaperMast
+      Jwt__Key: ${JWT_KEY}
+      GoogleBooks__ApiUrl: https://www.googleapis.com/books/v1/volumes
+      GoogleBooks__ApiKey: ${GOOGLE_BOOKS_API_KEY}
+      Wiki__RequestHeader: ${WIKI_REQUEST_HEADER}
+      Wiki__ApiUrl: https://en.wikipedia.org/api/rest_v1/page/summary
+      Nyt__ApiUrl: https://api.nytimes.com/svc/books/v3
+      Nyt__Key: ${NYT_KEY}
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/health/ready"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - edge
+      - data
+
+  migrate:
+    image: ${PAPERMAST_API_IMAGE:-papermast-api:local}
+    profiles: ["migration"]
+    entrypoint: ["/app/efbundle"]
+    command: ["--connection", "Server=mysql;Port=3306;Database=papermast;User=papermast;Password=${MYSQL_PASSWORD}"]
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - data
+
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    mem_limit: 1280m
+    logging: *default-logging
+    environment:
+      MYSQL_DATABASE: papermast
+      MYSQL_USER: papermast
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - data
+
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    mem_limit: 256m
+    logging: *default-logging
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - data
+
+networks:
+  edge:
+  data:
+    internal: true
+
+volumes:
+  caddy_data:
+  caddy_config:
+  mysql_data:
+  redis_data:

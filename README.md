@@ -1,6 +1,72 @@
-# Bookshelf
+# PaperMast
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.9.
+PaperMast is an Angular and ASP.NET Core application for discovering books, maintaining personal shelves, and tracking reading goals.
+
+## Architecture
+
+The production stack is defined in `compose.yml`:
+
+- Caddy serves the compiled Angular SPA and proxies `/api` and `/health`.
+- ASP.NET Core provides the API and cookie-based JWT authentication.
+- MySQL stores application and identity data.
+- Redis caches external API responses.
+
+Only Caddy publishes host ports. MySQL, Redis, and the API communicate over private Docker networks.
+
+## Local development
+
+Start MySQL and Redis using the existing ignored development Compose configuration, then run:
+
+```bash
+dotnet run --project papermast/papermast.csproj
+```
+
+In another terminal:
+
+```bash
+cd client
+pnpm install --frozen-lockfile
+pnpm start
+```
+
+Angular proxies relative `/api` requests to the local API.
+
+The tracked launch profile selects the `Development` environment and port 5050. Port 5000 is avoided because macOS AirPlay Receiver commonly reserves it. Development defaults Redis to `localhost:6379`; production still refuses to start without an explicit Redis connection string.
+
+## Production-like containers
+
+Create a local `.env` from `.env.example` and replace every placeholder. Then:
+
+```bash
+docker compose up -d mysql redis
+docker compose --profile migration run --rm migrate
+docker compose up -d
+```
+
+Inspect health with:
+
+```bash
+docker compose ps
+curl http://localhost/health/ready
+```
+
+Never use `docker compose down --volumes` against production. It deletes the named MySQL volume.
+
+## CI
+
+GitHub Actions validates the Angular tests/build and .NET Release build. Passing `master` builds publish immutable frontend and API images to GitHub Container Registry using the commit SHA.
+
+The deployment scripts under `deploy/scripts` are installed root-owned on the VPS. A deployment pulls an exact image SHA, creates a pre-migration database dump, applies EF migrations, starts the release, verifies public readiness, and restores the previous application images if readiness fails.
+
+## Configuration
+
+Real credentials are never committed or copied into image layers. Required variable names are documented in `.env.example`; production values live only in the protected `/opt/papermast/.env` file on the VPS.
+
+The learning-oriented architecture, deployment journal, and operations documentation live in the associated Obsidian vault.
+
+## Angular CLI reference
+
+The client currently uses Angular CLI 20.
 
 ## Development server
 
