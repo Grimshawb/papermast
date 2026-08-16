@@ -1,8 +1,10 @@
 import { TestBed } from '@angular/core/testing';
+import { configureTestBed } from '@testing';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
+    configureTestBed();
     await TestBed.configureTestingModule({
       imports: [AppComponent],
     }).compileComponents();
@@ -14,16 +16,8 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'bookshelf' title`, () => {
+  it('should use the dark theme by default', () => {
     const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('bookshelf');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, bookshelf');
+    expect(fixture.componentInstance.themeClass).toBe('dark-theme');
   });
 });

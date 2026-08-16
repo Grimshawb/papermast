@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestBed } from '@testing';
 
 import { BadNavigationComponent } from './bad-navigation.component';
 
@@ -7,6 +8,7 @@ describe('BadNavigationComponent', () => {
   let fixture: ComponentFixture<BadNavigationComponent>;
 
   beforeEach(async () => {
+    configureTestBed();
     await TestBed.configureTestingModule({
       imports: [BadNavigationComponent]
     })

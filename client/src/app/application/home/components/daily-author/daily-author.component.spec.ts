@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestBed } from '@testing';
 
 import { DailyAuthorComponent } from './daily-author.component';
 
@@ -7,6 +8,7 @@ describe('DailyAuthorComponent', () => {
   let fixture: ComponentFixture<DailyAuthorComponent>;
 
   beforeEach(async () => {
+    configureTestBed();
     await TestBed.configureTestingModule({
       imports: [DailyAuthorComponent]
     })

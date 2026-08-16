@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { configureTestBed } from '@testing';
 
 import { NytService } from './nyt.service';
 
@@ -6,6 +7,7 @@ describe('NytService', () => {
   let service: NytService;
 
   beforeEach(() => {
+    configureTestBed();
     TestBed.configureTestingModule({});
     service = TestBed.inject(NytService);
   });

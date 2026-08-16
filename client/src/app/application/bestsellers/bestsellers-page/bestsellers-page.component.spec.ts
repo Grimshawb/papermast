@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestBed } from '@testing';
 
 import { BestsellersPageComponent } from './bestsellers-page.component';
 
@@ -7,6 +8,7 @@ describe('BestsellersPageComponent', () => {
   let fixture: ComponentFixture<BestsellersPageComponent>;
 
   beforeEach(async () => {
+    configureTestBed();
     await TestBed.configureTestingModule({
       imports: [BestsellersPageComponent]
     })

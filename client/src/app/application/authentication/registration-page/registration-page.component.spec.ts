@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestBed } from '@testing';
 
 import { RegistrationPageComponent } from './registration-page.component';
 
@@ -7,6 +8,7 @@ describe('RegistrationPageComponent', () => {
   let fixture: ComponentFixture<RegistrationPageComponent>;
 
   beforeEach(async () => {
+    configureTestBed();
     await TestBed.configureTestingModule({
       imports: [RegistrationPageComponent]
     })
