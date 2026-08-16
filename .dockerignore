@@ -1,0 +1,14 @@
+.git
+.github
+.env
+**/.DS_Store
+**/.angular
+**/.vs
+**/.vscode
+**/bin
+**/dist
+**/node_modules
+**/obj
+**/*.user
+papermast/appsettings.json
+papermast/appsettings.Development.json

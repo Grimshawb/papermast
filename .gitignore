@@ -1,5 +1,7 @@
 
 .DS_Store
+.env
+!.env.example
 
 # Client
 client/dist
@@ -7,8 +9,6 @@ client/.vscode
 client/node_modules
 client/.editorconfig
 client/.angular
-client/src/environment.ts
-client/src/environment.prod.ts
 
 
 # Server
@@ -19,5 +19,4 @@ client/src/environment.prod.ts
 /papermast/bin/
 /papermast/obj/
 /papermast/.vs/
-/papermast/Properties/launchSettings.json
 docker-compose.yml
