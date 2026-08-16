@@ -27,5 +27,7 @@ export interface BookEntryRequest {
   isbn10?: string,
   isbn13?: string,
   status: string,
-  pageCount: number
+  pageCount: number,
+  pagesCompleted?: number,
+  percentCompleted?: number
 }

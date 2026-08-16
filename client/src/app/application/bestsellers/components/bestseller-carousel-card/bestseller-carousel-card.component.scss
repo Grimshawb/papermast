@@ -3,6 +3,19 @@
   max-height: 75vh;
   margin: auto;
   align-items: center;
+  cursor: pointer;
+  transition: box-shadow 160ms ease, transform 160ms ease;
+}
+
+.carousel-card:hover,
+.carousel-card:focus-visible {
+  box-shadow: var(--mat-sys-level3);
+  transform: translateY(-2px);
+}
+
+.carousel-card:focus-visible {
+  outline: 3px solid var(--mat-sys-primary);
+  outline-offset: 3px;
 }
 
 .image-frame {
@@ -18,4 +31,8 @@
   width: 80%;
   height: 100%;
   object-fit:contain;
+}
+
+mat-card-actions {
+  justify-content: center;
 }

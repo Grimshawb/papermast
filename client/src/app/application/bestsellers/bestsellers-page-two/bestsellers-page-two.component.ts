@@ -107,12 +107,6 @@ export class BestsellersPageTwoComponent implements OnInit, OnDestroy {
     if (list) this._nytStore.setSelectedBestsellerList(list);
   }
 
-  public getImageSource(): string {
-    return document.body.classList.contains('dark-theme') ?
-        'https://developer.nytimes.com/files/poweredby_nytimes_200a.png?v=1763725755000' :
-        'https://developer.nytimes.com/files/poweredby_nytimes_200b.png?v=1763725748000';
-  }
-
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

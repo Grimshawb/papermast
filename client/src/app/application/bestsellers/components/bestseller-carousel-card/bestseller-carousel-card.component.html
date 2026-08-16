@@ -1,4 +1,11 @@
-<mat-card class="carousel-card" appearance="outlined">
+<mat-card class="carousel-card"
+          appearance="outlined"
+          role="button"
+          tabindex="0"
+          [attr.aria-label]="'View details for ' + book.title"
+          (click)="showDetails()"
+          (keydown.enter)="showDetails()"
+          (keydown.space)="$event.preventDefault(); showDetails()">
   <mat-card-header>
     <!-- <div mat-card-avatar class="example-header-image"></div> -->
     <mat-card-title>{{ book.title }}</mat-card-title>
@@ -12,6 +19,11 @@
       {{ book.description }}
     </p>
   </mat-card-content>
+  <mat-card-actions>
+    <button mat-button type="button" (click)="$event.stopPropagation(); showDetails()">
+      View details
+    </button>
+  </mat-card-actions>
   <!-- <mat-card-actions>
     <button matButton>LIKE</button>
     <button matButton>SHARE</button>

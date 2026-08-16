@@ -1,0 +1,72 @@
+<div class="dialog-title-row">
+  <div>
+    <p class="eyebrow">Your shelf</p>
+    <h2 mat-dialog-title>{{ entry.title }}</h2>
+    <p class="author">by {{ entry.authors || 'Unknown author' }}</p>
+  </div>
+  <button mat-icon-button type="button" mat-dialog-close aria-label="Close book details">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content>
+  <div class="book-details">
+    <img class="cover" [src]="entry.thumbnailUrl || 'assets/book-placeholder.svg'" [alt]="'Cover of ' + entry.title">
+    <div class="metadata">
+      <dl>
+        @if (entry.pageCount) { <div><dt>Length</dt><dd>{{ entry.pageCount }} pages</dd></div> }
+        @if (entry.isbn13) { <div><dt>ISBN-13</dt><dd>{{ entry.isbn13 }}</dd></div> }
+        @if (entry.isbn10) { <div><dt>ISBN-10</dt><dd>{{ entry.isbn10 }}</dd></div> }
+        @if (entry.startDate) { <div><dt>Started</dt><dd>{{ entry.startDate | date:'MMM d, y' }}</dd></div> }
+        @if (entry.endDate) { <div><dt>Finished</dt><dd>{{ entry.endDate | date:'MMM d, y' }}</dd></div> }
+        <div><dt>Added</dt><dd>{{ entry.createdDate | date:'MMM d, y' }}</dd></div>
+      </dl>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Reading status</mat-label>
+        <mat-select [(ngModel)]="status" [disabled]="isSaving">
+          @for (option of statuses; track option) {
+            <mat-option [value]="option">{{ option }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  @if (status === 'Reading') {
+    <section class="progress-section" aria-labelledby="progress-heading">
+      <div class="progress-heading-row">
+        <h3 id="progress-heading">Reading progress</h3>
+        <strong>{{ percentCompleted }}%</strong>
+      </div>
+      <mat-progress-bar mode="determinate" [value]="percentCompleted"></mat-progress-bar>
+      <div class="progress-fields">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Current page</mat-label>
+          <input matInput type="number" min="0" [max]="pageCount || null"
+                 [ngModel]="pagesCompleted" (ngModelChange)="updatePages($event)">
+        </mat-form-field>
+        <span class="of-label">of</span>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Total pages</mat-label>
+          <input matInput type="number" min="0"
+                 [ngModel]="pageCount" (ngModelChange)="updatePageCount($event)">
+        </mat-form-field>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Percent complete</mat-label>
+          <input matInput type="number" min="0" max="100"
+                 [ngModel]="percentCompleted" (ngModelChange)="updatePercent($event)">
+          <span matTextSuffix>%</span>
+        </mat-form-field>
+      </div>
+    </section>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close [disabled]="isSaving">Cancel</button>
+  <button mat-flat-button color="primary" type="button" [disabled]="isSaving" (click)="save()">
+    @if (isSaving) { <mat-spinner diameter="20"></mat-spinner> }
+    @else { Save changes }
+  </button>
+</mat-dialog-actions>

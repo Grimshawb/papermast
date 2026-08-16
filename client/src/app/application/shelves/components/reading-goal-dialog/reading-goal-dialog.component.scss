@@ -1,0 +1,6 @@
+mat-dialog-content { min-width: min(380px, 70vw); }
+mat-dialog-content > p { margin-top: 0; color: var(--app-text-secondary); }
+mat-form-field { width: 100%; margin-top: 10px; }
+.error { color: var(--mat-sys-error); }
+
+@media (max-width: 480px) { mat-dialog-content { min-width: 0; } }

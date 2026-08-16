@@ -32,18 +32,29 @@
       <button mat-flat-button color="primary" type="button" (click)="retryLoad()">Try again</button>
     </div>
   } @else {
-    <section class="library-summary" aria-label="Library summary">
-      <div>
-        <span>{{ countFor('Reading') }}</span>
-        <small>Reading now</small>
+    <section class="library-overview" aria-label="Reading goal and library summary">
+      <div class="reading-goal-summary">
+        <reading-goal-widget
+          [goal]="readingGoal"
+          [interactive]="true"
+          [compact]="true"
+          (activated)="editReadingGoal()">
+        </reading-goal-widget>
       </div>
-      <div>
-        <span>{{ countFor('To Be Read') }}</span>
-        <small>To be read</small>
-      </div>
-      <div>
-        <span>{{ countFor('Read') }}</span>
-        <small>Books read</small>
+
+      <div class="library-summary">
+        <div>
+          <span>{{ countFor('Reading') }}</span>
+          <small>Reading now</small>
+        </div>
+        <div>
+          <span>{{ countFor('To Be Read') }}</span>
+          <small>To be read</small>
+        </div>
+        <div>
+          <span>{{ countFor('Read') }}</span>
+          <small>Books read</small>
+        </div>
       </div>
     </section>
 
@@ -106,7 +117,14 @@
     } @else {
       <div class="book-grid">
         @for (entry of visibleEntries; track entry.entryID) {
-          <mat-card class="shelf-card" appearance="outlined">
+          <mat-card class="shelf-card"
+                    appearance="outlined"
+                    role="button"
+                    tabindex="0"
+                    [attr.aria-label]="'View details for ' + entry.title"
+                    (click)="showDetails(entry)"
+                    (keydown.enter)="showDetails(entry)"
+                    (keydown.space)="$event.preventDefault(); showDetails(entry)">
             <div class="cover-wrap">
               <img [src]="entry.thumbnailUrl || 'assets/book-placeholder.svg'" [alt]="'Cover of ' + entry.title">
               <span class="status-label">{{ entry.status }}</span>
@@ -115,32 +133,14 @@
               <h3>{{ entry.title }}</h3>
               <p class="authors">{{ entry.authors || 'Unknown author' }}</p>
 
-              @if (entry.status === 'Reading') {
-                <div class="progress-copy">
-                  <span>Reading progress</span>
-                  <strong>{{ entry.percentCompleted }}%</strong>
-                </div>
-                <mat-progress-bar mode="determinate" [value]="entry.percentCompleted"></mat-progress-bar>
-                @if (entry.pagesCompleted || entry.pageCount) {
-                  <p class="page-progress">{{ entry.pagesCompleted }} of {{ entry.pageCount || '—' }} pages</p>
-                }
-              } @else if (entry.status === 'Read' && entry.endDate) {
+              @if (entry.status === 'Read' && entry.endDate) {
                 <p class="date-detail"><mat-icon>event_available</mat-icon> Finished {{ entry.endDate | date:'MMM d, y' }}</p>
               } @else if (entry.status === 'To Be Read' && entry.pageCount) {
                 <p class="date-detail"><mat-icon>menu_book</mat-icon> {{ entry.pageCount }} pages</p>
               }
             </mat-card-content>
             <mat-card-actions>
-              <mat-form-field appearance="outline" subscriptSizing="dynamic">
-                <mat-label>Status</mat-label>
-                <mat-select [value]="entry.status"
-                            [disabled]="savingEntryID === entry.entryID"
-                            (selectionChange)="updateStatus(entry, $event.value)">
-                  @for (status of statuses; track status) {
-                    <mat-option [value]="status">{{ status }}</mat-option>
-                  }
-                </mat-select>
-              </mat-form-field>
+              <button mat-button type="button" (click)="$event.stopPropagation(); showDetails(entry)">View details</button>
             </mat-card-actions>
           </mat-card>
         }

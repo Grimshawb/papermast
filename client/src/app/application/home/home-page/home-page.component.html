@@ -1,39 +1,66 @@
-<div [@fadeAnimation]>
-  <div class="page-layout">
-    <div class="author-column">
-      <mat-card class="scroll-container mat-elevation-z2">
-        <mat-card class="scroll-container mat-elevation-z2">
-          <mat-card-header class="mb-3">
-            <mat-card-title>Author Of The Day</mat-card-title>
-          </mat-card-header>
+<main class="home-page" [@fadeAnimation]>
+  @if (loggedInUser && readingGoal) {
+    <section class="reading-life" aria-label="Your reading life">
+      <reading-goal-widget
+        [goal]="readingGoal"
+        [interactive]="true"
+        (activated)="openShelves()">
+      </reading-goal-widget>
+    </section>
+  }
 
-          <mat-card-content>
-            <daily-author [author]="authorOfTheDay"></daily-author>
-          </mat-card-content>
-        </mat-card>
-      </mat-card>
-    </div>
+  <section class="author-feature" aria-labelledby="daily-author-heading">
+    <div class="section-kicker">A new literary voice, every day</div>
+    <h1 id="daily-author-heading">Author of the day</h1>
 
-    <div class="books-column">
-      <mat-card class="scroll-container mat-elevation-z2">
-        <mat-card-header class="mb-3">
-          <mat-card-title>{{ author }}</mat-card-title>
-        </mat-card-header>
+    @if (authorOfTheDay) {
+      <daily-author [author]="authorOfTheDay"></daily-author>
+    } @else {
+      <div class="author-skeleton" aria-label="Loading author of the day" role="status">
+        <div class="skeleton portrait"></div>
+        <div class="skeleton-copy">
+          <div class="skeleton line short"></div>
+          <div class="skeleton line title"></div>
+          <div class="skeleton line"></div>
+          <div class="skeleton line"></div>
+          <div class="skeleton line medium"></div>
+        </div>
+      </div>
+    }
+  </section>
 
-        @if (booksResults) {
-          <mat-card-content>
-            @for (book of booksResults || []; track book) {
-              <div class="mb-2">
-                <mat-card class="mb-2">
-                  <bookshelf-book-list-entry [book]="book"></bookshelf-book-list-entry>
-                </mat-card>
-              </div>
-            }
-          </mat-card-content>
+  <section class="book-discovery" aria-labelledby="author-books-heading">
+    <header class="section-heading">
+      <div>
+        <div class="section-kicker">Explore their work</div>
+        <h2 id="author-books-heading">Books by {{ author }}</h2>
+      </div>
+      @if (booksResults?.length) {
+        <span class="result-count">{{ booksResults.length }} titles</span>
+      }
+    </header>
+
+    @if (booksResults?.length) {
+      <div class="book-rail">
+        @for (book of booksResults; track book; let i = $index) {
+          <bookshelf-book-list-entry
+            class="book-entry"
+            [style.--entry-index]="i"
+            [book]="book">
+          </bookshelf-book-list-entry>
         }
-
-        <!-- pagination -->
-      </mat-card>
-    </div>
-  </div>
-</div>
+      </div>
+      <p class="rail-hint" aria-hidden="true">Scroll to explore <span>→</span></p>
+    } @else {
+      <div class="book-rail loading-rail" aria-label="Loading books" role="status">
+        @for (item of [1, 2, 3, 4]; track item) {
+          <div class="book-skeleton">
+            <div class="skeleton cover"></div>
+            <div class="skeleton line title"></div>
+            <div class="skeleton line short"></div>
+          </div>
+        }
+      </div>
+    }
+  </section>
+</main>

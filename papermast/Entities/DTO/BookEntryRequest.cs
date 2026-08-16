@@ -30,5 +30,11 @@ namespace papermast.Entities.DTO
 
         [Range(0, int.MaxValue)]
         public int PageCount { get; set; }
+
+        [Range(0, int.MaxValue)]
+        public int? PagesCompleted { get; set; }
+
+        [Range(0, 100)]
+        public int? PercentCompleted { get; set; }
     }
 }

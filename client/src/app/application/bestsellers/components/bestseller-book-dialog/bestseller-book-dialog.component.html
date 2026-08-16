@@ -1,0 +1,55 @@
+<div class="dialog-title-row">
+  <div>
+    <p class="eyebrow">NYT Best Seller</p>
+    <h2 mat-dialog-title>{{ book.title }}</h2>
+    <p class="author">by {{ book.author }}</p>
+  </div>
+  <button mat-icon-button type="button" mat-dialog-close aria-label="Close book details">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content>
+  <div class="book-details">
+    <img class="cover" [src]="book.bookImage" [alt]="'Cover of ' + book.title">
+    <div class="metadata">
+      @if (book.description) { <p class="description">{{ book.description }}</p> }
+
+      <dl>
+        @if (book.publisher) { <div><dt>Publisher</dt><dd>{{ book.publisher }}</dd></div> }
+        @if (book.weeksOnList) { <div><dt>On the list</dt><dd>{{ book.weeksOnList }} {{ book.weeksOnList === 1 ? 'week' : 'weeks' }}</dd></div> }
+        @if (book.ageGroup) { <div><dt>Age group</dt><dd>{{ book.ageGroup }}</dd></div> }
+        @for (isbn of book.isbns; track isbn.type) {
+          @if (isbn.identifier) { <div><dt>{{ isbn.type }}</dt><dd>{{ isbn.identifier }}</dd></div> }
+        }
+      </dl>
+
+      @if (loggedInUser) {
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Reading status</mat-label>
+          <mat-select [value]="currentEntry?.status || null"
+                      [disabled]="isSaving"
+                      (selectionChange)="setStatus($event.value)">
+            @for (status of statuses; track status) {
+              <mat-option [value]="status">{{ status }}</mat-option>
+            }
+          </mat-select>
+          @if (isSaving) { <mat-spinner matSuffix diameter="20"></mat-spinner> }
+        </mat-form-field>
+      } @else {
+        <button mat-flat-button type="button" (click)="signIn()">Log in to add to a shelf</button>
+      }
+    </div>
+  </div>
+
+  @if (book.buyLinks?.length) {
+    <section class="buy-links" aria-labelledby="buy-links-heading">
+      <h3 id="buy-links-heading">Find this book</h3>
+      <div class="link-list">
+        @for (link of book.buyLinks; track link.url) {
+          <a mat-stroked-button [href]="link.url" target="_blank" rel="noopener noreferrer">{{ link.name }}</a>
+        }
+      </div>
+    </section>
+  }
+</mat-dialog-content>

@@ -1,18 +1,22 @@
 @if (author) {
-  <mat-card class="book-card" appearance="outlined">
-    <div class="card-content d-flex align-items-start">
-      <img mat-card-image [src]="author.thumbnail?.source || '' " alt="No Image Available" class="thumbnail me-3">
-      <div class="book-info">
-        <mat-card-title class="mt-3 mb-1">
-          {{ author.title }}
-        </mat-card-title>
-        <mat-card-content >
-          <p> {{ author.extract }} </p>
-          <a class="wikipedia-link"
-             [href]="mobileView() ? author.content_urls.mobile.page : author.content_urls.desktop.page"
-             target="_blank">View On Wikipedia</a>
-        </mat-card-content>
-      </div>
+  <article class="author-card">
+    <div class="portrait-wrap">
+      <img [src]="author.thumbnail?.source || 'assets/book-placeholder.svg'"
+           [alt]="'Portrait of ' + author.title">
+      <div class="portrait-glow" aria-hidden="true"></div>
     </div>
-  </mat-card>
+
+    <div class="author-copy">
+      <p class="eyebrow">Today’s featured author</p>
+      <h2>{{ author.title }}</h2>
+      <p class="extract">{{ author.extract }}</p>
+      <a class="wikipedia-link"
+         [href]="mobileView() ? author.content_urls.mobile.page : author.content_urls.desktop.page"
+         target="_blank"
+         rel="noopener noreferrer">
+        Read the full story
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </article>
 }

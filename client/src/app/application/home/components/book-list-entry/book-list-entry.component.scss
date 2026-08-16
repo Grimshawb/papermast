@@ -1,0 +1,105 @@
+:host { display: block; }
+
+.book-card {
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--app-border);
+  border-radius: 16px;
+  outline: none;
+  background: var(--app-surface);
+  cursor: pointer;
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.book-card:hover,
+.book-card:focus-visible {
+  border-color: color-mix(in srgb, var(--app-primary) 60%, var(--app-border));
+  transform: translateY(-6px);
+  box-shadow: 0 16px 30px rgb(39 33 28 / 16%);
+}
+
+.book-card:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--app-primary) 35%, transparent), 0 16px 30px rgb(39 33 28 / 16%);
+}
+
+.cover-wrap {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+  padding: 20px;
+  background: color-mix(in srgb, var(--app-primary) 8%, var(--app-background));
+}
+
+.cover-wrap img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 11px 10px rgb(28 23 20 / 22%));
+  transition: transform 300ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.book-card:hover img,
+.book-card:focus-visible img { transform: scale(1.035); }
+
+.view-prompt {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--app-surface) 92%, transparent);
+  color: var(--app-text);
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.book-card:hover .view-prompt,
+.book-card:focus-visible .view-prompt { opacity: 1; transform: translateY(0); }
+
+.book-info { padding: 17px 18px 19px; }
+
+h3 {
+  display: -webkit-box;
+  overflow: hidden;
+  min-height: 2.7em;
+  margin: 0;
+  font: 600 1.08rem/1.35 Georgia, "Times New Roman", serif;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.authors {
+  overflow: hidden;
+  margin: 7px 0 15px;
+  color: var(--app-text-secondary);
+  font-size: 0.84rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  color: var(--app-text-secondary);
+  font-size: 0.72rem;
+}
+
+.metadata span + span::before {
+  margin-right: 7px;
+  content: "·";
+}
+
+@media (hover: none) { .view-prompt { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .book-card,
+  .cover-wrap img,
+  .view-prompt { transition: none; }
+  .book-card:hover,
+  .book-card:focus-visible { transform: none; }
+}

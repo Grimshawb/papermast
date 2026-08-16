@@ -13,6 +13,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<AppUser> AppUsers { get; set; }
     public DbSet<BookEntry> BookEntries { get; set; }
+    public DbSet<ReadingGoal> ReadingGoals { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -33,5 +34,9 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
 
         builder.Entity<BookEntry>()
             .HasIndex(entry => new { entry.UserID, entry.Isbn10 });
+
+        builder.Entity<ReadingGoal>()
+            .HasIndex(goal => new { goal.UserID, goal.Year })
+            .IsUnique();
     }
 }

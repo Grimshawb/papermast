@@ -90,6 +90,7 @@ builder.Services.AddScoped<IWikiService, WikiService>();
 builder.Services.AddScoped<INytService, NytService>();
 builder.Services.AddScoped<IBooksApiService, BooksApiService>();
 builder.Services.AddScoped<IBookEntryService, BookEntryService>();
+builder.Services.AddScoped<IReadingGoalService, ReadingGoalService>();
 
 var app = builder.Build();
 

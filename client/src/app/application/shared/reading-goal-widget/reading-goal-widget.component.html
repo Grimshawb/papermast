@@ -1,0 +1,41 @@
+<div class="goal-widget" [class.compact]="compact">
+  <button class="goal-ring"
+          type="button"
+          [class.interactive]="interactive"
+          [disabled]="!interactive"
+          [style.--goal-progress]="percentage + '%'"
+          [attr.aria-label]="interactive ? 'Edit ' + goal.year + ' reading goal' : goal.year + ' reading goal progress'"
+          (click)="activate()">
+    <span class="ring-center">
+      <strong>{{ goal.completedBookCount }}</strong>
+      @if (goal.targetBookCount) {
+        <span>of {{ goal.targetBookCount }}</span>
+      } @else {
+        <span>Set a goal</span>
+      }
+    </span>
+  </button>
+
+  <div class="goal-copy">
+    <p class="eyebrow">{{ goal.year }} reading goal</p>
+    @if (goal.targetBookCount) {
+      <h3>{{ percentage }}% complete</h3>
+      <p>
+        @if (goal.completedBookCount >= goal.targetBookCount) {
+          You reached your goal. Keep the story going.
+        } @else {
+          {{ goal.targetBookCount - goal.completedBookCount }}
+          {{ goal.targetBookCount - goal.completedBookCount === 1 ? 'book' : 'books' }} left to reach your target.
+        }
+      </p>
+    } @else {
+      <h3>Make this your reading year</h3>
+      <p>Choose a target and watch your progress grow with every finished book.</p>
+    }
+    @if (interactive) {
+      <button class="edit-link" type="button" (click)="activate()">
+        {{ goal.targetBookCount ? 'Adjust goal' : 'Set your goal' }} <span aria-hidden="true">→</span>
+      </button>
+    }
+  </div>
+</div>

@@ -9,11 +9,16 @@ import { BookSearchRequestDto, WikiEntry } from '../../../models';
 import { DailyAuthorComponent } from '../components/daily-author/daily-author.component';
 import { DailyAuthors } from '../../../constants/daily-authors.enum';
 import { NytService } from '../../../services/nyt.service';
+import { ReadingGoal, User } from '../../../models';
+import { AuthStore } from '../../../store/auth.store';
+import { ReadingGoalsService } from '../../../services';
+import { ReadingGoalWidgetComponent } from '../../shared/reading-goal-widget/reading-goal-widget.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'bookshelf-home-page',
   standalone: true,
-  imports: [BookListEntryComponent, MatCardModule, DailyAuthorComponent],
+  imports: [BookListEntryComponent, MatCardModule, DailyAuthorComponent, ReadingGoalWidgetComponent],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss',
   animations: [fadeAnimation]
@@ -33,10 +38,15 @@ export class HomePageComponent implements OnInit, OnDestroy {
   public pages: any[] = [];
   public selectedPage: number = 0;
   public totalElements: number = 0;
+  public loggedInUser: User | undefined;
+  public readingGoal: ReadingGoal | null = null;
 
   constructor(private _booksApiStore: BooksApiStore,
               private _wikiStore: WikiStore,
-              private _nytStore: NytStore) {
+              private _nytStore: NytStore,
+              private _authStore: AuthStore,
+              private _readingGoalsService: ReadingGoalsService,
+              private _router: Router) {
     this.getDailyAuthor();
     this._booksApiStore.apiSearch({inauthor: this.author} as BookSearchRequestDto);
     this._nytStore.getAllBestsellerLists();
@@ -50,10 +60,28 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.authorOfTheDay$ = this._wikiStore.select(s => s.authorOfTheDay)
       .pipe(tap(a => this.authorOfTheDay = a), takeUntil(this.destroy$))
     this.authorOfTheDay$.subscribe();
+
+    this._authStore.select(s => s.loggedInUser)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(user => {
+        this.loggedInUser = user;
+        if (user) this.loadReadingGoal();
+        else this.readingGoal = null;
+      });
   }
 
   public pageChanged(e: any): void {
 
+  }
+
+  public openShelves(): void {
+    this._router.navigate(['shelves']);
+  }
+
+  private loadReadingGoal(): void {
+    this._readingGoalsService.get(new Date().getFullYear())
+      .pipe(take(1))
+      .subscribe({ next: goal => this.readingGoal = goal });
   }
 
   public async getDailyAuthor() {

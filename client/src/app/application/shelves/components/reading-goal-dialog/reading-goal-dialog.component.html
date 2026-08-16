@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>{{ goal.targetBookCount ? 'Adjust' : 'Set' }} your {{ goal.year }} reading goal</h2>
+<mat-dialog-content>
+  <p>How many books would you like to finish this year?</p>
+  <mat-form-field appearance="outline">
+    <mat-label>Book target</mat-label>
+    <input matInput type="number" min="1" max="1000" step="1"
+           [(ngModel)]="targetBookCount"
+           (keydown.enter)="save()"
+           cdkFocusInitial>
+    <span matTextSuffix>books</span>
+    @if (targetBookCount < 1 || targetBookCount > 1000) {
+      <mat-error>Choose between 1 and 1,000 books.</mat-error>
+    }
+  </mat-form-field>
+  @if (error) { <p class="error" role="alert">{{ error }}</p> }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close>Cancel</button>
+  <button mat-flat-button color="primary" type="button"
+          [disabled]="saving || targetBookCount < 1 || targetBookCount > 1000"
+          (click)="save()">
+    {{ saving ? 'Saving…' : 'Save goal' }}
+  </button>
+</mat-dialog-actions>

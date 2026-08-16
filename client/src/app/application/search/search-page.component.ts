@@ -194,7 +194,9 @@ export class SearchPageComponent implements OnInit {
       isbn10: identifier(IsbnType.ISBN_10),
       isbn13: identifier(IsbnType.ISBN_13),
       status,
-      pageCount: book.pageCount || 0
+      pageCount: book.pageCount || 0,
+      pagesCompleted: 0,
+      percentCompleted: 0
     };
   }
 }

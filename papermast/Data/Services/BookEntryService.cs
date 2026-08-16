@@ -82,6 +82,8 @@ namespace papermast.Data.Services
         {
             if (!BookStatus.IsValid(request.Status))
                 throw new ArgumentException("The selected reading status is not valid.");
+            if (request.PageCount > 0 && request.PagesCompleted is int pagesCompleted && pagesCompleted > request.PageCount)
+                throw new ArgumentException("Pages completed cannot exceed the book's page count.");
             if (string.IsNullOrWhiteSpace(request.Isbn10) &&
                 string.IsNullOrWhiteSpace(request.Isbn13) &&
                 (string.IsNullOrWhiteSpace(request.Source) || string.IsNullOrWhiteSpace(request.SourceBookID)))
@@ -116,6 +118,8 @@ namespace papermast.Data.Services
             entry.Status = BookStatus.All.First(status =>
                 status.Equals(request.Status, StringComparison.OrdinalIgnoreCase));
             entry.PageCount = request.PageCount;
+            entry.PagesCompleted = request.PagesCompleted ?? entry.PagesCompleted;
+            entry.PercentCompleted = request.PercentCompleted ?? entry.PercentCompleted;
 
             if (entry.Status == BookStatus.READING && entry.StartDate is null)
                 entry.StartDate = DateTime.UtcNow;
