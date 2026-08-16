@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, filter, map, take } from 'rxjs';
 import { ApiBook } from '../models/books-api';
-import { environment } from '../../environment.prod';
+import { environment } from '../../environment';
 import { toHttpParams } from '../utils';
 import { BookSearchRequestDto } from '../models';
 

@@ -12,7 +12,7 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  public deleteUserAccount(userID: number): Observable<boolean> {
-    return this.http.delete<boolean>(`${this.baseUrl}/userID`, {});
+  public deleteUserAccount(): Observable<boolean> {
+    return this.http.delete<boolean>(this.baseUrl);
   }
 }

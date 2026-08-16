@@ -1,8 +1,9 @@
-﻿
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using papermast.Data.Services;
 using papermast.Entities.Models;
+using System.Security.Claims;
 
 namespace papermast.Controllers
 {
@@ -19,16 +20,23 @@ namespace papermast.Controllers
             _userService = userService;
         }
 
-        [HttpDelete("{userID}")]
-        public async Task<ActionResult<bool>> DeleteUser([FromRoute] int userID)
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        [HttpDelete]
+        public async Task<ActionResult<bool>> DeleteUser()
         {
             try
             {
-                return Ok(this._userService.DeleteUser(userID));
+                var identityUserID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(identityUserID)) return Unauthorized();
+
+                var appUser = await _userService.GetAppUserByIdentityID(identityUserID);
+                if (appUser == null) return NotFound();
+
+                return Ok(await _userService.DeleteUser(appUser.UserID));
             }
-            catch (Exception ex)
+            catch
             {
-                return BadRequest($"Error Deleting User Account: {ex.Message}");
+                return BadRequest("Unable to delete the user account.");
             }
         }
     }

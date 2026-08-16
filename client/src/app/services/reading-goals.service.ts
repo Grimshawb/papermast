@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../environment.prod';
+import { environment } from '../../environment';
 import { ReadingGoal, ReadingGoalRequest } from '../models';
 
 @Injectable({ providedIn: 'root' })

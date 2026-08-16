@@ -28,11 +28,11 @@ namespace papermast.Data.Services
         {
             var identityUser = new ApplicationUser
             {
-                UserName = request.Username,
-                Email = request.Email
+                UserName = request.Username!,
+                Email = request.Email!
             };
 
-            var result = await _userManager.CreateAsync(identityUser, request.Password);
+            var result = await _userManager.CreateAsync(identityUser, request.Password!);
             if (!result.Succeeded) throw new Exception("Error Creating User Identity");
 
             // Create the AppUser linked to Identity
@@ -40,7 +40,8 @@ namespace papermast.Data.Services
             {
                 IdentityUserId = identityUser.Id,
                 FirstName = request.FirstName,
-                LastName = request.LastName
+                LastName = request.LastName,
+                Username = request.Username
             };
 
             _context.AppUsers.Add(appUser);

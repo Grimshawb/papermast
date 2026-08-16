@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using papermast.Data.Services;
 using papermast.Entities.DTO;
@@ -18,36 +19,39 @@ namespace papermast.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _config;
         private readonly IUserService _userService;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(UserManager<ApplicationUser> userManager, IConfiguration config, IUserService userService)
+        public AuthController(UserManager<ApplicationUser> userManager, IConfiguration config, IUserService userService, ILogger<AuthController> logger)
         {
             _userManager = userManager;
             _config = config;
             _userService = userService;
+            _logger = logger;
         }
 
+        [EnableRateLimiting("authentication")]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationRequest request)
         {
             try
             {
-                if (string.IsNullOrEmpty(request?.Email) || string.IsNullOrEmpty(request?.Password)) return BadRequest("Email And Password Are Required To Register");
                 return Ok(await _userService.CreateUser(request));
             }
             catch (Exception ex)
             {
-                return BadRequest($"Error Registering New User: {ex.Message}");
+                _logger.LogWarning(ex, "Registration failed");
+                return BadRequest("Unable to register with the supplied information.");
             }
         }
 
+        [EnableRateLimiting("authentication")]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             try
             {
-                if (string.IsNullOrEmpty(request?.Email) || string.IsNullOrEmpty(request?.Password)) return BadRequest("Email And Password Are Required To Log In");
-                var user = await _userManager.FindByEmailAsync(request.Email);
-                if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
+                var user = await _userManager.FindByEmailAsync(request.Email!);
+                if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password!))
                     return Unauthorized();
 
                 var token = JwtHelper.GenerateToken(user, _config);
@@ -56,15 +60,16 @@ namespace papermast.Controllers
                 {
                     HttpOnly = true,
                     Secure = true, 
-                    SameSite = SameSiteMode.None, 
-                    Expires = DateTimeOffset.UtcNow.AddDays(7)
+                    SameSite = SameSiteMode.Lax,
+                    Expires = DateTimeOffset.UtcNow.AddHours(24)
                 });
 
                 return Ok(true);
             }
             catch (Exception ex)
             {
-                return BadRequest($"Error Logging In User: {ex.Message}");
+                _logger.LogError(ex, "Login failed unexpectedly");
+                return BadRequest("Unable to complete login.");
             }
         }
 
@@ -77,26 +82,29 @@ namespace papermast.Controllers
                 {
                     HttpOnly = true,
                     Secure = true, 
-                    SameSite = SameSiteMode.None 
+                    SameSite = SameSiteMode.Lax
                 });
                 return Ok();
             }
             catch (Exception ex)
             {
-                return BadRequest($"Error Logging Out: {ex.Message}");
+                _logger.LogError(ex, "Logout failed unexpectedly");
+                return BadRequest("Unable to complete logout.");
             }
         }
 
+        [EnableRateLimiting("authentication")]
         [HttpGet("email-exists/{email}")]
         public async Task<ActionResult<bool>> EmailExists([FromRoute] string? email)
         {
             try
             {
-                return Ok(this._userService.EmailExists(email));
+                return Ok(await _userService.EmailExists(email ?? string.Empty));
             }
             catch (Exception ex)
             {
-                return BadRequest($"Error Validating Email: {ex.Message}");
+                _logger.LogWarning(ex, "Email availability check failed");
+                return BadRequest("Unable to check email availability.");
             }
         }
 
@@ -118,7 +126,8 @@ namespace papermast.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest($"Error Retrieving Logged In User: {ex.Message}");
+                _logger.LogError(ex, "Failed to retrieve logged-in user");
+                return BadRequest("Unable to retrieve the logged-in user.");
             }
         }
     }

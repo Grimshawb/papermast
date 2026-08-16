@@ -40,8 +40,10 @@ namespace papermast.Data.Services
 
         private async Task<string?> apiSearch(string? text, string? intitle, string? inauthor, string? subject, string? isbn)
         {
-            var apiKey = _config["GoogleBooks:ApiKey"];
-            var apiUrl = _config["GoogleBooks:ApiUrl"];
+            var apiKey = _config["GoogleBooks:ApiKey"]
+                ?? throw new InvalidOperationException("GoogleBooks:ApiKey is required.");
+            var apiUrl = _config["GoogleBooks:ApiUrl"]
+                ?? throw new InvalidOperationException("GoogleBooks:ApiUrl is required.");
             var queryParts = new List<string>();
 
             if (!string.IsNullOrEmpty(text)) queryParts.Add(text);
