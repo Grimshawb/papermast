@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoginRequestDto, RegistrationRequestDto, User } from '../models';
+import { SUPPRESS_UNAUTHORIZED_TOAST } from '../interceptors/error-context';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,8 @@ export class AuthService {
   }
 
   public getLoggedInUser(): Observable<User> {
-    return this.http.get<User>(`${this.baseUrl}`);
+    return this.http.get<User>(`${this.baseUrl}`, {
+      context: new HttpContext().set(SUPPRESS_UNAUTHORIZED_TOAST, true)
+    });
   }
 }

@@ -3,7 +3,7 @@ import {  LoginRequestDto, User } from '../models';
 import { Store } from './store';
 import { AuthService } from '../services/auth.service';
 import { AuthStoreState } from '../models/state-models/auth-store-state.model';
-import { take, tap } from 'rxjs';
+import { defaultIfEmpty, take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +30,10 @@ export class AuthStore extends Store<AuthStoreState> {
 
   public getLoggedInUser(): void {
     this._authService.getLoggedInUser()
-      .pipe(take(1))
+      .pipe(
+        defaultIfEmpty(null),
+        take(1)
+      )
       .subscribe(u => this.setState({ loggedInUser: u }));
   }
 
