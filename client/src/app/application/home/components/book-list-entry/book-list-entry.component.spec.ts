@@ -9,11 +9,14 @@ import { BestsellerBookDialogComponent } from '../../../bestsellers/components/b
 describe('BookListEntryComponent', () => {
   let component: BookListEntryComponent;
   let fixture: ComponentFixture<BookListEntryComponent>;
+  let dialog: jasmine.SpyObj<MatDialog>;
 
   beforeEach(async () => {
+    dialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
     configureTestBed();
     await TestBed.configureTestingModule({
-      imports: [BookListEntryComponent]
+      imports: [BookListEntryComponent],
+      providers: [{ provide: MatDialog, useValue: dialog }]
     })
     .compileComponents();
 
@@ -27,8 +30,6 @@ describe('BookListEntryComponent', () => {
   });
 
   it('opens the bestseller-style dialog with Google Books metadata', () => {
-    const dialog = TestBed.inject(MatDialog);
-    const open = spyOn(dialog, 'open');
     component.book = {
       id: 'google-book-id',
       title: 'Test Book',
@@ -42,7 +43,7 @@ describe('BookListEntryComponent', () => {
 
     component.showDetails();
 
-    expect(open).toHaveBeenCalledWith(BestsellerBookDialogComponent, jasmine.objectContaining({
+    expect(dialog.open).toHaveBeenCalledWith(BestsellerBookDialogComponent, jasmine.objectContaining({
       data: jasmine.objectContaining({
         source: 'google-books',
         sourceBookID: 'google-book-id',
