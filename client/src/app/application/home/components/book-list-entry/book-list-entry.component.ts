@@ -16,6 +16,9 @@ export class BookListEntryComponent {
   @Input()
   public book: ApiBook | undefined;
 
+  @Input()
+  public eyebrow = 'Author’s work';
+
   constructor(private dialog: MatDialog) { }
 
   public subtitle(s: string): string {
@@ -48,7 +51,7 @@ export class BookListEntryComponent {
     this.dialog.open(BestsellerBookDialogComponent, {
       data: {
         book: dialogBook,
-        eyebrow: 'Author’s work',
+        eyebrow: this.eyebrow,
         source: 'google-books',
         sourceBookID: this.book.id,
         pageCount: this.book.pageCount

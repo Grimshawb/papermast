@@ -1,13 +1,5 @@
 <main class="home-page" [@fadeAnimation]>
-  @if (loggedInUser && readingGoal) {
-    <section class="reading-life" aria-label="Your reading life">
-      <reading-goal-widget
-        [goal]="readingGoal"
-        [interactive]="true"
-        (activated)="openShelves()">
-      </reading-goal-widget>
-    </section>
-  }
+  <p class="brand-promise">Books worth discovering.</p>
 
   <section class="author-feature" aria-labelledby="daily-author-heading">
     <div class="section-kicker">A new literary voice, every day</div>
@@ -63,4 +55,38 @@
       </div>
     }
   </section>
+
+  @if (loggedInUser && readingGoal) {
+    <section class="reading-life" aria-label="Your reading life">
+      <reading-goal-widget
+        [goal]="readingGoal"
+        [interactive]="true"
+        (activated)="openShelves()">
+      </reading-goal-widget>
+    </section>
+  }
+
+  @if (recentlyViewedBooks.length) {
+    <section class="recently-viewed" aria-labelledby="recently-viewed-heading">
+      <header class="section-heading">
+        <div>
+          <div class="section-kicker">Pick up where you left off</div>
+          <h2 id="recently-viewed-heading">Recently viewed</h2>
+        </div>
+        <span class="result-count">{{ recentlyViewedBooks.length }} recent</span>
+      </header>
+
+      <div class="book-rail">
+        @for (book of recentlyViewedBooks; track book.id; let i = $index) {
+          <bookshelf-book-list-entry
+            class="book-entry"
+            [style.--entry-index]="i"
+            eyebrow="Recently viewed"
+            [book]="book">
+          </bookshelf-book-list-entry>
+        }
+      </div>
+      <p class="rail-hint" aria-hidden="true">Your latest discoveries <span>→</span></p>
+    </section>
+  }
 </main>

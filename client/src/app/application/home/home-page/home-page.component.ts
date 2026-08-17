@@ -5,13 +5,13 @@ import { BooksApiStore, NytStore, WikiStore } from '../../../store';
 import { fadeAnimation } from '../../../constants';
 import { BookListEntryComponent } from '../components/book-list-entry/book-list-entry.component';
 import { MatCardModule } from '@angular/material/card';
-import { BookSearchRequestDto, WikiEntry } from '../../../models';
+import { ApiBook, BookSearchRequestDto, WikiEntry } from '../../../models';
 import { DailyAuthorComponent } from '../components/daily-author/daily-author.component';
 import { DailyAuthors } from '../../../constants/daily-authors.enum';
 import { NytService } from '../../../services/nyt.service';
 import { ReadingGoal, User } from '../../../models';
 import { AuthStore } from '../../../store/auth.store';
-import { ReadingGoalsService } from '../../../services';
+import { ReadingGoalsService, RecentlyViewedService } from '../../../services';
 import { ReadingGoalWidgetComponent } from '../../shared/reading-goal-widget/reading-goal-widget.component';
 import { Router } from '@angular/router';
 
@@ -40,12 +40,14 @@ export class HomePageComponent implements OnInit, OnDestroy {
   public totalElements: number = 0;
   public loggedInUser: User | undefined;
   public readingGoal: ReadingGoal | null = null;
+  public recentlyViewedBooks: ApiBook[] = [];
 
   constructor(private _booksApiStore: BooksApiStore,
               private _wikiStore: WikiStore,
               private _nytStore: NytStore,
               private _authStore: AuthStore,
               private _readingGoalsService: ReadingGoalsService,
+              private _recentlyViewedService: RecentlyViewedService,
               private _router: Router) {
     this.getDailyAuthor();
     this._booksApiStore.apiSearch({inauthor: this.author} as BookSearchRequestDto);
@@ -68,6 +70,10 @@ export class HomePageComponent implements OnInit, OnDestroy {
         if (user) this.loadReadingGoal();
         else this.readingGoal = null;
       });
+
+    this._recentlyViewedService.books$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(books => this.recentlyViewedBooks = books);
   }
 
   public pageChanged(e: any): void {

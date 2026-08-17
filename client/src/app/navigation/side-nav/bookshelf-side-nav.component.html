@@ -30,17 +30,4 @@
     </mat-accordion>
   </nav>
 
-  <div class="sidenav-bottom">
-    <div class="theme-row">
-      <button mat-button
-        class="nav-button theme-toggle-button"
-        type="button"
-        (click)="toggleDarkMode()"
-        [attr.aria-label]="darkMode ? 'Switch to light mode' : 'Switch to dark mode'"
-        [title]="darkMode ? 'Switch to light mode' : 'Switch to dark mode'">
-        <mat-icon color="accent">{{ darkMode ? 'brightness_7' : 'brightness_2' }}</mat-icon>
-        <span>{{ darkMode ? 'Use light theme' : 'Use dark theme' }}</span>
-      </button>
-    </div>
-  </div>
 </div>

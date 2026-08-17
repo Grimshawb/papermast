@@ -1,4 +1,4 @@
-import { Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,12 +22,6 @@ export class SideNavComponent implements OnInit {
 
   constructor(private authStore: AuthStore) {}
 
-  @Input()
-  public darkMode: boolean = true;
-
-  @Output()
-  public onDarkModeChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
-
   @Output()
   public onNavigate: EventEmitter<void> = new EventEmitter<void>();
 
@@ -35,11 +29,6 @@ export class SideNavComponent implements OnInit {
     this.authStore.select(state => state.loggedInUser)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(user => this.loggedInUser = user);
-  }
-
-  public toggleDarkMode(): void {
-    this.darkMode = !this.darkMode;
-    this.onDarkModeChanged.emit(this.darkMode);
   }
 
   public navigate(): void {

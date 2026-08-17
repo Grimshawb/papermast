@@ -4,12 +4,51 @@
   padding: clamp(24px, 4vw, 52px) 0 72px;
 }
 
+.brand-promise {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 0 0 clamp(26px, 4vw, 42px);
+  color: var(--app-text-secondary);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  font-style: italic;
+  letter-spacing: 0.01em;
+}
+
+.brand-promise::before,
+.brand-promise::after {
+  flex: 0 0 clamp(38px, 8vw, 64px);
+  color: color-mix(in srgb, var(--app-accent) 82%, transparent);
+  content: "〜";
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.4rem;
+  font-style: normal;
+  line-height: 0.5;
+  text-align: center;
+}
+
+.brand-promise::before {
+  transform: scaleX(1.35);
+}
+
+.brand-promise::after {
+  transform: scaleX(-1.35);
+}
+
 .author-feature {
   margin-bottom: clamp(30px, 4vw, 44px);
 }
 
+.recently-viewed {
+  margin-top: clamp(52px, 8vw, 88px);
+  padding-top: clamp(30px, 5vw, 48px);
+  border-top: 1px solid var(--app-border);
+}
+
 .reading-life {
-  margin-bottom: clamp(44px, 7vw, 76px);
+  margin-top: clamp(44px, 7vw, 76px);
   padding: clamp(26px, 5vw, 48px);
   border: 1px solid var(--app-border);
   border-radius: 22px;
@@ -97,7 +136,8 @@ h2 {
   transition: transform 180ms ease;
 }
 
-.book-discovery:hover .rail-hint span {
+.book-discovery:hover .rail-hint span,
+.recently-viewed:hover .rail-hint span {
   transform: translateX(5px);
 }
 

@@ -9,9 +9,7 @@
       [fixedInViewport]="true"
       fixedTopGap="64"
       >
-      <bookshelf-side-nav [darkMode]="themeClass === 'dark-theme'"
-                          (onNavigate)="closeMobileDrawer()"
-                          (onDarkModeChanged)="onThemeChanged($event)"></bookshelf-side-nav>
+      <bookshelf-side-nav (onNavigate)="closeMobileDrawer()"></bookshelf-side-nav>
     </mat-sidenav>
 
     <mat-sidenav-content>

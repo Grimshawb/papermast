@@ -10,7 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { defaultIfEmpty, finalize, take } from 'rxjs';
 import { BookEntry, BookEntryRequest, IsbnType, NytBook, User } from '../../../../models';
-import { BookEntriesService, ToasterService } from '../../../../services';
+import { BookEntriesService, RecentlyViewedService, ToasterService } from '../../../../services';
 import { AuthStore } from '../../../../store';
 
 export interface BestsellerBookDialogData {
@@ -40,6 +40,7 @@ export class BestsellerBookDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<BestsellerBookDialogComponent>,
     private bookEntriesService: BookEntriesService,
     private authStore: AuthStore,
+    private recentlyViewedService: RecentlyViewedService,
     private toaster: ToasterService,
     private router: Router
   ) {}
@@ -53,6 +54,8 @@ export class BestsellerBookDialogComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.recentlyViewedService.record(this.book, this.data.sourceBookID, this.data.pageCount);
+
     this.authStore.select(state => state.loggedInUser)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(user => {
