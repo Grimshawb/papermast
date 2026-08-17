@@ -15,8 +15,10 @@ describe('BookListEntryComponent', () => {
     dialog = jasmine.createSpyObj<MatDialog>('MatDialog', ['open']);
     configureTestBed();
     await TestBed.configureTestingModule({
-      imports: [BookListEntryComponent],
-      providers: [{ provide: MatDialog, useValue: dialog }]
+      imports: [BookListEntryComponent]
+    })
+    .overrideComponent(BookListEntryComponent, {
+      set: { providers: [{ provide: MatDialog, useValue: dialog }] }
     })
     .compileComponents();
 
