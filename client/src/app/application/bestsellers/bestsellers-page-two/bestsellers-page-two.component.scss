@@ -70,8 +70,16 @@
 }
 
 @media (max-width: 575.98px) {
+  .page-header {
+    margin-bottom: 40px;
+  }
+
   .list-selector {
     min-width: 0;
+  }
+
+  .book-position-indicators {
+    margin-top: 64px;
   }
 }
 
