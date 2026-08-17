@@ -13,6 +13,14 @@ import { BookEntry, BookEntryRequest, IsbnType, NytBook, User } from '../../../.
 import { BookEntriesService, ToasterService } from '../../../../services';
 import { AuthStore } from '../../../../store';
 
+export interface BestsellerBookDialogData {
+  book: NytBook;
+  eyebrow?: string;
+  source?: string;
+  sourceBookID?: string;
+  pageCount?: number;
+}
+
 @Component({
   selector: 'bestseller-book-dialog',
   imports: [CommonModule, MatButtonModule, MatDialogModule, MatFormFieldModule, MatIconModule,
@@ -28,13 +36,21 @@ export class BestsellerBookDialogComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public book: NytBook,
+    @Inject(MAT_DIALOG_DATA) public data: BestsellerBookDialogData,
     private dialogRef: MatDialogRef<BestsellerBookDialogComponent>,
     private bookEntriesService: BookEntriesService,
     private authStore: AuthStore,
     private toaster: ToasterService,
     private router: Router
   ) {}
+
+  public get book(): NytBook {
+    return this.data.book;
+  }
+
+  public get eyebrow(): string {
+    return this.data.eyebrow || 'NYT Best Seller';
+  }
 
   public ngOnInit(): void {
     this.authStore.select(state => state.loggedInUser)
@@ -48,11 +64,11 @@ export class BestsellerBookDialogComponent implements OnInit {
   public get currentEntry(): BookEntry | undefined {
     const isbn10 = this.identifier(IsbnType.ISBN_10);
     const isbn13 = this.identifier(IsbnType.ISBN_13);
-    const sourceBookID = isbn13 || isbn10 || this.fallbackSourceID;
+    const sourceBookID = this.data.sourceBookID || isbn13 || isbn10 || this.fallbackSourceID;
     return this.entries.find(entry =>
       (!!isbn13 && entry.isbn13 === isbn13) ||
       (!!isbn10 && entry.isbn10 === isbn10) ||
-      (entry.source === 'nyt-bestsellers' && entry.sourceBookID === sourceBookID));
+      (entry.source === (this.data.source || 'nyt-bestsellers') && entry.sourceBookID === sourceBookID));
   }
 
   public setStatus(status: string): void {
@@ -101,15 +117,15 @@ export class BestsellerBookDialogComponent implements OnInit {
     const isbn10 = this.identifier(IsbnType.ISBN_10);
     const isbn13 = this.identifier(IsbnType.ISBN_13);
     return {
-      source: existing?.source || 'nyt-bestsellers',
-      sourceBookID: existing?.sourceBookID || isbn13 || isbn10 || this.fallbackSourceID,
+      source: existing?.source || this.data.source || 'nyt-bestsellers',
+      sourceBookID: existing?.sourceBookID || this.data.sourceBookID || isbn13 || isbn10 || this.fallbackSourceID,
       title: existing?.title || this.book.title,
       authors: existing?.authors || this.book.author,
       thumbnailUrl: existing?.thumbnailUrl || this.book.bookImage,
       isbn10: existing?.isbn10 || isbn10,
       isbn13: existing?.isbn13 || isbn13,
       status,
-      pageCount: existing?.pageCount || 0
+      pageCount: existing?.pageCount || this.data.pageCount || 0
     };
   }
 }

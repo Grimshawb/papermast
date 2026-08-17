@@ -1,13 +1,13 @@
 import { Component, Input } from '@angular/core';
-import { BooksApiStore } from '../../../../store';
-import { Router } from '@angular/router';
-import { ApiBook } from '../../../../models';
+import { ApiBook, NytBook } from '../../../../models';
 
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { BestsellerBookDialogComponent } from '../../../bestsellers/components/bestseller-book-dialog/bestseller-book-dialog.component';
 
 @Component({
   selector: 'bookshelf-book-list-entry',
-  imports: [MatCardModule],
+  imports: [MatCardModule, MatDialogModule],
   templateUrl: './book-list-entry.component.html',
   styleUrl: './book-list-entry.component.scss'
 })
@@ -16,8 +16,7 @@ export class BookListEntryComponent {
   @Input()
   public book: ApiBook | undefined;
 
-  constructor(private _bookStore: BooksApiStore,
-              private _router: Router) { }
+  constructor(private dialog: MatDialog) { }
 
   public subtitle(s: string): string {
     if (s && s.trim() !== '') {
@@ -27,10 +26,37 @@ export class BookListEntryComponent {
     }
   }
 
-  public navigateToBook(): void {
-    if (this.book) {
-      this._bookStore.setSelectedBook(this.book);
-      this._router.navigate(['book']);
-    }
+  public showDetails(): void {
+    if (!this.book) return;
+
+    const dialogBook: NytBook = {
+      ageGroup: '',
+      amazonProductUrl: '',
+      author: this.book.authors?.join(', ') || 'Unknown author',
+      bookImage: this.book.imageLinks?.thumbnail || this.book.imageLinks?.smallThumbnail || 'assets/book-placeholder.svg',
+      buyLinks: [],
+      contributor: '',
+      contributorNote: '',
+      createdDate: undefined,
+      description: this.book.description || '',
+      isbns: this.book.industryIdentifiers || [],
+      publisher: this.book.publisher || '',
+      title: this.book.title,
+      weeksOnList: 0
+    };
+
+    this.dialog.open(BestsellerBookDialogComponent, {
+      data: {
+        book: dialogBook,
+        eyebrow: 'Author’s work',
+        source: 'google-books',
+        sourceBookID: this.book.id,
+        pageCount: this.book.pageCount
+      },
+      width: 'min(760px, calc(100vw - 32px))',
+      maxWidth: '760px',
+      maxHeight: '90vh',
+      autoFocus: 'dialog'
+    });
   }
 }

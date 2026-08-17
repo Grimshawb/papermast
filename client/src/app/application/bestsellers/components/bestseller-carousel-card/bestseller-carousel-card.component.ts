@@ -22,7 +22,7 @@ export class BestsellerCarouselCardComponent {
     if (!this.book) return;
 
     this.dialog.open(BestsellerBookDialogComponent, {
-      data: this.book,
+      data: { book: this.book },
       width: 'min(760px, calc(100vw - 32px))',
       maxWidth: '760px',
       maxHeight: '90vh',

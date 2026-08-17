@@ -2,9 +2,9 @@
   <article class="book-card"
            role="button"
            tabindex="0"
-           (click)="navigateToBook()"
-           (keydown.enter)="navigateToBook()"
-           (keydown.space)="navigateToBook(); $event.preventDefault()">
+           (click)="showDetails()"
+           (keydown.enter)="showDetails()"
+           (keydown.space)="showDetails(); $event.preventDefault()">
     <div class="cover-wrap">
       <img [src]="book.imageLinks?.thumbnail || book.imageLinks?.smallThumbnail || 'assets/book-placeholder.svg'"
            [alt]="'Cover of ' + book.title">
