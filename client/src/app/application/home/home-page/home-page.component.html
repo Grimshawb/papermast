@@ -56,8 +56,34 @@
     }
   </section>
 
+  <section class="genre-explorer" aria-labelledby="genre-explorer-heading">
+    <header class="section-heading">
+      <div>
+        <div class="section-kicker">Choose your atmosphere</div>
+        <h2 id="genre-explorer-heading">Explore by genre</h2>
+      </div>
+    </header>
+    <div class="genre-chips">
+      @for (genre of genres; track genre.slug) {
+        <a class="genre-chip"
+           [attr.data-genre]="genre.slug"
+           [routerLink]="['/genres', genre.slug]">
+          <span class="chip-mark" aria-hidden="true">◆</span>
+          <span>{{ genre.label }}</span>
+          <span class="chip-arrow" aria-hidden="true">→</span>
+        </a>
+      }
+    </div>
+  </section>
+
   @if (loggedInUser && readingGoal) {
-    <section class="reading-life" aria-label="Your reading life">
+    <section class="reading-life" aria-labelledby="reading-goal-heading">
+      <header class="section-heading reading-life-heading">
+        <div>
+          <div class="section-kicker">A chapter at a time</div>
+          <h2 id="reading-goal-heading">Your reading goal</h2>
+        </div>
+      </header>
       <reading-goal-widget
         [goal]="readingGoal"
         [interactive]="true"

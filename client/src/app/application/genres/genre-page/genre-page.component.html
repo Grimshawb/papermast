@@ -1,0 +1,60 @@
+<main [class]="'genre-page ' + (genre?.themeClass || '')">
+  @if (genre) {
+    <header class="genre-hero">
+      <a class="back-link" routerLink="/">← Home</a>
+      <div class="hero-copy">
+        <p class="eyebrow">{{ genre.eyebrow }}</p>
+        <h1>{{ genre.label }}</h1>
+        <p class="description">{{ genre.description }}</p>
+      </div>
+      <div class="atmosphere" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+    </header>
+
+    <section class="genre-books" [attr.aria-busy]="isLoading">
+      <div class="section-heading">
+        <div>
+          <p class="kicker">From the stacks</p>
+          <h2>Explore {{ genre.label }}</h2>
+        </div>
+        @if (books.length) { <span>{{ books.length }} titles</span> }
+      </div>
+
+      @if (isLoading) {
+        <div class="book-grid loading-grid" [attr.aria-label]="'Loading ' + genre.label + ' books'" role="status">
+          @for (item of [1, 2, 3, 4, 5, 6, 7, 8]; track item) {
+            <div class="book-skeleton"></div>
+          }
+        </div>
+      } @else if (loadFailed) {
+        <div class="empty-state">
+          <h2>The trail went cold.</h2>
+          <p>We couldn't reach the catalog. Try returning in a moment.</p>
+        </div>
+      } @else if (books.length) {
+        <div class="book-grid">
+          @for (book of books; track book.id; let i = $index) {
+            <bookshelf-book-list-entry
+              class="book-entry"
+              [style.--entry-index]="i"
+              [book]="book"
+              [eyebrow]="genre.label">
+            </bookshelf-book-list-entry>
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <h2>Nothing stirred.</h2>
+          <p>No books were found in this corner of the catalog.</p>
+        </div>
+      }
+    </section>
+  } @else {
+    <section class="unknown-genre">
+      <p class="eyebrow">Uncharted shelves</p>
+      <h1>That genre isn't open yet.</h1>
+      <a routerLink="/">Return home</a>
+    </section>
+  }
+</main>

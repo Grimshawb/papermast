@@ -5,7 +5,7 @@ import { BooksApiStore, NytStore, WikiStore } from '../../../store';
 import { fadeAnimation } from '../../../constants';
 import { BookListEntryComponent } from '../components/book-list-entry/book-list-entry.component';
 import { MatCardModule } from '@angular/material/card';
-import { ApiBook, BookSearchRequestDto, WikiEntry } from '../../../models';
+import { ApiBook, BookSearchRequestDto, GENRES, WikiEntry } from '../../../models';
 import { DailyAuthorComponent } from '../components/daily-author/daily-author.component';
 import { DailyAuthors } from '../../../constants/daily-authors.enum';
 import { NytService } from '../../../services/nyt.service';
@@ -13,12 +13,12 @@ import { ReadingGoal, User } from '../../../models';
 import { AuthStore } from '../../../store/auth.store';
 import { ReadingGoalsService, RecentlyViewedService } from '../../../services';
 import { ReadingGoalWidgetComponent } from '../../shared/reading-goal-widget/reading-goal-widget.component';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'bookshelf-home-page',
   standalone: true,
-  imports: [BookListEntryComponent, MatCardModule, DailyAuthorComponent, ReadingGoalWidgetComponent],
+  imports: [BookListEntryComponent, MatCardModule, DailyAuthorComponent, ReadingGoalWidgetComponent, RouterLink],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss',
   animations: [fadeAnimation]
@@ -41,6 +41,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   public loggedInUser: User | undefined;
   public readingGoal: ReadingGoal | null = null;
   public recentlyViewedBooks: ApiBook[] = [];
+  public readonly genres = GENRES;
 
   constructor(private _booksApiStore: BooksApiStore,
               private _wikiStore: WikiStore,

@@ -1,0 +1,23 @@
+<main class="genre-directory">
+  <header class="directory-header">
+    <p class="eyebrow">Choose your atmosphere</p>
+    <h1>Explore by genre</h1>
+    <p>Follow a familiar path or step onto a shelf you haven't visited before.</p>
+  </header>
+
+  <nav class="genre-grid" aria-label="Book genres">
+    @for (genre of genres; track genre.slug; let i = $index) {
+      <a class="genre-link"
+         [attr.data-genre]="genre.slug"
+         [style.--genre-index]="i"
+         [routerLink]="['/genres', genre.slug]">
+        <span class="genre-mark" aria-hidden="true">◆</span>
+        <span class="genre-copy">
+          <strong>{{ genre.label }}</strong>
+          <small>{{ genre.eyebrow }}</small>
+        </span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    }
+  </nav>
+</main>

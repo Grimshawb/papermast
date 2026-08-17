@@ -54,5 +54,21 @@ namespace papermast.Controllers
                 return BadRequest($"Error Searching For Books: {ex.Message}");
             }
         }
+
+        [HttpGet("genres/{genreSlug}")]
+        public async Task<IActionResult> GenreSearch(string genreSlug)
+        {
+            try
+            {
+                var books = await _booksApiService.GenreSearch(genreSlug);
+                if (books is null) return NotFound($"Unknown genre: {genreSlug}");
+                if (!string.IsNullOrEmpty(books)) return Content(books, "application/json");
+                return BadRequest($"Error searching genre: {genreSlug}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error searching genre {genreSlug}: {ex.Message}");
+            }
+        }
     }
 }

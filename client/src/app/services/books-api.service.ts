@@ -48,20 +48,27 @@ export class BooksApiService {
     return this.searchEndpoint('search', request);
   }
 
+  public genre(slug: string): Observable<ApiBook[]> {
+    return this.http.get<any>(`${this.baseUrl}/genres/${encodeURIComponent(slug)}`)
+      .pipe(take(1), map(response => this.toBooks(response)));
+  }
+
   private searchEndpoint(endpoint: string, request: BookSearchRequestDto): Observable<ApiBook[]> {
     return this.http.get<any>(`${this.baseUrl}/${endpoint}`, {params: toHttpParams(request)})
     .pipe(
       take(1),
-      map((res: any) => {
-        let books: ApiBook[] = [];
-        for (let i = 0; i < (res.items?.length || 0); i++) {
-          let bookData = res.items[i].volumeInfo;
-          if (bookData.language === 'en') {
-            books.push({ id: res.items[i].id, ...bookData } as ApiBook);
-          }
-        }
-        return books;
-      })
+      map((res: any) => this.toBooks(res))
     );
+  }
+
+  private toBooks(response: any): ApiBook[] {
+    const books: ApiBook[] = [];
+    for (const item of response.items || []) {
+      const bookData = item.volumeInfo;
+      if (item.id && bookData?.title && bookData.language === 'en') {
+        books.push({ id: item.id, ...bookData } as ApiBook);
+      }
+    }
+    return books;
   }
 }

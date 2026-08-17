@@ -1,4 +1,5 @@
 export * from './book-entry.model';
+export * from './genre.model';
 export * from './reading-goal.model';
 export * from './user.model';
 export * from './books-api/index';

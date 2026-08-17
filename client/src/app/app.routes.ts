@@ -19,6 +19,14 @@ export const routes: Routes = [
     loadComponent: () => import('./application/bestsellers/bestsellers-page-two/bestsellers-page-two.component').then(m => m.BestsellersPageTwoComponent)
   },
   {
+    path: 'genres',
+    loadComponent: () => import('./application/genres/genre-directory/genre-directory.component').then(m => m.GenreDirectoryComponent)
+  },
+  {
+    path: 'genres/:slug',
+    loadComponent: () => import('./application/genres/genre-page/genre-page.component').then(m => m.GenrePageComponent)
+  },
+  {
     path: 'search',
     canActivate: [AuthGuard],
     loadComponent: () => import('./application/search/search-page.component').then(m => m.SearchPageComponent)

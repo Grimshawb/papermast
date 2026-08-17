@@ -24,7 +24,8 @@ export const NAVIGATION_GROUPS: NavigationGroup[] = [
     icon: 'explore',
     items: [
       { label: 'Search', icon: 'search', route: '/search', requiresAuth: true },
-      { label: 'Bestsellers', icon: 'sell', route: '/bestsellers' }
+      { label: 'Bestsellers', icon: 'sell', route: '/bestsellers' },
+      { label: 'Browse genres', icon: 'category', route: '/genres' }
     ]
   },
   {
