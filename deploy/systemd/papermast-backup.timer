@@ -1,0 +1,11 @@
+[Unit]
+Description=Run the PaperMast MySQL backup every day
+
+[Timer]
+OnCalendar=*-*-* 03:15:00 UTC
+RandomizedDelaySec=30min
+Persistent=true
+Unit=papermast-backup.service
+
+[Install]
+WantedBy=timers.target
