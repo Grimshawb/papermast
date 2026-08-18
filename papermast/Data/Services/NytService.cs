@@ -9,6 +9,8 @@ namespace papermast.Data.Services
 
     public class NytService : INytService
     {
+        private const int NytRefreshHourUtc = 5;
+
         private readonly IConfiguration _config;
         private readonly IRedisCacheService _cache;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -31,7 +33,28 @@ namespace papermast.Data.Services
                 if (!response.IsSuccessStatusCode) return string.Empty;
 
                 return await response.Content.ReadAsStringAsync();
-            }, TimeSpan.FromDays(8));
+            }, GetTimeUntilNextListRefresh(DateTimeOffset.UtcNow));
+        }
+
+        internal static TimeSpan GetTimeUntilNextListRefresh(DateTimeOffset now)
+        {
+            var utcNow = now.ToUniversalTime();
+            var daysUntilThursday = ((int)DayOfWeek.Thursday - (int)utcNow.DayOfWeek + 7) % 7;
+            var nextRefresh = new DateTimeOffset(
+                utcNow.Year,
+                utcNow.Month,
+                utcNow.Day,
+                NytRefreshHourUtc,
+                0,
+                0,
+                TimeSpan.Zero).AddDays(daysUntilThursday);
+
+            if (nextRefresh <= utcNow)
+            {
+                nextRefresh = nextRefresh.AddDays(7);
+            }
+
+            return nextRefresh - utcNow;
         }
     }
 }

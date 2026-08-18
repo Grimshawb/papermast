@@ -14,6 +14,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<AppUser> AppUsers { get; set; }
     public DbSet<BookEntry> BookEntries { get; set; }
     public DbSet<ReadingGoal> ReadingGoals { get; set; }
+    public DbSet<ApiRequestLog> ApiRequestLogs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -38,5 +39,26 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
         builder.Entity<ReadingGoal>()
             .HasIndex(goal => new { goal.UserID, goal.Year })
             .IsUnique();
+
+        builder.Entity<ApiRequestLog>(entry =>
+        {
+            entry.HasKey(log => log.ApiRequestLogID);
+            entry.Property(log => log.ApiName).HasMaxLength(64);
+            entry.Property(log => log.Direction).HasMaxLength(16);
+            entry.Property(log => log.Method).HasMaxLength(16);
+            entry.Property(log => log.Route).HasMaxLength(512);
+            entry.Property(log => log.ActorType).HasMaxLength(16);
+            entry.Property(log => log.ActorId).HasMaxLength(255);
+            entry.Property(log => log.QueryParameterNames).HasMaxLength(512);
+            entry.Property(log => log.ClientIp).HasMaxLength(45);
+            entry.Property(log => log.UserAgent).HasMaxLength(512);
+            entry.Property(log => log.TraceId).HasMaxLength(64);
+            entry.Property(log => log.ErrorType).HasMaxLength(255);
+            entry.Property(log => log.ErrorMessage).HasMaxLength(1000);
+            entry.HasIndex(log => log.StartedAtUtc);
+            entry.HasIndex(log => new { log.ApiName, log.StartedAtUtc });
+            entry.HasIndex(log => new { log.ActorId, log.StartedAtUtc });
+            entry.HasIndex(log => log.TraceId);
+        });
     }
 }

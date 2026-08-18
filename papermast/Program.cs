@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using papermast.Data.Services;
 using papermast.Entities.Models;
 using papermast.Entities.Options;
+using papermast.Middleware;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
@@ -45,6 +46,7 @@ foreach (var requiredSetting in new[]
 {
     "GoogleBooks:ApiUrl",
     "GoogleBooks:ApiKey",
+    "OpenLibrary:ApiUrl",
     "Wiki:ApiUrl",
     "Wiki:RequestHeader",
     "Nyt:ApiUrl",
@@ -64,7 +66,10 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.KnownProxies.Clear();
 });
 
-builder.Services.AddHttpClient();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<ExternalApiAuditHandler>();
+builder.Services.AddHttpClient(string.Empty)
+    .AddHttpMessageHandler<ExternalApiAuditHandler>();
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = redisConnection;
@@ -132,8 +137,13 @@ builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
 builder.Services.AddScoped<IWikiService, WikiService>();
 builder.Services.AddScoped<INytService, NytService>();
 builder.Services.AddScoped<IBooksApiService, BooksApiService>();
+builder.Services.AddScoped<IOpenLibraryService, OpenLibraryService>();
 builder.Services.AddScoped<IBookEntryService, BookEntryService>();
 builder.Services.AddScoped<IReadingGoalService, ReadingGoalService>();
+builder.Services.AddSingleton<ApiAuditQueue>();
+builder.Services.AddSingleton<IApiAuditSink>(services => services.GetRequiredService<ApiAuditQueue>());
+builder.Services.AddHostedService<ApiAuditWriterService>();
+builder.Services.AddHostedService<ApiAuditRetentionService>();
 
 var app = builder.Build();
 

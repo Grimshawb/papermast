@@ -35,14 +35,16 @@ namespace papermast.Data.Services
         private readonly IRedisCacheService _cache;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly INytService _nytService;
+        private readonly IOpenLibraryService _openLibraryService;
 
         public BooksApiService(IConfiguration config, IRedisCacheService cache, IHttpClientFactory httpClientFactory,
-                               INytService nytService)
+                               INytService nytService, IOpenLibraryService openLibraryService)
         {
             _config = config;
             _cache = cache;
             _httpClientFactory = httpClientFactory;
             _nytService = nytService;
+            _openLibraryService = openLibraryService;
         }
 
         public async Task<string?> DailyAuthorSearch(string? text, string? intitle, string? inauthor, string? subject, string? isbn)
@@ -65,10 +67,22 @@ namespace papermast.Data.Services
         {
             if (!GenreSubjects.TryGetValue(genreSlug, out var subjects)) return null;
 
+            var cacheVersion = genreSlug.Equals("horror", StringComparison.OrdinalIgnoreCase) ? "v3" : "v2";
             return await _cache.GetOrCreateAsoluteTTLAsync<string?>(
-                $"Genre:v2:{genreSlug.ToLowerInvariant()}",
+                $"Genre:{cacheVersion}:{genreSlug.ToLowerInvariant()}",
                 async () =>
                 {
+                    if (genreSlug.Equals("horror", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var openLibraryTask = _openLibraryService.GetPopularBySubject("horror fiction");
+                        var horrorNytTask = _nytService.GetAllBestSellerLists();
+                        await Task.WhenAll(openLibraryTask, horrorNytTask);
+                        return MergeGenreResults(
+                            OpenLibraryToGoogleResults(openLibraryTask.Result),
+                            horrorNytTask.Result,
+                            genreSlug);
+                    }
+
                     var googleTasks = subjects
                         .Select(subject => apiSearch(null, null, null, subject, null))
                         .ToArray();
@@ -77,6 +91,58 @@ namespace papermast.Data.Services
                     return MergeGenreResults(CombineGoogleResults(googleTasks.Select(task => task.Result)), nytTask.Result, genreSlug);
                 },
                 TimeSpan.FromHours(24));
+        }
+
+        private static string OpenLibraryToGoogleResults(string? response)
+        {
+            var items = new JsonArray();
+            if (JsonNode.Parse(response ?? "{}")?["docs"] is not JsonArray works)
+                return new JsonObject { ["items"] = items }.ToJsonString();
+
+            foreach (var work in works.OfType<JsonObject>())
+            {
+                var title = work["title"]?.GetValue<string>();
+                var key = work["key"]?.GetValue<string>();
+                if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(key)) continue;
+
+                var identifiers = new JsonArray();
+                var isbns = (work["isbn"] as JsonArray)?
+                    .Select(node => node?.GetValue<string>())
+                    .Where(isbn => !string.IsNullOrWhiteSpace(isbn))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToArray() ?? [];
+                var isbn10 = isbns.FirstOrDefault(isbn => isbn!.Length == 10);
+                var isbn13 = isbns.FirstOrDefault(isbn => isbn!.Length == 13);
+                if (isbn10 is not null) identifiers.Add(new JsonObject { ["type"] = "ISBN_10", ["identifier"] = isbn10 });
+                if (isbn13 is not null) identifiers.Add(new JsonObject { ["type"] = "ISBN_13", ["identifier"] = isbn13 });
+
+                var authors = new JsonArray((work["author_name"] as JsonArray)?
+                    .Select(author => (JsonNode?)author?.GetValue<string>())
+                    .ToArray() ?? []);
+                var volumeInfo = new JsonObject
+                {
+                    ["title"] = title,
+                    ["authors"] = authors,
+                    ["language"] = "en",
+                    ["industryIdentifiers"] = identifiers
+                };
+                if (work["first_publish_year"] is JsonNode year)
+                    volumeInfo["publishedDate"] = year.GetValue<int>().ToString();
+                if (work["cover_i"] is JsonNode cover)
+                {
+                    var coverUrl = $"https://covers.openlibrary.org/b/id/{cover.GetValue<int>()}-L.jpg";
+                    volumeInfo["imageLinks"] = new JsonObject { ["smallThumbnail"] = coverUrl, ["thumbnail"] = coverUrl };
+                }
+
+                items.Add(new JsonObject
+                {
+                    ["id"] = $"openlibrary-{key.Trim('/').Replace('/', '-')}",
+                    ["volumeInfo"] = volumeInfo,
+                    ["papermastSource"] = "open-library"
+                });
+            }
+
+            return new JsonObject { ["items"] = items }.ToJsonString();
         }
 
         private static string CombineGoogleResults(IEnumerable<string?> responses)

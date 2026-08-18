@@ -54,6 +54,7 @@ services:
       Jwt__Key: ${JWT_KEY}
       GoogleBooks__ApiUrl: https://www.googleapis.com/books/v1/volumes
       GoogleBooks__ApiKey: ${GOOGLE_BOOKS_API_KEY}
+      OpenLibrary__ApiUrl: https://openlibrary.org/search.json
       Wiki__RequestHeader: ${WIKI_REQUEST_HEADER}
       Wiki__ApiUrl: https://en.wikipedia.org/api/rest_v1/page/summary
       Nyt__ApiUrl: https://api.nytimes.com/svc/books/v3
