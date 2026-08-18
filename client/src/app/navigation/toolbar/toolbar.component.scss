@@ -8,7 +8,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 64px;
+  height: var(--app-toolbar-height);
   z-index: 10;
 }
 
