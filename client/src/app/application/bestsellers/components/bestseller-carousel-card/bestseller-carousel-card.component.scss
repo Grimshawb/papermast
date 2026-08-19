@@ -4,7 +4,6 @@
   max-height: 75dvh;
   margin: auto;
   align-items: center;
-  overflow: hidden;
   cursor: pointer;
   transition: box-shadow 160ms ease, transform 160ms ease;
 }
@@ -44,4 +43,25 @@ mat-card-content p {
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 4;
+}
+
+@media (max-width: 575.98px) {
+  .carousel-card {
+    display: flex;
+    flex-direction: column;
+    height: min(75vh, 620px);
+    height: min(75dvh, 620px);
+    max-height: none;
+    overflow: hidden;
+  }
+
+  .image-frame {
+    flex: 1 1 auto;
+    min-height: 0;
+    aspect-ratio: auto;
+  }
+
+  .main-image {
+    object-fit: contain;
+  }
 }
