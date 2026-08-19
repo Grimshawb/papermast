@@ -27,6 +27,11 @@ mat-panel-title mat-icon {
   background: rgba(127, 127, 127, 0.16);
 }
 
+.direct-nav-button,
+.direct-nav-button.active-nav-item {
+  background: transparent;
+}
+
 mat-expansion-panel {
   border-radius: 0;
   box-shadow: none;

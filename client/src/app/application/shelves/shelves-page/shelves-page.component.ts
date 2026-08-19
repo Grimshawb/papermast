@@ -115,7 +115,9 @@ export class ShelvesPageComponent implements OnInit {
       data: entry,
       width: 'min(760px, calc(100vw - 32px))',
       maxWidth: '760px',
-      maxHeight: '90vh',
+      maxHeight: 'calc(var(--app-visual-viewport-height, 100dvh) - 16px)',
+      panelClass: 'app-responsive-dialog',
+      position: { top: 'calc(var(--app-visual-viewport-offset-top, 0px) + 8px)' },
       autoFocus: 'dialog'
     }).afterClosed()
       .pipe(take(1), filter((updatedEntry): updatedEntry is BookEntry => !!updatedEntry))

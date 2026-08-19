@@ -8,7 +8,7 @@ import { AuthStore } from '../../store/auth.store';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
 import { User } from '../../models';
 import { RouterLink, RouterLinkActive } from "@angular/router";
-import { NAVIGATION_GROUPS } from '../navigation-items';
+import { DIRECT_NAV_ITEMS, NAVIGATION_GROUPS } from '../navigation-items';
 
 
 @Component({
@@ -26,6 +26,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   public loggedInUser$: Observable<User>;
   public loggedInUser: User = undefined;
   public readonly navigationGroups = NAVIGATION_GROUPS;
+  public readonly directNavigationItems = DIRECT_NAV_ITEMS;
   private _destroy$: Subject<void> = new Subject<void>();
 
   @Input()

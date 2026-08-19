@@ -79,7 +79,18 @@
   }
 
   .book-position-indicators {
-    margin-top: 64px;
+    margin-top: 24px;
+  }
+
+  .carousel-container {
+    height: calc(min(75vh, 620px) + 80px);
+    height: calc(min(75dvh, 620px) + 80px);
+    min-height: 440px;
+    padding-top: 0;
+  }
+
+  .carousel-stage {
+    height: 100%;
   }
 }
 

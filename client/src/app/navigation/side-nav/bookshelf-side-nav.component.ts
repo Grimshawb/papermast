@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { NAVIGATION_GROUPS } from '../navigation-items';
+import { DIRECT_NAV_ITEMS, NAVIGATION_GROUPS } from '../navigation-items';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { User } from '../../models';
 import { AuthStore } from '../../store/auth.store';
@@ -17,6 +17,7 @@ import { AuthStore } from '../../store/auth.store';
 })
 export class SideNavComponent implements OnInit {
   public readonly navigationGroups = NAVIGATION_GROUPS;
+  public readonly directNavigationItems = DIRECT_NAV_ITEMS;
   public loggedInUser: User | undefined;
   private readonly destroyRef = inject(DestroyRef);
 

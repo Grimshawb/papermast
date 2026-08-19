@@ -18,6 +18,10 @@ export const HOME_NAV_ITEM: NavigationItem = {
   route: '/'
 };
 
+export const DIRECT_NAV_ITEMS: NavigationItem[] = [
+  { label: 'Shelves', icon: 'menu_book', route: '/shelves', requiresAuth: true }
+];
+
 export const NAVIGATION_GROUPS: NavigationGroup[] = [
   {
     label: 'Discover',
@@ -26,14 +30,6 @@ export const NAVIGATION_GROUPS: NavigationGroup[] = [
       { label: 'Search', icon: 'search', route: '/search', requiresAuth: true },
       { label: 'Bestsellers', icon: 'sell', route: '/bestsellers' },
       { label: 'Browse genres', icon: 'category', route: '/genres' }
-    ]
-  },
-  {
-    label: 'My Library',
-    icon: 'local_library',
-    requiresAuth: true,
-    items: [
-      { label: 'Shelves', icon: 'menu_book', route: '/shelves' }
     ]
   }
 ];

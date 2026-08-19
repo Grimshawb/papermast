@@ -1,8 +1,10 @@
 .carousel-card {
   width: clamp(280px, 85vw, 420px);
   max-height: 75vh;
+  max-height: 75dvh;
   margin: auto;
   align-items: center;
+  overflow: hidden;
   cursor: pointer;
   transition: box-shadow 160ms ease, transform 160ms ease;
 }
@@ -35,4 +37,11 @@
 
 mat-card-actions {
   justify-content: center;
+}
+
+mat-card-content p {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
 }

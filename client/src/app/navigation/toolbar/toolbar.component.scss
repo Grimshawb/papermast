@@ -77,6 +77,11 @@
   background: rgba(255, 255, 255, 0.14);
 }
 
+.direct-nav-button,
+.direct-nav-button.active-nav-item {
+  background: transparent;
+}
+
 .active-menu-item {
   font-weight: 500;
 }

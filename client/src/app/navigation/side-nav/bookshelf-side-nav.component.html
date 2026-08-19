@@ -28,6 +28,19 @@
         }
       }
     </mat-accordion>
+
+    @for (item of directNavigationItems; track item.route) {
+      @if (!item.requiresAuth || loggedInUser) {
+        <a mat-button
+           class="nav-button direct-nav-button"
+           [routerLink]="item.route"
+           routerLinkActive="active-nav-item"
+           (click)="navigate()">
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    }
   </nav>
 
 </div>

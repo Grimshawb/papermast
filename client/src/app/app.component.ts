@@ -40,6 +40,22 @@ export class AppComponent {
 
     this.overlay.getContainerElement().classList.add(this.themeClass);
     this.renderer.addClass(document.body, this.themeClass);
+
+    const visualViewport = window.visualViewport;
+    const syncVisualViewport = () => {
+      const height = visualViewport?.height ?? window.innerHeight;
+      const offsetTop = visualViewport?.offsetTop ?? 0;
+      this.renderer.setStyle(document.documentElement, '--app-visual-viewport-height', `${height}px`);
+      this.renderer.setStyle(document.documentElement, '--app-visual-viewport-offset-top', `${offsetTop}px`);
+    };
+
+    syncVisualViewport();
+    visualViewport?.addEventListener('resize', syncVisualViewport);
+    visualViewport?.addEventListener('scroll', syncVisualViewport);
+    this.destroyRef.onDestroy(() => {
+      visualViewport?.removeEventListener('resize', syncVisualViewport);
+      visualViewport?.removeEventListener('scroll', syncVisualViewport);
+    });
   }
 
   public toggleMobileDrawer(): void {
