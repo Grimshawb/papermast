@@ -27,6 +27,10 @@ export const routes: Routes = [
     loadComponent: () => import('./application/genres/genre-page/genre-page.component').then(m => m.GenrePageComponent)
   },
   {
+    path: 'about',
+    loadComponent: () => import('./application/about/about-page.component').then(m => m.AboutPageComponent)
+  },
+  {
     path: 'search',
     canActivate: [AuthGuard],
     loadComponent: () => import('./application/search/search-page.component').then(m => m.SearchPageComponent)

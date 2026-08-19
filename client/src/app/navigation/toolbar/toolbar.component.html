@@ -67,10 +67,6 @@
         <mat-icon>account_circle</mat-icon>
       </button>
       <mat-menu #accountMenu="matMenu">
-        <button mat-menu-item>
-          <mat-icon>manage_accounts</mat-icon>
-          <span>Account</span>
-        </button>
         <button mat-menu-item (click)="toggleDarkMode()">
           <mat-icon>{{ darkMode ? 'brightness_7' : 'brightness_2' }}</mat-icon>
           <span>{{ darkMode ? 'Use light theme' : 'Use dark theme' }}</span>

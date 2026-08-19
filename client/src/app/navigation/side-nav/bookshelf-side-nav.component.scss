@@ -33,7 +33,9 @@ mat-panel-title mat-icon {
 }
 
 .direct-nav-button {
-  padding-left: 24px;
+  width: calc(100% - 24px);
+  margin-inline: 12px;
+  padding-inline: 12px;
 }
 
 mat-expansion-panel {

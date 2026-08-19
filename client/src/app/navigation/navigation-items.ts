@@ -19,7 +19,8 @@ export const HOME_NAV_ITEM: NavigationItem = {
 };
 
 export const DIRECT_NAV_ITEMS: NavigationItem[] = [
-  { label: 'Shelves', icon: 'menu_book', route: '/shelves', requiresAuth: true }
+  { label: 'Shelves', icon: 'menu_book', route: '/shelves', requiresAuth: true },
+  { label: 'About', icon: 'info', route: '/about' }
 ];
 
 export const NAVIGATION_GROUPS: NavigationGroup[] = [
