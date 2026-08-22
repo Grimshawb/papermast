@@ -62,6 +62,8 @@ The deployment scripts under `deploy/scripts` are installed root-owned on the VP
 
 Real credentials are never committed or copied into image layers. Required variable names are documented in `.env.example`; production values live only in the protected `/opt/papermast/.env` file on the VPS.
 
+Catalog administrators are managed through the standard ASP.NET Identity `AspNetRoles` and `AspNetUserRoles` tables. After changing a user's role membership, that user must sign out and back in so the role is included in the authentication token. Administrators manage curated genre catalogs at `/admin/catalogs`; a starter file is available at `docs/catalogs/genre-catalog-template.csv`.
+
 The learning-oriented architecture, deployment journal, and operations documentation live in the associated Obsidian vault.
 
 ## Angular CLI reference

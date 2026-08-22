@@ -47,6 +47,8 @@ foreach (var requiredSetting in new[]
     "GoogleBooks:ApiUrl",
     "GoogleBooks:ApiKey",
     "OpenLibrary:ApiUrl",
+    "OpenLibrary:BooksApiUrl",
+    "OpenLibrary:UserAgent",
     "Wiki:ApiUrl",
     "Wiki:RequestHeader",
     "Nyt:ApiUrl",
@@ -138,6 +140,7 @@ builder.Services.AddScoped<IWikiService, WikiService>();
 builder.Services.AddScoped<INytService, NytService>();
 builder.Services.AddScoped<IBooksApiService, BooksApiService>();
 builder.Services.AddScoped<IOpenLibraryService, OpenLibraryService>();
+builder.Services.AddScoped<ICuratedCatalogService, CuratedCatalogService>();
 builder.Services.AddScoped<IBookEntryService, BookEntryService>();
 builder.Services.AddScoped<IReadingGoalService, ReadingGoalService>();
 builder.Services.AddSingleton<ApiAuditQueue>();

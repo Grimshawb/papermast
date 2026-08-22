@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace papermast.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260820010601_AddCuratedCatalog")]
+    partial class AddCuratedCatalog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -416,75 +419,6 @@ namespace papermast.Migrations
                         .IsUnique();
 
                     b.ToTable("BookEntries");
-                });
-
-            modelBuilder.Entity("papermast.Entities.Models.BookMetadata", b =>
-                {
-                    b.Property<int>("BookMetadataID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("BookMetadataID"));
-
-                    b.Property<string>("AuthorsJson")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("CoverOverrideUrl")
-                        .HasMaxLength(2000)
-                        .HasColumnType("varchar(2000)");
-
-                    b.Property<string>("CoverUrl")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("IdentifiersJson")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Isbn13")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("varchar(13)");
-
-                    b.Property<string>("Provider")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("varchar(32)");
-
-                    b.Property<string>("PublishedDate")
-                        .HasMaxLength(32)
-                        .HasColumnType("varchar(32)");
-
-                    b.Property<string>("Publisher")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime>("RetrievedAtUtc")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("SourceBookID")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
-
-                    b.HasKey("BookMetadataID");
-
-                    b.HasIndex("Isbn13")
-                        .IsUnique();
-
-                    b.ToTable("BookMetadata");
                 });
 
             modelBuilder.Entity("papermast.Entities.Models.CuratedCatalogBatch", b =>
