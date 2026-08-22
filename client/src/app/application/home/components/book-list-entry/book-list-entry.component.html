@@ -1,14 +1,14 @@
 @if (book) {
   <article class="book-card"
-           role="button"
-           tabindex="0"
+           [attr.role]="interactive ? 'button' : null"
+           [attr.tabindex]="interactive ? 0 : null"
            (click)="showDetails()"
-           (keydown.enter)="showDetails()"
-           (keydown.space)="showDetails(); $event.preventDefault()">
+           (keydown.enter)="interactive && showDetails()"
+           (keydown.space)="interactive && showDetails(); interactive && $event.preventDefault()">
     <div class="cover-wrap">
       <img [src]="book.imageLinks?.thumbnail || book.imageLinks?.smallThumbnail || 'assets/book-placeholder.svg'"
            [alt]="'Cover of ' + book.title">
-      <span class="view-prompt">View book <span aria-hidden="true">→</span></span>
+      @if (interactive) { <span class="view-prompt">View book <span aria-hidden="true">→</span></span> }
     </div>
     <div class="book-info">
       <h3>{{ book.title }}</h3>

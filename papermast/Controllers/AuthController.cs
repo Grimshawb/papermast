@@ -54,7 +54,7 @@ namespace papermast.Controllers
                 if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password!))
                     return Unauthorized();
 
-                var token = JwtHelper.GenerateToken(user, _config);
+                var token = JwtHelper.GenerateToken(user, _config, await _userManager.GetRolesAsync(user));
                 
                 Response.Cookies.Append("papermast_auth", token, new CookieOptions
                 {
@@ -120,6 +120,7 @@ namespace papermast.Controllers
                 if (!string.IsNullOrEmpty(identityUserID))
                 {
                     var appUser = await this._userService.GetAppUserByIdentityID(identityUserID);
+                    if (appUser is not null) appUser.IsAdmin = User.IsInRole("Admin");
                     return Ok(appUser);
                 }
                 return NotFound("AppUser not found");

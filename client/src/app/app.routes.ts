@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -29,6 +30,11 @@ export const routes: Routes = [
   {
     path: 'about',
     loadComponent: () => import('./application/about/about-page.component').then(m => m.AboutPageComponent)
+  },
+  {
+    path: 'admin/catalogs',
+    canActivate: [AdminGuard],
+    loadComponent: () => import('./application/admin/catalog-import/catalog-import.component').then(m => m.CatalogImportComponent)
   },
   {
     path: 'search',

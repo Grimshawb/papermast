@@ -12,6 +12,33 @@
       </div>
     </header>
 
+    @if (isCurated) {
+      <section class="genre-books" [attr.aria-busy]="isLoading">
+        @if (isLoading) {
+          <div class="book-grid loading-grid" aria-label="Loading Horror books" role="status">
+            @for (item of [1, 2, 3, 4, 5, 6, 7, 8]; track item) { <div class="book-skeleton"></div> }
+          </div>
+        } @else if (loadFailed) {
+          <div class="empty-state"><h2>The trail went cold.</h2><p>We couldn't reach the curated catalog. Try returning in a moment.</p></div>
+        } @else if ((curatedSections[0]?.books?.length || 0) + (curatedSections[1]?.books?.length || 0) === 0) {
+          <div class="empty-state"><h2>The shelves are being prepared.</h2><p>Our first curated horror selections will appear here soon.</p></div>
+        } @else {
+          @for (section of curatedSections; track section.key) {
+            <section class="curated-section" [attr.aria-labelledby]="section.key + '-heading'">
+              <div class="section-heading"><div><p class="kicker">{{ section.key === 'upcoming' ? 'On the horizon' : 'From the stacks' }}</p><h2 [id]="section.key + '-heading'">{{ section.title }}</h2></div><span>{{ section.books.length }} titles</span></div>
+              @if (section.books.length) {
+                <div class="book-grid">
+                  @for (book of section.books; track book.id; let i = $index) {
+                    <div class="curated-book"><bookshelf-book-list-entry class="book-entry" [style.--entry-index]="i" [book]="book" [eyebrow]="section.title"></bookshelf-book-list-entry>
+                    @if (section.key === 'upcoming' && book.releaseDate) { <p class="release-date">Releases {{ book.releaseDate | date:'longDate':'UTC' }}</p> }</div>
+                  }
+                </div>
+              } @else { <p class="section-empty">No selections in this section yet.</p> }
+            </section>
+          }
+        }
+      </section>
+    } @else {
     <section class="genre-books" [attr.aria-busy]="isLoading">
       <div class="section-heading">
         <div>
@@ -50,6 +77,7 @@
         </div>
       }
     </section>
+    }
   } @else {
     <section class="unknown-genre">
       <p class="eyebrow">Uncharted shelves</p>

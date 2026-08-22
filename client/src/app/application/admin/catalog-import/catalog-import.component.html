@@ -1,0 +1,96 @@
+<main class="catalog-admin">
+  <header>
+    <p class="eyebrow">Catalog administration</p>
+    <h1>Curate genres</h1>
+    <p>Select a section, upload its ISBN list, and manage cover URLs from the resulting draft or currently published catalog.</p>
+  </header>
+
+  <div class="catalog-selectors">
+    <mat-form-field appearance="outline">
+      <mat-label>Genre</mat-label>
+      <mat-select [(ngModel)]="selectedGenre" (selectionChange)="changeGenre()">
+        @for (genre of genres; track genre.slug) { <mat-option [value]="genre.slug">{{ genre.label }}</mat-option> }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Upload section</mat-label>
+      <mat-select [(ngModel)]="selectedSection" (selectionChange)="changeSection()">
+        <mat-option value="popular">Popular & Recommended</mat-option>
+        <mat-option value="upcoming">Coming Soon</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <section class="upload-panel">
+    <label class="file-picker">
+      <mat-icon>upload_file</mat-icon>
+      <span>{{ selectedFile?.name || 'Choose a UTF-8 CSV file' }}</span>
+      <input type="file" accept=".csv,text/csv" (change)="selectFile($event)">
+    </label>
+    <button mat-flat-button [disabled]="!selectedFile || isUploading" (click)="upload()">{{ isUploading ? 'Resolving books…' : 'Validate and preview' }}</button>
+    <a class="format-help" href="data:text/csv;charset=utf-8,isbn%2Ctitle%2Cauthor%0A" [download]="selectedGenre + '-' + selectedSection + '-catalog-template.csv'">Download CSV template</a>
+  </section>
+
+  @if (errors.length) {
+    <div class="validation-errors" role="alert">
+      <h3>{{ catalog && isDraft ? 'These rows were skipped' : 'Fix these rows and upload again' }}</h3>
+      @if (catalog && isDraft) { <p>The remaining valid rows are included in the draft below.</p> }
+      <ul>@for (error of errors; track $index) { <li><strong>Row {{ error.row }}, {{ error.field }}:</strong> {{ error.message }}</li> }</ul>
+    </div>
+  }
+
+  @if (isLoadingCatalog) { <p class="catalog-loading">Loading published catalog…</p> }
+  @if (catalog) {
+    <section class="preview-heading">
+      <div><p class="eyebrow">{{ isDraft ? 'Unpublished draft' : 'Published catalog' }}</p><h2>Catalog and cover management</h2></div>
+      @if (isDraft) { <button mat-flat-button [disabled]="isPublishing" (click)="publish()">{{ isPublishing ? 'Publishing…' : 'Publish section' }}</button> }
+    </section>
+    @if (isDraft) {
+      <section class="draft-add">
+        <div><h3>Add a book by ISBN</h3><p>The book will be appended to the selected {{ selectedSection }} section.</p></div>
+        <div class="draft-add-controls">
+          <input type="text" [(ngModel)]="addIsbn" placeholder="ISBN-10 or ISBN-13" (keydown.enter)="addBook()">
+          <button mat-flat-button [disabled]="!addIsbn.trim() || isAddingBook" (click)="addBook()">{{ isAddingBook ? 'Retrieving…' : 'Add book' }}</button>
+        </div>
+        @if (addError) { <p class="cover-error" role="alert">{{ addError }}</p> }
+      </section>
+    }
+    @for (section of catalog.catalog.sections; track section.key) {
+      <section class="preview-section">
+        <h2>{{ section.title }} <span>{{ section.books.length }} titles</span></h2>
+        <div class="book-grid">
+          @for (book of section.books; track book.id) {
+            <div class="preview-book">
+              <bookshelf-book-list-entry [book]="book" [eyebrow]="section.title" [interactive]="false"></bookshelf-book-list-entry>
+              @if (book.releaseDate) { <p class="release-date">Releases {{ book.releaseDate | date:'longDate':'UTC' }}</p> }
+              <div class="cover-management">
+                <span>Cover</span>
+                <button mat-stroked-button (click)="editCover(book)">{{ book.imageLinks?.thumbnail ? 'Replace URL' : 'Set URL' }}</button>
+              </div>
+              @if (isDraft) {
+                <button mat-button class="discard-button" [disabled]="removingIsbn === book.isbn13" (click)="discardBook(book)">
+                  <mat-icon>delete_outline</mat-icon>{{ removingIsbn === book.isbn13 ? 'Discarding…' : 'Discard from draft' }}
+                </button>
+              }
+              @if (editingCoverIsbn === book.isbn13) {
+                <div class="cover-editor">
+                  <label [for]="'cover-' + book.isbn13">Direct HTTPS image URL</label>
+                  <input [id]="'cover-' + book.isbn13" type="url" [(ngModel)]="coverUrl" placeholder="https://example.com/cover.jpg">
+                  @if (coverUrl) { <img [src]="coverUrl" [alt]="'Cover preview for ' + book.title" (load)="coverError = ''" (error)="coverPreviewFailed()"> }
+                  @if (coverError) { <p class="cover-error" role="alert">{{ coverError }}</p> }
+                  <div class="cover-actions">
+                    <button mat-flat-button [disabled]="!coverUrl.trim() || !!coverError || isSavingCover" (click)="saveCover()">Save URL</button>
+                    <button mat-button [disabled]="isSavingCover" (click)="removeCover()">Remove override</button>
+                    <button mat-button [disabled]="isSavingCover" (click)="cancelCoverEdit()">Cancel</button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </section>
+    }
+  } @else if (!isLoadingCatalog && !isDraft) {
+    <p class="catalog-empty">No catalog has been published for this genre yet.</p>
+  }
+</main>

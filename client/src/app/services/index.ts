@@ -3,6 +3,7 @@ export * from './toaster.service';
 export * from './auth.service';
 export * from './nyt.service';
 export * from './book-entries.service';
+export * from './curated-catalog.service';
 export * from './reading-goals.service';
 export * from './recently-viewed.service';
 export * from './user.service';

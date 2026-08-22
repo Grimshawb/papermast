@@ -19,6 +19,9 @@ export class BookListEntryComponent {
   @Input()
   public eyebrow = 'Author’s work';
 
+  @Input()
+  public interactive = true;
+
   constructor(private dialog: MatDialog) { }
 
   public subtitle(s: string): string {
@@ -30,7 +33,7 @@ export class BookListEntryComponent {
   }
 
   public showDetails(): void {
-    if (!this.book) return;
+    if (!this.book || !this.interactive) return;
 
     const dialogBook: NytBook = {
       ageGroup: '',

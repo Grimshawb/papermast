@@ -242,6 +242,9 @@
 .atmosphere span:nth-child(3) { right: 7%; bottom: 42%; width: 10px; height: 10px; animation-delay: -4s; }
 
 .genre-books { padding-top: clamp(44px, 7vw, 76px); }
+.curated-section + .curated-section { margin-top: clamp(56px, 8vw, 92px); }
+.release-date, .section-empty { color: var(--app-text-secondary); }
+.release-date { margin: 10px 4px 0; font-size: .82rem; }
 .section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 24px; }
 .section-heading h2,
 .empty-state h2,
