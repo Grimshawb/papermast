@@ -331,9 +331,11 @@ namespace papermast.Data.Services
                 ["q"] = query,
                 ["orderBy"] = "relevance",
                 ["startIndex"] = "0",
-                ["maxResults"] = "40",
+                ["maxResults"] = string.IsNullOrEmpty(isbn) ? "40" : "1",
                 ["key"] = apiKey,
             };
+            if (!string.IsNullOrEmpty(isbn))
+                queryParams["fields"] = "items(id,volumeInfo(title,authors,description,publisher,publishedDate,imageLinks,industryIdentifiers))";
             var url = QueryHelpers.AddQueryString(apiUrl, queryParams);
             var client = _httpClientFactory.CreateClient();
             var response = await client.GetAsync(url);

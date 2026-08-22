@@ -6,14 +6,15 @@ using System.Text;
 
 public static class JwtHelper
 {
-    public static string GenerateToken(IdentityUser user, IConfiguration config)
+    public static string GenerateToken(IdentityUser user, IConfiguration config, IEnumerable<string>? roles = null)
     {
-        var claims = new[]
+        var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
+        claims.AddRange((roles ?? []).Select(role => new Claim(ClaimTypes.Role, role)));
 
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(config["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key is required."))
