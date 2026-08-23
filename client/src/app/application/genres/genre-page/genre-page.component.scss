@@ -162,31 +162,94 @@
   content: "";
 }
 
-.genre-horror .genre-hero::before {
-  position: absolute;
-  z-index: -1;
-  top: 0;
-  right: 7%;
-  width: min(410px, 58vw);
-  height: 150px;
+$bg-black: #100b0c;
+$bg-black-2: #1a0f11;
+$blood-deep: #4a0d10;
+$blood-bright: #9e1c1f;
+$cream: #f2e9de;
+$accent-red: #c23b3b;
+$text-muted: rgba($cream, 0.55);
+
+.horror-hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 460px;
   background:
-    radial-gradient(ellipse at 14% 0, #83141c 0 13%, transparent 14%),
-    radial-gradient(ellipse at 38% 0, #a31d25 0 20%, transparent 21%),
-    radial-gradient(ellipse at 63% 0, #701017 0 16%, transparent 17%),
-    radial-gradient(ellipse at 88% 0, #951921 0 12%, transparent 13%),
-    linear-gradient(#78131a 0 28px, transparent 29px);
-  filter: drop-shadow(0 12px 18px rgb(66 0 5 / 28%));
-  content: "";
-  opacity: 0.85;
+    radial-gradient(ellipse 900px 500px at 85% 0%, rgba($blood-deep, 0.35), transparent 70%),
+    linear-gradient(160deg, $bg-black-2 0%, $bg-black 55%, #0a0708 100%);
+  border-radius: 14px;
+  padding: 40px 56px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      100deg,
+      rgba($cream, 0.015) 0px,
+      rgba($cream, 0.015) 1px,
+      transparent 1px,
+      transparent 46px
+    );
+    pointer-events: none;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 1200px 700px at 50% 40%, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
+    pointer-events: none;
+  }
 }
 
-.genre-horror .genre-hero::after {
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  background: repeating-linear-gradient(102deg, transparent 0 78px, rgb(255 255 255 / 1.8%) 80px 81px);
-  content: "";
-  mix-blend-mode: screen;
+.horror-hero .horror-hero__nav {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 600 12px/1 "Inter", sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: $text-muted;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover { color: $cream; }
+}
+
+.horror-hero .horror-hero__content {
+  position: relative;
+  z-index: 2;
+  margin-top: 140px;
+  max-width: 640px;
+}
+
+.horror-hero .horror-hero__eyebrow {
+  font: 700 12px/1 "Inter", sans-serif;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: $accent-red;
+  margin-bottom: 18px;
+}
+
+.horror-hero .horror-hero__title {
+  font-family: "Playfair Display", "Georgia", serif;
+  font-weight: 700;
+  font-size: clamp(64px, 9vw, 120px);
+  line-height: 0.95;
+  color: $cream;
+  margin: 0 0 24px;
+  text-shadow: 0 0 40px rgba($blood-bright, 0.25);
+}
+
+.horror-hero .horror-hero__subtitle {
+  font-family: "Playfair Display", serif;
+  font-size: 20px;
+  line-height: 1.55;
+  color: rgba($cream, 0.72);
+  max-width: 560px;
 }
 
 .back-link {
@@ -276,6 +339,15 @@
   .genre-hero { min-height: 380px; border-radius: 18px; }
   .book-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .book-entry { font-size: 0.9rem; }
+}
+
+@media (max-width: 768px) {
+  .horror-hero {
+    padding: 28px 24px;
+    min-height: 380px;
+    border-radius: 14px;
+  }
+  .horror-hero .horror-hero__content { margin-top: 90px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

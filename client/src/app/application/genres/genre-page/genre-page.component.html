@@ -1,27 +1,28 @@
 <main [class]="'genre-page ' + (genre?.themeClass || '')">
   @if (genre) {
-    <header class="genre-hero">
-      <a class="back-link" routerLink="/">← Home</a>
-      <div class="hero-copy">
-        <p class="eyebrow">{{ genre.eyebrow }}</p>
-        <h1>{{ genre.label }}</h1>
-        <p class="description">{{ genre.description }}</p>
+    <header class="genre-hero" [class.horror-hero]="genre.slug === 'horror'">
+      <a class="back-link" [class.horror-hero__nav]="genre.slug === 'horror'" routerLink="/">← Home</a>
+      <div class="hero-copy" [class.horror-hero__content]="genre.slug === 'horror'">
+        <p class="eyebrow" [class.horror-hero__eyebrow]="genre.slug === 'horror'">{{ genre.eyebrow }}</p>
+        <h1 [class.horror-hero__title]="genre.slug === 'horror'">{{ genre.label }}</h1>
+        <p class="description" [class.horror-hero__subtitle]="genre.slug === 'horror'">{{ genre.description }}</p>
       </div>
-      <div class="atmosphere" aria-hidden="true">
-        <span></span><span></span><span></span>
-      </div>
+      @if (genre.slug !== 'horror') {
+        <div class="atmosphere" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+      }
     </header>
 
-    @if (isCurated) {
-      <section class="genre-books" [attr.aria-busy]="isLoading">
+    <section class="genre-books" [attr.aria-busy]="isLoading">
         @if (isLoading) {
-          <div class="book-grid loading-grid" aria-label="Loading Horror books" role="status">
+          <div class="book-grid loading-grid" [attr.aria-label]="'Loading ' + genre.label + ' books'" role="status">
             @for (item of [1, 2, 3, 4, 5, 6, 7, 8]; track item) { <div class="book-skeleton"></div> }
           </div>
         } @else if (loadFailed) {
           <div class="empty-state"><h2>The trail went cold.</h2><p>We couldn't reach the curated catalog. Try returning in a moment.</p></div>
         } @else if ((curatedSections[0]?.books?.length || 0) + (curatedSections[1]?.books?.length || 0) === 0) {
-          <div class="empty-state"><h2>The shelves are being prepared.</h2><p>Our first curated horror selections will appear here soon.</p></div>
+          <div class="empty-state"><h2>The shelves are being prepared.</h2><p>Our first curated {{ genre.label }} selections will appear here soon.</p></div>
         } @else {
           @for (section of curatedSections; track section.key) {
             <section class="curated-section" [attr.aria-labelledby]="section.key + '-heading'">
@@ -37,47 +38,7 @@
             </section>
           }
         }
-      </section>
-    } @else {
-    <section class="genre-books" [attr.aria-busy]="isLoading">
-      <div class="section-heading">
-        <div>
-          <p class="kicker">From the stacks</p>
-          <h2>Explore {{ genre.label }}</h2>
-        </div>
-        @if (books.length) { <span>{{ books.length }} titles</span> }
-      </div>
-
-      @if (isLoading) {
-        <div class="book-grid loading-grid" [attr.aria-label]="'Loading ' + genre.label + ' books'" role="status">
-          @for (item of [1, 2, 3, 4, 5, 6, 7, 8]; track item) {
-            <div class="book-skeleton"></div>
-          }
-        </div>
-      } @else if (loadFailed) {
-        <div class="empty-state">
-          <h2>The trail went cold.</h2>
-          <p>We couldn't reach the catalog. Try returning in a moment.</p>
-        </div>
-      } @else if (books.length) {
-        <div class="book-grid">
-          @for (book of books; track book.id; let i = $index) {
-            <bookshelf-book-list-entry
-              class="book-entry"
-              [style.--entry-index]="i"
-              [book]="book"
-              [eyebrow]="genre.label">
-            </bookshelf-book-list-entry>
-          }
-        </div>
-      } @else {
-        <div class="empty-state">
-          <h2>Nothing stirred.</h2>
-          <p>No books were found in this corner of the catalog.</p>
-        </div>
-      }
     </section>
-    }
   } @else {
     <section class="unknown-genre">
       <p class="eyebrow">Uncharted shelves</p>
