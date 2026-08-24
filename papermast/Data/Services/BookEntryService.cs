@@ -84,6 +84,9 @@ namespace papermast.Data.Services
                 throw new ArgumentException("The selected reading status is not valid.");
             if (request.PageCount > 0 && request.PagesCompleted is int pagesCompleted && pagesCompleted > request.PageCount)
                 throw new ArgumentException("Pages completed cannot exceed the book's page count.");
+            if (request.Status.Equals(BookStatus.READ, StringComparison.OrdinalIgnoreCase) &&
+                request.StartDate.HasValue && request.EndDate.HasValue && request.EndDate.Value < request.StartDate.Value)
+                throw new ArgumentException("The finish date cannot be before the start date.");
             if (string.IsNullOrWhiteSpace(request.Isbn10) &&
                 string.IsNullOrWhiteSpace(request.Isbn13) &&
                 (string.IsNullOrWhiteSpace(request.Source) || string.IsNullOrWhiteSpace(request.SourceBookID)))
@@ -121,13 +124,20 @@ namespace papermast.Data.Services
             entry.PagesCompleted = request.PagesCompleted ?? entry.PagesCompleted;
             entry.PercentCompleted = request.PercentCompleted ?? entry.PercentCompleted;
 
-            if (entry.Status == BookStatus.READING && entry.StartDate is null)
-                entry.StartDate = DateTime.UtcNow;
+            if (entry.Status == BookStatus.READING)
+                entry.StartDate = NormalizeDate(request.StartDate) ?? entry.StartDate ?? DateTime.UtcNow.Date;
             if (entry.Status == BookStatus.READ && previousStatus != BookStatus.READ)
             {
-                entry.EndDate = DateTime.UtcNow;
                 entry.PercentCompleted = 100;
                 if (entry.PageCount > 0) entry.PagesCompleted = entry.PageCount;
+            }
+            if (entry.Status == BookStatus.READ)
+            {
+                entry.StartDate = NormalizeDate(request.StartDate) ?? entry.StartDate;
+                entry.EndDate = NormalizeDate(request.EndDate) ?? entry.EndDate ?? DateTime.UtcNow.Date;
+                entry.Rating = request.Rating;
+                entry.UserReview = NormalizeReview(request.UserReview);
+                entry.UserInternalReview = NormalizeReview(request.UserInternalReview);
             }
 
             entry.UpdatedDate = DateTime.UtcNow;
@@ -137,6 +147,12 @@ namespace papermast.Data.Services
             string.IsNullOrWhiteSpace(value)
                 ? null
                 : value.Replace("-", string.Empty).Replace(" ", string.Empty).ToUpperInvariant();
+
+        private static DateTime? NormalizeDate(DateOnly? value) =>
+            value?.ToDateTime(TimeOnly.MinValue);
+
+        private static string? NormalizeReview(string? value) =>
+            string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
         private static BookEntryDto ToDto(BookEntry entry) => new()
         {
@@ -153,8 +169,10 @@ namespace papermast.Data.Services
             PagesCompleted = entry.PagesCompleted,
             PercentCompleted = entry.PercentCompleted,
             Rating = entry.Rating,
-            StartDate = entry.StartDate,
-            EndDate = entry.EndDate,
+            UserReview = entry.UserReview,
+            UserInternalReview = entry.UserInternalReview,
+            StartDate = entry.StartDate.HasValue ? DateOnly.FromDateTime(entry.StartDate.Value) : null,
+            EndDate = entry.EndDate.HasValue ? DateOnly.FromDateTime(entry.EndDate.Value) : null,
             CreatedDate = entry.CreatedDate,
             UpdatedDate = entry.UpdatedDate
         };

@@ -304,6 +304,8 @@ $text-muted: rgba($cream, 0.55);
 .atmosphere span:nth-child(2) { right: 24%; bottom: 28%; width: 4px; height: 4px; animation-delay: -2s; }
 .atmosphere span:nth-child(3) { right: 7%; bottom: 42%; width: 10px; height: 10px; animation-delay: -4s; }
 
+.genre-switcher { margin-top: clamp(24px, 4vw, 36px); }
+
 .genre-books { padding-top: clamp(44px, 7vw, 76px); }
 .curated-section + .curated-section { margin-top: clamp(56px, 8vw, 92px); }
 .release-date, .section-empty { color: var(--app-text-secondary); }

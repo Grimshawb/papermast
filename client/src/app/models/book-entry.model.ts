@@ -12,8 +12,10 @@ export interface BookEntry {
   pagesCompleted: number,
   percentCompleted: number,
   rating?: number,
-  startDate?: Date,
-  endDate?: Date,
+  userReview?: string,
+  userInternalReview?: string,
+  startDate?: string,
+  endDate?: string,
   createdDate: Date,
   updatedDate: Date
 }
@@ -29,5 +31,10 @@ export interface BookEntryRequest {
   status: string,
   pageCount: number,
   pagesCompleted?: number,
-  percentCompleted?: number
+  percentCompleted?: number,
+  rating?: number,
+  startDate?: string,
+  endDate?: string,
+  userReview?: string,
+  userInternalReview?: string
 }

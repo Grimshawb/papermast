@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { withInterceptorsFromDi } from '@angular/common/http';
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -13,6 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
+    provideNativeDateAdapter(),
     provideAnimations(),
     provideAnimationsAsync(),
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

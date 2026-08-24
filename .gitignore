@@ -3,6 +3,8 @@
 .env
 !.env.example
 .vscode/
+.codex/
+agents.md
 
 # Client
 client/dist

@@ -36,6 +36,24 @@ dd { margin: 0; color: var(--mat-sys-on-surface-variant); overflow-wrap: anywher
 mat-form-field { width: 100%; }
 
 .progress-section { border-top: 1px solid var(--mat-sys-outline-variant); margin-top: 24px; padding-top: 18px; }
+.reading-details-section { border-top: 1px solid var(--mat-sys-outline-variant); margin-top: 24px; padding-top: 18px; }
+.reading-details-section h3 { margin: 0 0 14px; }
+.date-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.rating-fieldset { border: 0; margin: 18px 0 0; padding: 0; }
+.rating-fieldset legend { font-weight: 600; margin-bottom: 6px; }
+.star-rating { display: flex; flex-wrap: wrap; }
+.star-rating button { color: var(--mat-sys-primary); }
+.rating-value { color: var(--mat-sys-on-surface-variant); display: block; margin-top: 4px; }
+.review-editors { display: grid; gap: 16px; margin-top: 24px; }
+.review-editor { border: 1px solid var(--mat-sys-outline-variant); border-radius: 12px; padding: 16px; }
+.review-editor-heading { display: flex; gap: 12px; margin-bottom: 14px; }
+.review-editor-heading mat-icon { flex: 0 0 auto; }
+.review-editor-heading h4 { font-size: 1rem; margin: 0; }
+.review-editor-heading p { color: var(--mat-sys-on-surface-variant); margin: 3px 0 0; }
+.public-review .review-editor-heading mat-icon { color: var(--mat-sys-primary); }
+.private-review { background: var(--mat-sys-surface-container-low); }
+.private-review .review-editor-heading mat-icon { color: var(--mat-sys-secondary); }
+.review-editor textarea { line-height: 1.5; resize: vertical; }
 .progress-heading-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
 .progress-heading-row h3 { margin: 0; }
 .progress-fields { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 10px; margin-top: 18px; }
@@ -47,4 +65,5 @@ mat-dialog-actions button mat-spinner { margin: 0 20px; }
   .cover { max-height: 240px; }
   .progress-fields { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
   .progress-fields > mat-form-field:last-child { grid-column: 1 / -1; }
+  .date-fields { grid-template-columns: 1fr; }
 }

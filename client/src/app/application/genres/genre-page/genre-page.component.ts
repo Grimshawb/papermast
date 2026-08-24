@@ -6,11 +6,12 @@ import { catchError, finalize, map, of, switchMap } from 'rxjs';
 import { CuratedCatalogSection, Genre, GENRES } from '../../../models';
 import { CuratedCatalogService } from '../../../services';
 import { BookListEntryComponent } from '../../home/components/book-list-entry/book-list-entry.component';
+import { GenreSwitcherComponent } from '../components/genre-switcher/genre-switcher.component';
 
 @Component({
   selector: 'bookshelf-genre-page',
   standalone: true,
-  imports: [RouterLink, DatePipe, BookListEntryComponent],
+  imports: [RouterLink, DatePipe, BookListEntryComponent, GenreSwitcherComponent],
   templateUrl: './genre-page.component.html',
   styleUrl: './genre-page.component.scss'
 })

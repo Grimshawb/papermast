@@ -34,6 +34,15 @@
   </div>
 
   @if (status === 'Reading') {
+    <section class="reading-details-section" aria-labelledby="reading-details-heading">
+      <h3 id="reading-details-heading">Reading dates</h3>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Start date</mat-label>
+        <input matInput [matDatepicker]="readingStartPicker" [(ngModel)]="startDate" [disabled]="isSaving">
+        <mat-datepicker-toggle matIconSuffix [for]="readingStartPicker"></mat-datepicker-toggle>
+        <mat-datepicker #readingStartPicker></mat-datepicker>
+      </mat-form-field>
+    </section>
     <section class="progress-section" aria-labelledby="progress-heading">
       <div class="progress-heading-row">
         <h3 id="progress-heading">Reading progress</h3>
@@ -58,6 +67,74 @@
                  [ngModel]="percentCompleted" (ngModelChange)="updatePercent($event)">
           <span matTextSuffix>%</span>
         </mat-form-field>
+      </div>
+    </section>
+  }
+  @if (status === 'Read') {
+    <section class="reading-details-section" aria-labelledby="reading-details-heading">
+      <h3 id="reading-details-heading">Reading dates and review</h3>
+      <div class="date-fields">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Start date</mat-label>
+          <input matInput [matDatepicker]="readStartPicker" [(ngModel)]="startDate" [disabled]="isSaving">
+          <mat-datepicker-toggle matIconSuffix [for]="readStartPicker"></mat-datepicker-toggle>
+          <mat-datepicker #readStartPicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Finish date</mat-label>
+          <input matInput [matDatepicker]="readFinishPicker" [(ngModel)]="endDate"
+                 [min]="startDate" [disabled]="isSaving">
+          <mat-datepicker-toggle matIconSuffix [for]="readFinishPicker"></mat-datepicker-toggle>
+          <mat-datepicker #readFinishPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <fieldset class="rating-fieldset">
+        <legend>Your rating</legend>
+        <div class="star-rating" role="radiogroup" aria-label="Rating out of 10 stars">
+          @for (star of [1,2,3,4,5,6,7,8,9,10]; track star) {
+            <button mat-icon-button type="button" role="radio" [attr.aria-label]="star + ' out of 10 stars'"
+                    [attr.aria-checked]="rating === star" [disabled]="isSaving" (click)="setRating(star)">
+              <mat-icon>{{ rating && star <= rating ? 'star' : 'star_outline' }}</mat-icon>
+            </button>
+          }
+        </div>
+        <span class="rating-value">{{ rating ? rating + ' / 10' : 'Not rated' }}</span>
+      </fieldset>
+
+      <div class="review-editors">
+        <section class="review-editor public-review" aria-labelledby="public-review-heading">
+          <div class="review-editor-heading">
+            <mat-icon aria-hidden="true">public</mat-icon>
+            <div>
+              <h4 id="public-review-heading">Public review</h4>
+              <p>Share your thoughts with other readers.</p>
+            </div>
+          </div>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Write your public review</mat-label>
+            <textarea matInput rows="6" maxlength="10000" [(ngModel)]="userReview"
+                      [disabled]="isSaving" aria-describedby="public-review-privacy"></textarea>
+            <mat-hint id="public-review-privacy">This review is public.</mat-hint>
+            <mat-hint align="end">{{ userReview.length }} / {{ reviewMaxLength }}</mat-hint>
+          </mat-form-field>
+        </section>
+
+        <section class="review-editor private-review" aria-labelledby="private-review-heading">
+          <div class="review-editor-heading">
+            <mat-icon aria-hidden="true">lock</mat-icon>
+            <div>
+              <h4 id="private-review-heading">Private notes</h4>
+              <p>Keep personal thoughts, reminders, or reading notes.</p>
+            </div>
+          </div>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Write private notes</mat-label>
+            <textarea matInput rows="6" maxlength="10000" [(ngModel)]="userInternalReview"
+                      [disabled]="isSaving" aria-describedby="private-review-privacy"></textarea>
+            <mat-hint id="private-review-privacy">Only you can see these notes.</mat-hint>
+            <mat-hint align="end">{{ userInternalReview.length }} / {{ reviewMaxLength }}</mat-hint>
+          </mat-form-field>
+        </section>
       </div>
     </section>
   }

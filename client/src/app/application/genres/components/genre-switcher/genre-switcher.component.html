@@ -1,0 +1,15 @@
+<nav class="genre-switcher" aria-label="Browse other genres">
+  <div class="genre-switcher__rail">
+    @for (genre of genres; track genre.slug) {
+      <a class="genre-chip"
+         [class.genre-chip--active]="genre.slug === currentGenre"
+         [attr.aria-current]="genre.slug === currentGenre ? 'page' : null"
+         [attr.data-genre]="genre.slug"
+         [routerLink]="['/genres', genre.slug]">
+        <span class="chip-mark" aria-hidden="true">◆</span>
+        <span>{{ genre.label }}</span>
+        <span class="chip-arrow" aria-hidden="true">→</span>
+      </a>
+    }
+  </div>
+</nav>

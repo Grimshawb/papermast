@@ -36,5 +36,18 @@ namespace papermast.Entities.DTO
 
         [Range(0, 100)]
         public int? PercentCompleted { get; set; }
+
+        [Range(1, 10)]
+        public decimal? Rating { get; set; }
+
+        public DateOnly? StartDate { get; set; }
+
+        public DateOnly? EndDate { get; set; }
+
+        [StringLength(10000)]
+        public string? UserReview { get; set; }
+
+        [StringLength(10000)]
+        public string? UserInternalReview { get; set; }
     }
 }

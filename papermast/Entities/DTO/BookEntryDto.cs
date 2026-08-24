@@ -15,8 +15,10 @@ namespace papermast.Entities.DTO
         public int PagesCompleted { get; set; }
         public int PercentCompleted { get; set; }
         public decimal? Rating { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public string? UserReview { get; set; }
+        public string? UserInternalReview { get; set; }
+        public DateOnly? StartDate { get; set; }
+        public DateOnly? EndDate { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
     }

@@ -1,0 +1,73 @@
+:host { display: block; }
+
+.genre-switcher { position: relative; }
+.genre-switcher::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 10px;
+  width: 48px;
+  background: linear-gradient(90deg, transparent, var(--app-background));
+  content: "";
+  pointer-events: none;
+}
+
+.genre-switcher__rail {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 3px 48px 12px 3px;
+  scrollbar-color: var(--app-border) transparent;
+  scrollbar-width: thin;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+
+.genre-chip {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 9px;
+  min-width: max-content;
+  padding: 11px 15px;
+  border: 1px solid var(--app-border);
+  border-radius: 999px;
+  color: var(--app-text);
+  font: 600 0.92rem/1 Georgia, "Times New Roman", serif;
+  text-decoration: none;
+  scroll-snap-align: start;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.genre-chip:hover { transform: translateY(-2px); }
+.genre-chip:focus-visible { outline: 2px solid var(--app-primary); outline-offset: 2px; }
+.genre-chip--active { box-shadow: inset 0 0 0 1px currentColor; }
+.genre-chip[data-genre="horror"] { border-color: #704044; background: linear-gradient(120deg, #2a2021, #421d21); color: #f0dfd7; }
+.genre-chip[data-genre="fantasy"] { border-color: #58527c; background: linear-gradient(120deg, #242536, #38345a); color: #eeeafa; }
+.genre-chip[data-genre="fantasy"] .chip-mark { color: #a99be8; }
+.genre-chip[data-genre="science-fiction"] { border-color: #356b78; background: linear-gradient(120deg, #172b34, #173f4b); color: #e1f5f5; }
+.genre-chip[data-genre="science-fiction"] .chip-mark { color: #65cad2; }
+.genre-chip[data-genre="mystery"] { border-color: #64645b; background: linear-gradient(120deg, #292a29, #3d3e38); color: #efeee5; }
+.genre-chip[data-genre="mystery"] .chip-mark { color: #c8b979; }
+.genre-chip[data-genre="thriller"] { border-color: #80532f; background: linear-gradient(120deg, #2d2520, #56301e); color: #fff0df; }
+.genre-chip[data-genre="thriller"] .chip-mark { color: #e77b32; }
+.genre-chip[data-genre="romance"] { border-color: #9b6977; background: linear-gradient(120deg, #412b34, #68404e); color: #ffedf1; }
+.genre-chip[data-genre="romance"] .chip-mark { color: #e9a3b5; }
+.genre-chip[data-genre="historical-fiction"] { border-color: #826b48; background: linear-gradient(120deg, #342d23, #58462d); color: #f6ead3; }
+.genre-chip[data-genre="historical-fiction"] .chip-mark { color: #d1a965; }
+.genre-chip[data-genre="literary-fiction"] { border-color: #756451; background: linear-gradient(120deg, #35302b, #51463c); color: #f5eee5; }
+.genre-chip[data-genre="literary-fiction"] .chip-mark { color: #c9ad8e; }
+.genre-chip[data-genre="biography-memoir"] { border-color: #61705e; background: linear-gradient(120deg, #27312a, #3e5042); color: #ebf2e8; }
+.genre-chip[data-genre="biography-memoir"] .chip-mark { color: #9eb89a; }
+.genre-chip[data-genre="history"] { border-color: #75613c; background: linear-gradient(120deg, #302c22, #504326); color: #f5ecd5; }
+.genre-chip[data-genre="history"] .chip-mark { color: #c7a458; }
+.genre-chip[data-genre="young-adult"] { border-color: #496d83; background: linear-gradient(120deg, #253443, #345a6d); color: #ecf7ff; }
+.genre-chip[data-genre="young-adult"] .chip-mark { color: #79bed6; }
+.chip-mark { color: #b32e36; font-size: 0.65rem; }
+.chip-arrow { transition: transform 180ms ease; }
+.genre-chip:hover .chip-arrow { transform: translateX(3px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .genre-chip,
+  .chip-arrow { transition: none; }
+}

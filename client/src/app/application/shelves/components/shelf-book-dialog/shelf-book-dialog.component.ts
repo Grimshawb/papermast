@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,16 +18,23 @@ import { BookEntriesService, ToasterService } from '../../../../services';
   selector: 'shelf-book-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule, MatButtonModule, MatDialogModule, MatFormFieldModule,
-    MatIconModule, MatInputModule, MatProgressBarModule, MatProgressSpinnerModule, MatSelectModule],
+    MatDatepickerModule, MatIconModule, MatInputModule, MatProgressBarModule, MatProgressSpinnerModule,
+    MatSelectModule],
   templateUrl: './shelf-book-dialog.component.html',
   styleUrl: './shelf-book-dialog.component.scss'
 })
 export class ShelfBookDialogComponent {
+  public readonly reviewMaxLength = 10000;
   public readonly statuses = ['To Be Read', 'Reading', 'Read', 'Did Not Finish', 'Not Interested'];
   public status: string;
   public pageCount: number;
   public pagesCompleted: number;
   public percentCompleted: number;
+  public startDate: Date | null;
+  public endDate: Date | null;
+  public rating?: number;
+  public userReview: string;
+  public userInternalReview: string;
   public isSaving = false;
 
   constructor(
@@ -39,6 +47,11 @@ export class ShelfBookDialogComponent {
     this.pageCount = entry.pageCount;
     this.pagesCompleted = entry.pagesCompleted;
     this.percentCompleted = entry.percentCompleted;
+    this.startDate = this.toDateInputValue(entry.startDate);
+    this.endDate = this.toDateInputValue(entry.endDate);
+    this.rating = entry.rating;
+    this.userReview = entry.userReview || '';
+    this.userInternalReview = entry.userInternalReview || '';
   }
 
   public updatePages(value: number | string): void {
@@ -74,6 +87,10 @@ export class ShelfBookDialogComponent {
       });
   }
 
+  public setRating(rating: number): void {
+    this.rating = rating;
+  }
+
   private toRequest(): BookEntryRequest {
     return {
       source: this.entry.source,
@@ -86,8 +103,32 @@ export class ShelfBookDialogComponent {
       status: this.status,
       pageCount: this.pageCount,
       pagesCompleted: this.pagesCompleted,
-      percentCompleted: this.percentCompleted
+      percentCompleted: this.percentCompleted,
+      rating: this.status === 'Read' ? this.rating : undefined,
+      startDate: this.status === 'Reading' || this.status === 'Read' ? this.toRequestDate(this.startDate) : undefined,
+      endDate: this.status === 'Read' ? this.toRequestDate(this.endDate) : undefined,
+      userReview: this.status === 'Read' ? this.userReview : undefined,
+      userInternalReview: this.status === 'Read' ? this.userInternalReview : undefined
     };
+  }
+
+  private toDateInputValue(value?: Date | string): Date | null {
+    if (!value) return null;
+    const datePart = value instanceof Date
+      ? `${value.getUTCFullYear()}-${String(value.getUTCMonth() + 1).padStart(2, '0')}-${String(value.getUTCDate()).padStart(2, '0')}`
+      : value.slice(0, 10);
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(datePart);
+    if (!match) return null;
+    const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  private toRequestDate(value: Date | null): string | undefined {
+    if (!value || Number.isNaN(value.getTime())) return undefined;
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   private clamp(value: number, minimum: number, maximum: number): number {

@@ -14,6 +14,8 @@
       }
     </header>
 
+    <bookshelf-genre-switcher class="genre-switcher" [currentGenre]="genre.slug"></bookshelf-genre-switcher>
+
     <section class="genre-books" [attr.aria-busy]="isLoading">
         @if (isLoading) {
           <div class="book-grid loading-grid" [attr.aria-label]="'Loading ' + genre.label + ' books'" role="status">
