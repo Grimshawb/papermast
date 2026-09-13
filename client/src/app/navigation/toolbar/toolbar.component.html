@@ -52,6 +52,30 @@
 
   <!-- Right -->
   <div class="toolbar-actions">
+    @if (!isMobile && loggedInUser) {
+      <form class="header-search" (ngSubmit)="submitLibrarianSearch()" role="search">
+        <mat-icon class="header-search-icon" aria-hidden="true">auto_awesome</mat-icon>
+        <input class="header-search-input"
+               type="text"
+               name="librarianQuery"
+               [(ngModel)]="librarianQuery"
+               placeholder="Ask the librarian..."
+               aria-label="Ask the librarian for a book recommendation"
+               autocomplete="off">
+        <button class="header-search-clear"
+                type="button"
+                (click)="clearLibrarianQuery()"
+                [class.header-search-clear--hidden]="!librarianQuery"
+                [attr.aria-hidden]="!librarianQuery ? 'true' : null"
+                [tabIndex]="librarianQuery ? 0 : -1"
+                aria-label="Clear">
+          <mat-icon>close</mat-icon>
+        </button>
+        <button class="header-search-submit" type="submit" [disabled]="!isLibrarianQueryValid" aria-label="Ask the librarian">
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </form>
+    }
     @if (!loggedInUser) {
       <button mat-icon-button
               type="button"

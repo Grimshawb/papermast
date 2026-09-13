@@ -1,0 +1,113 @@
+<section class="librarian-page">
+  <header class="librarian-header">
+    <p class="eyebrow">Ask the Librarian</p>
+    @if (isMobile && loggedInUser) {
+      <h1>What are you in the mood to read?</h1>
+      <p>Describe a vibe, a theme, or exactly what you're after, and the librarian will pick a few books that fit.</p>
+    } @else {
+      <h1>Your librarian recommendations</h1>
+      <p>Personalized picks based on what you tell the librarian you're in the mood for.</p>
+    }
+
+    @if (isMobile && loggedInUser) {
+      <form class="librarian-form" (ngSubmit)="submit()">
+        <mat-form-field appearance="outline" class="query-field" subscriptSizing="dynamic">
+          <mat-label>Tell the librarian what you're looking for</mat-label>
+          <textarea matInput
+                    name="librarianQuery"
+                    rows="4"
+                    maxlength="500"
+                    [(ngModel)]="query"
+                    [disabled]="isLoading"
+                    placeholder="Something funny and weird, a cozy mystery for a rainy weekend, a book like..."></textarea>
+          <mat-hint align="end">{{ query.trim().length }}/{{ maxLength }}</mat-hint>
+        </mat-form-field>
+
+        @if (query.trim().length > 0 && !isQueryValid) {
+          <p class="validation-hint" role="alert">
+            @if (query.trim().length < minLength) {
+              Give the librarian a little more to go on &mdash; at least {{ minLength }} characters.
+            } @else {
+              That's a lot to take in &mdash; keep it under {{ maxLength }} characters.
+            }
+          </p>
+        }
+
+        <button mat-flat-button color="primary" type="submit" class="ask-button" [disabled]="!isQueryValid || isLoading">
+          @if (isLoading) {
+            <mat-progress-spinner mode="indeterminate" diameter="20"></mat-progress-spinner>
+          } @else {
+            <ng-container>
+              <mat-icon>auto_awesome</mat-icon>
+              Ask the librarian
+            </ng-container>
+          }
+        </button>
+      </form>
+    }
+  </header>
+
+  @if (errorMessage) {
+    <div class="error-state" role="alert">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-stroked-button type="button" (click)="retry()" [disabled]="isLoading">Try again</button>
+    </div>
+  }
+
+  @if (isLoading) {
+    <div class="book-grid loading-grid" role="status" aria-label="Finding recommendations">
+      @for (item of [1, 2, 3, 4, 5]; track item) { <div class="book-skeleton"></div> }
+    </div>
+  }
+
+  @if (!isLoading && !errorMessage && recommendations.length === 0) {
+    <div class="empty-state">
+      <mat-icon>auto_stories</mat-icon>
+      @if (!hasSearched) {
+        @if (isMobile && loggedInUser) {
+          <h2>Nothing here yet</h2>
+          <p>Use the form above to get a few personalized picks.</p>
+        } @else if (loggedInUser) {
+          <h2>Nothing here yet</h2>
+          <p>Ask the librarian something using the search bar in the header to see recommendations here.</p>
+        } @else {
+          <h2>Log in to ask the librarian</h2>
+          <p><a routerLink="/login">Log in</a> to get personalized recommendations from the search bar in the header.</p>
+        }
+      } @else {
+        <h2>No recommendations came back</h2>
+        <p>Try describing what you're after a little differently.</p>
+      }
+    </div>
+  }
+
+  @if (!isLoading && recommendations.length > 0) {
+    <div class="book-grid results" aria-live="polite">
+      @for (recommendation of recommendations; track recommendation.workKey) {
+        <mat-card class="recommendation-card" appearance="outlined">
+          <img [src]="coverUrl(recommendation) || 'assets/book-placeholder.svg'"
+               [alt]="'Cover of ' + recommendation.title">
+          <div class="rec-copy">
+            <h2>{{ recommendation.title }}</h2>
+            <p class="authors">{{ authorsLabel(recommendation) }}</p>
+            <p class="metadata">
+              @if (recommendation.publicationDate) { <span>{{ recommendation.publicationDate }}</span> }
+              @if (recommendation.pageCount) { <span>{{ recommendation.pageCount }} pages</span> }
+            </p>
+            @if (recommendation.genres?.length) {
+              <div class="genre-tags">
+                @for (genre of recommendation.genres; track genre) { <span class="genre-tag">{{ genre }}</span> }
+              </div>
+            }
+            @if (recommendation.description) { <p class="description">{{ recommendation.description }}</p> }
+            <p class="reason"><mat-icon>auto_awesome</mat-icon> <span>{{ recommendation.reason }}</span></p>
+            <a class="open-library-link" [href]="openLibraryUrl(recommendation)" target="_blank" rel="noopener noreferrer">
+              View on Open Library <mat-icon>north_east</mat-icon>
+            </a>
+          </div>
+        </mat-card>
+      }
+    </div>
+  }
+</section>

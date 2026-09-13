@@ -18,5 +18,8 @@ namespace papermast
 
         [Required, StringLength(128, MinimumLength = 8)]
         public string? Password { get; set; }
+
+        [Range(typeof(bool), "true", "true", ErrorMessage = "AI Librarian disclosure must be acknowledged.")]
+        public bool AiLibrarianDisclosureAccepted { get; set; }
     }
 }

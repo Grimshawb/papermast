@@ -1,0 +1,2 @@
+-r requirements-qdrant.txt
+google-genai==2.23.0

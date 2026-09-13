@@ -8,3 +8,4 @@ export * from './reading-goals.service';
 export * from './recently-viewed.service';
 export * from './user.service';
 export * from './wiki.service';
+export * from './librarian.service';

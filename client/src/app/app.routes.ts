@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { LibrarianGuard } from './guards/librarian.guard';
 
 export const routes: Routes = [
   {
@@ -26,6 +27,11 @@ export const routes: Routes = [
   {
     path: 'genres/:slug',
     loadComponent: () => import('./application/genres/genre-page/genre-page.component').then(m => m.GenrePageComponent)
+  },
+  {
+    path: 'ask-the-librarian',
+    canActivate: [LibrarianGuard],
+    loadComponent: () => import('./application/librarian/librarian-page.component').then(m => m.LibrarianPageComponent)
   },
   {
     path: 'about',

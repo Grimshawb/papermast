@@ -1,19 +1,21 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AuthStore } from '../../store/auth.store';
+import { LibrarianStore } from '../../store/librarian.store';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
 import { User } from '../../models';
-import { RouterLink, RouterLinkActive } from "@angular/router";
+import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { DIRECT_NAV_ITEMS, NAVIGATION_GROUPS } from '../navigation-items';
 
 
 @Component({
   selector: 'bookshelf-toolbar',
-  imports: [MatIconModule, MatToolbarModule, MatButtonModule, MatSlideToggleModule, MatMenuModule,
+  imports: [FormsModule, MatIconModule, MatToolbarModule, MatButtonModule, MatSlideToggleModule, MatMenuModule,
     RouterLink, RouterLinkActive],
   standalone: true,
   templateUrl: './toolbar.component.html',
@@ -41,7 +43,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   @Output()
   public onDarkModeChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(private _authStore: AuthStore) {}
+  public librarianQuery = '';
+
+  constructor(private _authStore: AuthStore, private librarianStore: LibrarianStore, private router: Router) {}
 
   ngOnInit(): void {
     this.loggedInUser$ = this._authStore.select(s => s.loggedInUser)
@@ -59,6 +63,20 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   public logout(): void {
     this._authStore.logout();
+  }
+
+  public get isLibrarianQueryValid(): boolean {
+    return this.librarianStore.isQueryValid(this.librarianQuery);
+  }
+
+  public submitLibrarianSearch(): void {
+    if (!this.isLibrarianQueryValid) return;
+    this.librarianStore.search(this.librarianQuery);
+    this.router.navigate(['/ask-the-librarian']);
+  }
+
+  public clearLibrarianQuery(): void {
+    this.librarianQuery = '';
   }
 
   ngOnDestroy(): void {

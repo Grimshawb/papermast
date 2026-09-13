@@ -1,0 +1,34 @@
+FROM python:3.12.14-slim-bookworm
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1 \
+    OMP_NUM_THREADS=2 \
+    LIBRARIAN_MODEL_CACHE=/models \
+    LIBRARIAN_MODEL_LOCAL_ONLY=true
+
+WORKDIR /app
+
+COPY tools/openlibrary-import/requirements-service.txt ./requirements-service.txt
+RUN python -m pip install --requirement requirements-service.txt
+
+COPY tools/openlibrary-import/embedding_contract.py ./
+COPY tools/openlibrary-import/gemini_librarian.py ./
+COPY tools/openlibrary-import/librarian_service.py ./
+COPY tools/openlibrary-import/qdrant_catalog.py ./
+COPY tools/openlibrary-import/restore_runtime.py ./
+
+# Resolve and cache the exact quantized ONNX revision at image-build time. The
+# runtime service remains independent of Hugging Face availability.
+RUN python -c "from fastembed import TextEmbedding; TextEmbedding(model_name='BAAI/bge-small-en-v1.5', cache_dir='/models', revision='52398278842ec682c6f32300af41344b1c0b0bb2')"
+
+RUN groupadd --system librarian \
+    && useradd --system --gid librarian --home-dir /app librarian \
+    && chown -R librarian:librarian /app /models
+
+USER librarian
+
+EXPOSE 8091
+
+CMD ["python", "-m", "uvicorn", "librarian_service:app", "--host", "0.0.0.0", "--port", "8091", "--workers", "1", "--no-access-log"]

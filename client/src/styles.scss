@@ -206,3 +206,16 @@ body.dark-theme {
   -webkit-box-shadow: 0 0 0 1000px var(--app-surface) inset !important;
   -webkit-text-fill-color: var(--app-text) !important;
 }
+
+// Content that should reach assistive technology without occupying layout space.
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

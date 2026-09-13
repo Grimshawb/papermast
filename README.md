@@ -66,6 +66,18 @@ Catalog administrators are managed through the standard ASP.NET Identity `AspNet
 
 The learning-oriented architecture, deployment journal, and operations documentation live in the associated Obsidian vault.
 
+## Open Library librarian experiment
+
+The local Python tools under `tools/openlibrary-import` download, profile, and
+merge Open Library dumps, build the fiction embedding catalog, and run the
+containerized librarian experiment against Qdrant and Gemini. They do not modify
+the application database. Production catalog restoration is a separate, explicit
+administrator operation documented in the runbook. See `tools/openlibrary-import/README.md`
+for exact Mac commands, generated report locations, and cleanup procedures.
+Qdrant and the Python librarian are included in the standard ignored local
+`docker-compose.yml`; `docker compose up -d qdrant` starts catalog search, while
+`docker compose up -d --build librarian` starts both services.
+
 ## Angular CLI reference
 
 The client currently uses Angular CLI 20.

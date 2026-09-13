@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { take, finalize } from 'rxjs/operators';
@@ -16,7 +17,7 @@ import { fadeAnimation } from '../../../constants';
 @Component({
   selector: 'registration-page',
   standalone: true,
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinnerModule, RouterModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinnerModule, MatCheckboxModule, RouterModule],
   templateUrl: './registration-page.component.html',
   styleUrls: ['./registration-page.component.scss'],
   animations: [fadeAnimation]
@@ -37,6 +38,7 @@ export class RegistrationPageComponent {
       username: [null, [Validators.required]],
       firstName: [null, [Validators.required]],
       lastName: [null, [Validators.required]],
+      aiLibrarianDisclosureAccepted: [false, [Validators.requiredTrue]],
       password: [null, [Validators.required, Validators.minLength(8), Validators.maxLength(64),
                         Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).+$/)]]
     });

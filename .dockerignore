@@ -1,14 +1,17 @@
 .git
 .github
 .env
+.data
 **/.DS_Store
 **/.angular
+**/__pycache__
 **/.vs
 **/.vscode
 **/bin
 **/dist
 **/node_modules
 **/obj
+**/*.py[cod]
 **/*.user
 papermast/appsettings.json
 papermast/appsettings.Development.json
