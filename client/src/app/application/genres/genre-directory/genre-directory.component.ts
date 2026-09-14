@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { GENRES } from '../../../models';
+import { VISIBLE_GENRES } from '../../../models';
 
 @Component({
   selector: 'bookshelf-genre-directory',
@@ -10,5 +10,5 @@ import { GENRES } from '../../../models';
   styleUrl: './genre-directory.component.scss'
 })
 export class GenreDirectoryComponent {
-  public readonly genres = GENRES;
+  public readonly genres = VISIBLE_GENRES;
 }

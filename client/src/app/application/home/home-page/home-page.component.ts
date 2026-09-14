@@ -4,8 +4,9 @@ import { filter, Observable, Subject, take, takeUntil, tap } from 'rxjs';
 import { BooksApiStore, NytStore, WikiStore } from '../../../store';
 import { fadeAnimation } from '../../../constants';
 import { BookListEntryComponent } from '../components/book-list-entry/book-list-entry.component';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { ApiBook, BookSearchRequestDto, GENRES, WikiEntry } from '../../../models';
+import { ApiBook, BookSearchRequestDto, VISIBLE_GENRES, WikiEntry } from '../../../models';
 import { DailyAuthorComponent } from '../components/daily-author/daily-author.component';
 import { DailyAuthors } from '../../../constants/daily-authors.enum';
 import { NytService } from '../../../services/nyt.service';
@@ -18,7 +19,7 @@ import { Router, RouterLink } from '@angular/router';
 @Component({
   selector: 'bookshelf-home-page',
   standalone: true,
-  imports: [BookListEntryComponent, MatCardModule, DailyAuthorComponent, ReadingGoalWidgetComponent, RouterLink],
+  imports: [BookListEntryComponent, MatButtonModule, MatCardModule, DailyAuthorComponent, ReadingGoalWidgetComponent, RouterLink],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss',
   animations: [fadeAnimation]
@@ -41,7 +42,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   public loggedInUser: User | undefined;
   public readingGoal: ReadingGoal | null = null;
   public recentlyViewedBooks: ApiBook[] = [];
-  public readonly genres = GENRES;
+  public readonly genres = VISIBLE_GENRES;
 
   constructor(private _booksApiStore: BooksApiStore,
               private _wikiStore: WikiStore,

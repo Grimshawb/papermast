@@ -42,6 +42,27 @@ if (Encoding.UTF8.GetByteCount(jwtKey) < 32)
     throw new InvalidOperationException("Jwt:Key must be at least 32 bytes.");
 }
 
+var librarianBaseUrl = builder.Configuration["Librarian:BaseUrl"];
+if (string.IsNullOrWhiteSpace(librarianBaseUrl))
+{
+    librarianBaseUrl = builder.Environment.IsDevelopment()
+        ? "http://127.0.0.1:8091"
+        : "http://librarian:8091";
+}
+
+if (!Uri.TryCreate(librarianBaseUrl, UriKind.Absolute, out var librarianUri)
+    || (librarianUri.Scheme != Uri.UriSchemeHttp && librarianUri.Scheme != Uri.UriSchemeHttps))
+{
+    throw new InvalidOperationException("Librarian:BaseUrl must be an absolute HTTP or HTTPS URL.");
+}
+
+var librarianOptions = builder.Configuration.GetSection(LibrarianOptions.SectionName).Get<LibrarianOptions>()
+    ?? new LibrarianOptions();
+librarianOptions.BaseUrl = librarianBaseUrl;
+librarianOptions.Enabled = builder.Configuration.GetValue<bool?>("Librarian:Enabled")
+    ?? builder.Environment.IsDevelopment();
+librarianOptions.Validate();
+
 foreach (var requiredSetting in new[]
 {
     "GoogleBooks:ApiUrl",
@@ -71,6 +92,13 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<ExternalApiAuditHandler>();
 builder.Services.AddHttpClient(string.Empty)
+    .AddHttpMessageHandler<ExternalApiAuditHandler>();
+builder.Services.AddSingleton(librarianOptions);
+builder.Services.AddHttpClient<ILibrarianClient, LibrarianClient>(client =>
+    {
+        client.BaseAddress = librarianUri;
+        client.Timeout = TimeSpan.FromSeconds(librarianOptions.RequestTimeoutSeconds);
+    })
     .AddHttpMessageHandler<ExternalApiAuditHandler>();
 builder.Services.AddStackExchangeRedisCache(options =>
 {
@@ -131,6 +159,16 @@ builder.Services.AddRateLimiter(options =>
                 QueueLimit = 0,
                 AutoReplenishment = true
             }));
+    options.AddPolicy("librarian", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            }));
 });
 
 builder.Services.AddControllers();
@@ -143,6 +181,7 @@ builder.Services.AddScoped<IOpenLibraryService, OpenLibraryService>();
 builder.Services.AddScoped<ICuratedCatalogService, CuratedCatalogService>();
 builder.Services.AddScoped<IBookEntryService, BookEntryService>();
 builder.Services.AddScoped<IReadingGoalService, ReadingGoalService>();
+builder.Services.AddScoped<ILibrarianRecommendationService, LibrarianRecommendationService>();
 builder.Services.AddSingleton<ApiAuditQueue>();
 builder.Services.AddSingleton<IApiAuditSink>(services => services.GetRequiredService<ApiAuditQueue>());
 builder.Services.AddHostedService<ApiAuditWriterService>();

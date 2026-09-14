@@ -5,6 +5,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { MOBILE_BREAKPOINT } from './constants';
 import { CommonModule } from '@angular/common';
 import { SideNavComponent } from './navigation/side-nav/bookshelf-side-nav.component';
 import { ToolbarComponent } from "./navigation/toolbar/toolbar.component";
@@ -30,7 +31,7 @@ export class AppComponent {
               private _authStore: AuthStore,
               private overlay: OverlayContainer,
               private renderer: Renderer2) {
-    this.breakpointObserver.observe(['(max-width: 767.98px)'])
+    this.breakpointObserver.observe([MOBILE_BREAKPOINT])
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(result => {
         this.isMobile = result.matches;

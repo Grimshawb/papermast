@@ -4,38 +4,132 @@
   padding: clamp(24px, 4vw, 52px) 0 72px;
 }
 
-.brand-promise {
-  display: flex;
+// Fills the landing viewport, leaving a sliver of the next section visible so
+// the page still reads as scrollable. The subtracted chrome is the fixed
+// toolbar, the app shell gutter, and this page's own top padding.
+.home-hero {
+  --hero-chrome: calc(var(--app-toolbar-height) + var(--app-page-gutter) + clamp(24px, 4vw, 52px));
+
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.6fr);
+  gap: clamp(32px, 7vw, 88px);
   align-items: center;
-  justify-content: center;
+  min-height: calc(var(--app-visual-viewport-height) - var(--hero-chrome) - 64px);
+  margin-bottom: clamp(34px, 6vw, 58px);
+  padding: clamp(30px, 6vw, 72px);
+  overflow: hidden;
+  border: 1px solid var(--app-border);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 88% 12%, color-mix(in srgb, var(--app-accent) 16%, transparent), transparent 36%),
+    linear-gradient(135deg, var(--app-surface), color-mix(in srgb, var(--app-primary) 10%, var(--app-surface)));
+}
+
+.home-hero::after {
+  position: absolute;
+  right: -80px;
+  bottom: -115px;
+  width: 310px;
+  height: 310px;
+  border: 1px solid color-mix(in srgb, var(--app-primary) 35%, transparent);
+  border-radius: 50%;
+  content: "";
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.home-hero .section-kicker {
+  margin-bottom: 14px;
+}
+
+.hero-headline {
+  max-width: 20ch;
+  margin-bottom: 0;
+  font-size: clamp(2.4rem, 6vw, 5rem);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+}
+
+// Each sentence is its own block so the two-tone break is deliberate; balancing
+// keeps the longer one from stranding a single word on its second line.
+.hero-headline span {
+  display: block;
+  text-wrap: balance;
+}
+
+.hero-invitation {
+  color: var(--app-accent);
+}
+
+.hero-lede {
+  max-width: 48ch;
+  margin: clamp(20px, 3vw, 30px) 0 0;
+  color: var(--app-text-secondary);
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  line-height: 1.65;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
   gap: 12px;
-  margin: 0 0 clamp(26px, 4vw, 42px);
+  margin-top: clamp(24px, 3vw, 34px);
+}
+
+.hero-actions a {
+  height: 46px;
+  padding: 0 26px;
+  font-size: 0.95rem;
+}
+
+// Material's stroked outline is a translucent white that all but disappears on
+// the dark theme's background; use the palette's own border token instead.
+.hero-actions a[mat-stroked-button] {
+  border-color: var(--app-border);
+  color: var(--app-text);
+}
+
+.hero-prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: clamp(24px, 3vw, 34px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-prompts li {
+  padding: 8px 17px;
+  border: 1px solid var(--app-border);
+  border-radius: 999px;
   color: var(--app-text-secondary);
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  font-size: 0.88rem;
   font-style: italic;
-  letter-spacing: 0.01em;
 }
 
-.brand-promise::before,
-.brand-promise::after {
-  flex: 0 0 clamp(38px, 8vw, 64px);
-  color: color-mix(in srgb, var(--app-accent) 82%, transparent);
-  content: "〜";
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.4rem;
-  font-style: normal;
-  line-height: 0.5;
-  text-align: center;
+.hero-logo {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
 }
 
-.brand-promise::before {
-  transform: scaleX(1.35);
+.hero-logo img {
+  display: block;
+  width: 125%;
+  max-width: 360px;
+  height: auto;
+  transform: translateY(-12px) rotate(8deg);
 }
 
-.brand-promise::after {
-  transform: scaleX(-1.35);
-}
+.logo-dark { display: none !important; }
+:host-context(.dark-theme) .logo-light { display: none; }
+:host-context(.dark-theme) .logo-dark { display: block !important; }
 
 .author-feature {
   margin-bottom: clamp(30px, 4vw, 44px);
@@ -242,6 +336,13 @@ h2 {
 
 @keyframes shimmer {
   to { transform: translateX(100%); }
+}
+
+@media (max-width: 860px) {
+  .home-hero { grid-template-columns: 1fr; padding: clamp(28px, 7vw, 44px) clamp(22px, 6vw, 38px); border-radius: 22px; }
+  .home-hero::after { display: none; }
+  .hero-logo { display: none; }
+  .hero-headline { max-width: none; }
 }
 
 @media (max-width: 640px) {

@@ -22,6 +22,96 @@
   gap: 8px;
 }
 
+.header-search {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 3px 2px 14px;
+  border: 1px solid var(--app-border);
+  border-radius: 999px;
+  background: var(--app-surface);
+}
+
+.header-search-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--app-text-secondary);
+  font-size: 16px;
+}
+
+.header-search-input {
+  width: clamp(220px, 24vw, 340px);
+  padding: 6px 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--app-text);
+  font-size: 0.88rem;
+}
+
+.header-search-input::placeholder {
+  color: var(--app-text-secondary);
+}
+
+.header-search-submit,
+.header-search-clear {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.header-search-submit mat-icon,
+.header-search-clear mat-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+}
+
+.header-search-submit {
+  color: var(--app-primary);
+}
+
+.header-search-submit:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--app-primary) 12%, transparent);
+}
+
+.header-search-submit:disabled {
+  color: var(--app-text-secondary);
+  cursor: default;
+}
+
+.header-search-clear {
+  width: 26px;
+  height: 26px;
+  color: var(--app-text-secondary);
+  opacity: 1;
+  transition: opacity 120ms ease, background 160ms ease;
+}
+
+.header-search-clear mat-icon {
+  width: 15px;
+  height: 15px;
+  font-size: 15px;
+}
+
+.header-search-clear:hover {
+  background: color-mix(in srgb, var(--app-text-secondary) 16%, transparent);
+  color: var(--app-text);
+}
+
+.header-search-clear--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .account-menu-button {
   color: inherit;
 }

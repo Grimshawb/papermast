@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="papermast.csproj" />
+  <Project Path="../papermast.Tests/papermast.Tests.csproj" />
 </Solution>

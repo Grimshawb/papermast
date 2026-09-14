@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { GENRES } from '../../../../models';
+import { VISIBLE_GENRES } from '../../../../models';
 
 @Component({
   selector: 'bookshelf-genre-switcher',
@@ -11,5 +11,5 @@ import { GENRES } from '../../../../models';
 })
 export class GenreSwitcherComponent {
   @Input({ required: true }) public currentGenre = '';
-  public readonly genres = GENRES;
+  public readonly genres = VISIBLE_GENRES;
 }

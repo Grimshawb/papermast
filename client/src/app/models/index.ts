@@ -8,3 +8,4 @@ export * from './state-models/index';
 export * from './dtos/index';
 export * from './wiki-entry.model';
 export * from './nyt/index';
+export * from './librarian.model';

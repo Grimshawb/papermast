@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { catchError, finalize, of } from 'rxjs';
-import { CatalogImportError, CatalogImportPreview, CuratedCatalogBook, GENRES } from '../../../models';
+import { CatalogImportError, CatalogImportPreview, CuratedCatalogBook, VISIBLE_GENRES } from '../../../models';
 import { CuratedCatalogService, ToasterService } from '../../../services';
 import { BookListEntryComponent } from '../../home/components/book-list-entry/book-list-entry.component';
 
@@ -21,7 +21,7 @@ type SectionKey = 'popular' | 'upcoming';
   styleUrl: './catalog-import.component.scss'
 })
 export class CatalogImportComponent implements OnInit {
-  public readonly genres = GENRES;
+  public readonly genres = VISIBLE_GENRES;
   public selectedGenre = 'horror';
   public selectedSection: SectionKey = 'popular';
   public selectedFile?: File;

@@ -30,7 +30,8 @@ export const NAVIGATION_GROUPS: NavigationGroup[] = [
     items: [
       { label: 'Search', icon: 'search', route: '/search', requiresAuth: true },
       { label: 'Bestsellers', icon: 'sell', route: '/bestsellers' },
-      { label: 'Browse genres', icon: 'category', route: '/genres' }
+      { label: 'Browse genres', icon: 'category', route: '/genres' },
+      { label: 'Ask the Librarian', icon: 'question_answer', route: '/ask-the-librarian', requiresAuth: true }
     ]
   }
 ];

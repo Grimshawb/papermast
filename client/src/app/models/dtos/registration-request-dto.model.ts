@@ -4,4 +4,5 @@ export interface RegistrationRequestDto {
   lastName: string;
   email: string;
   password: string;
+  aiLibrarianDisclosureAccepted: boolean;
 }

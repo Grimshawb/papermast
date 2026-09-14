@@ -1,7 +1,38 @@
 <main class="home-page" [@fadeAnimation]>
+  @if (!loggedInUser) {
+    <section class="home-hero" aria-labelledby="librarian-hero-heading">
+      <div class="hero-copy">
+        <p class="section-kicker">Ask the librarian</p>
+        <h1 id="librarian-hero-heading" class="hero-headline">
+          <span>Every reader gets a librarian.</span>
+          <span class="hero-invitation">Sign in to meet yours.</span>
+        </h1>
+        <p class="hero-lede">
+          Describe a mood, a theme, or exactly what you're after. The librarian reads it
+          and pulls a few books that fit.
+        </p>
+        <div class="hero-actions">
+          <a mat-flat-button color="primary" routerLink="/register">Create an account</a>
+          <a mat-stroked-button routerLink="/login">Sign in</a>
+        </div>
+        <ul class="hero-prompts">
+          <li>&ldquo;something funny and weird&rdquo;</li>
+          <li>&ldquo;a cozy mystery for a rainy weekend&rdquo;</li>
+        </ul>
+      </div>
+
+      <div class="hero-logo" aria-hidden="true">
+        <img class="logo-light" src="assets/pm-logo-black.svg" alt="">
+        <img class="logo-dark" src="assets/pm-logo-white.svg" alt="">
+      </div>
+    </section>
+  } @else {
+    <h1 class="visually-hidden">Paper Mast</h1>
+  }
+
   <section class="author-feature" aria-labelledby="daily-author-heading">
     <div class="section-kicker">A new literary voice, every day</div>
-    <h1 id="daily-author-heading">Author of the day</h1>
+    <h2 id="daily-author-heading">Author of the day</h2>
 
     @if (authorOfTheDay) {
       <daily-author [author]="authorOfTheDay"></daily-author>

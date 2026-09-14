@@ -61,6 +61,11 @@ services:
       Wiki__ApiUrl: https://en.wikipedia.org/api/rest_v1/page/summary
       Nyt__ApiUrl: https://api.nytimes.com/svc/books/v3
       Nyt__Key: ${NYT_KEY}
+      Librarian__Enabled: ${LIBRARIAN_ENABLED:-false}
+      Librarian__BaseUrl: http://librarian:8091
+      Librarian__RequestTimeoutSeconds: ${LIBRARIAN_REQUEST_TIMEOUT_SECONDS:-20}
+      Librarian__CacheMinutes: ${LIBRARIAN_CACHE_MINUTES:-60}
+      Librarian__CatalogVersion: ${LIBRARIAN_CATALOG_VERSION:-bge-runtime-v1}
     depends_on:
       mysql:
         condition: service_healthy
@@ -74,6 +79,73 @@ services:
       start_period: 30s
     networks:
       - edge
+      - data
+
+  librarian:
+    profiles: ["librarian"]
+    image: ${PAPERMAST_LIBRARIAN_IMAGE:-papermast-librarian:local}
+    build:
+      context: .
+      dockerfile: tools/openlibrary-import/Dockerfile.librarian
+    restart: unless-stopped
+    mem_limit: 512m
+    cpus: 1.0
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    logging: *default-logging
+    environment:
+      LIBRARIAN_QDRANT_URL: http://qdrant:6333
+      LIBRARIAN_QDRANT_COLLECTION: ${LIBRARIAN_COLLECTION:-papermast_fiction_bge_runtime_v1}
+      LIBRARIAN_GEMINI_MODEL: ${LIBRARIAN_GEMINI_MODEL:-gemini-3.5-flash-lite}
+      LIBRARIAN_EXPECTED_POINTS: ${LIBRARIAN_EXPECTED_POINTS:-676258}
+      LIBRARIAN_MAX_CONCURRENCY: ${LIBRARIAN_MAX_CONCURRENCY:-2}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      QDRANT_API_KEY: ${QDRANT_API_KEY}
+    volumes:
+      - /opt/papermast/catalog-artifacts:/catalog:ro
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - >-
+          import urllib.request;
+          urllib.request.urlopen('http://127.0.0.1:8091/health/ready', timeout=5)
+      interval: 15s
+      timeout: 6s
+      retries: 5
+      start_period: 30s
+    networks:
+      - data
+
+  qdrant:
+    profiles: ["librarian"]
+    image: qdrant/qdrant:v1.15.5
+    restart: unless-stopped
+    mem_limit: 1g
+    cpus: 2.0
+    security_opt:
+      - no-new-privileges:true
+    logging: *default-logging
+    environment:
+      QDRANT__SERVICE__API_KEY: ${QDRANT_API_KEY}
+      QDRANT__TELEMETRY_DISABLED: "true"
+    volumes:
+      - qdrant_data:/qdrant/storage
+      - /opt/papermast/catalog-artifacts:/catalog:ro
+    healthcheck:
+      test: ["CMD", "bash", "-c", "</dev/tcp/127.0.0.1/6333"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
+    networks:
       - data
 
   migrate:
@@ -134,3 +206,4 @@ volumes:
   caddy_config:
   mysql_data:
   redis_data:
+  qdrant_data:

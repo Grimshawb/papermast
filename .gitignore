@@ -6,6 +6,19 @@
 .codex/
 agents.md
 
+# Local bulk-data experiments and generated reports
+/.data/openlibrary/
+
+# Python-generated local state
+__pycache__/
+*.py[cod]
+.coverage
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.cache/
+htmlcov/
+
 # Client
 client/dist
 client/.vscode
@@ -17,9 +30,9 @@ client/.angular
 # Server
 /server/
 
+**/bin/
+**/obj/
 /papermast/appsettings.Development.json
 /papermast/appsettings.json
-/papermast/bin/
-/papermast/obj/
 /papermast/.vs/
 docker-compose.yml

@@ -26,6 +26,17 @@
   width: 100%;
 }
 
+.ai-disclosure {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.disclosure-error {
+  color: var(--mat-sys-error);
+  margin: 0.25rem 0 0 3rem;
+}
+
 @media (max-width: 600px) {
   .register-card {
     width: 95%;

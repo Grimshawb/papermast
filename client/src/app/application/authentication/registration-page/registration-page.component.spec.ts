@@ -22,4 +22,21 @@ describe('RegistrationPageComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('requires the AI Librarian disclosure acknowledgment', () => {
+    component.registerForm.patchValue({
+      firstName: 'Ada',
+      lastName: 'Lovelace',
+      username: 'ada',
+      email: 'ada@example.com',
+      password: 'Secure1!'
+    });
+
+    expect(component.registerForm.invalid).toBeTrue();
+    expect(component.registerForm.get('aiLibrarianDisclosureAccepted')?.hasError('required')).toBeTrue();
+
+    component.registerForm.patchValue({ aiLibrarianDisclosureAccepted: true });
+
+    expect(component.registerForm.valid).toBeTrue();
+  });
 });

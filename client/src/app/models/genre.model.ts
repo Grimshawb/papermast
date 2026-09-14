@@ -4,9 +4,11 @@ export interface Genre {
   eyebrow: string;
   description: string;
   themeClass: string;
+  /** Hidden from genre pickers (directory, switcher, home page, admin import) while the route stays reachable directly. */
+  hidden?: boolean;
 }
 
-export const GENRES: readonly Genre[] = [
+const ALL_GENRES: readonly Genre[] = [
   {
     slug: 'horror',
     label: 'Horror',
@@ -68,14 +70,18 @@ export const GENRES: readonly Genre[] = [
     label: 'Biography & Memoir',
     eyebrow: 'A life, closely read',
     description: 'Remarkable lives, candid recollections, and the experiences that shape a person.',
-    themeClass: 'genre-biography-memoir'
+    themeClass: 'genre-biography-memoir',
+    // Non-fiction: hidden from genre pickers while the catalog is fiction-only. Route stays live.
+    hidden: true
   },
   {
     slug: 'history',
     label: 'History',
     eyebrow: 'How we arrived here',
     description: 'Civilizations, conflicts, movements, and the people who changed what came next.',
-    themeClass: 'genre-history'
+    themeClass: 'genre-history',
+    // Non-fiction: hidden from genre pickers while the catalog is fiction-only. Route stays live.
+    hidden: true
   },
   {
     slug: 'young-adult',
@@ -85,3 +91,9 @@ export const GENRES: readonly Genre[] = [
     themeClass: 'genre-young-adult'
   }
 ];
+
+/** Every genre, including hidden ones. Use this to resolve a genre by slug (e.g. direct navigation) so hidden routes keep working. */
+export const GENRES: readonly Genre[] = ALL_GENRES;
+
+/** Genres shown in pickers: the directory grid, the switcher, the home page, and the admin import tool. */
+export const VISIBLE_GENRES: readonly Genre[] = ALL_GENRES.filter(genre => !genre.hidden);
